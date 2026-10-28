@@ -853,8 +853,8 @@
           <summary>Health inputs and Garmin import</summary>
           <div class="details-body">
             <div class="button-row">
-              <button class="btn" type="button" id="importGarminBtn">Import Garmin export files</button>
-              <input type="file" id="garminFiles" accept=".json,application/json" multiple class="hidden">
+              <button class="btn" type="button" id="importGarminBtn">Import Garmin export (.zip)</button>
+              <input type="file" id="garminFiles" multiple class="hidden">
             </div>
             <p class="training-note" id="garminNote"></p>
             <div class="form-grid train-form">
@@ -1074,9 +1074,43 @@
     };
   }
 
-  function importGarmin(fileList){
-    const files=[...fileList].filter(f=>/\.json$/i.test(f.name));
-    if(!files.length){alert("Select the .json files from your Garmin export — the DI-Connect-Wellness and DI-Connect-Aggregator folders hold the useful ones.");return}
+  // The whole Garmin export zip can be picked: the useful JSON files inside it
+  // are found by folder and read in the browser. Nothing is uploaded anywhere.
+  function loadJsZip(){
+    if(window.JSZip)return Promise.resolve(window.JSZip);
+    return new Promise((res,rej)=>{const s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+      s.onload=()=>res(window.JSZip);s.onerror=()=>rej(new Error("jszip"));document.head.appendChild(s)});
+  }
+  async function importGarmin(fileList){
+    const all=[...fileList];
+    const zips=all.filter(f=>/\.zip$/i.test(f.name)||/zip/i.test(f.type));
+    if(zips.length){
+      $("garminNote").textContent=`Opening ${zips[0].name}…`;
+      try{
+        const JSZip=await loadJsZip(),parsed=[],bad=[];let total=0;
+        for(const zf of zips){
+          const zip=await JSZip.loadAsync(zf);
+          // only the file types the health page reads: daily summaries, sleep,
+          // HRV, VO2 max, and the two profile files (birth date, height)
+          const WANT=/DI-Connect-(Aggregator\/UDSFile_[^/]*|Wellness\/[^/]*(sleepData|healthStatusData|userBioMetricProfileData)[^/]*|Metrics\/MetricsMaxMetData_[^/]*|User\/user_profile)\.json$/i;
+          const entries=Object.values(zip.files).filter(e=>!e.dir&&WANT.test(e.name));
+          total+=entries.length;
+          let done=0;
+          for(const e of entries){
+            $("garminNote").textContent=`Reading ${zf.name}… ${++done} of ${entries.length}`;
+            try{parsed.push(JSON.parse(await e.async("string")))}catch(err){bad.push(e.name.split("/").pop())}}
+        }
+        if(!total){$("garminNote").textContent="";alert("This zip doesn't look like a Garmin export — no DI_CONNECT folders were found inside it.");return}
+        finishGarmin(parsed,bad,total);
+      }catch(e){
+        $("garminNote").textContent="";
+        alert(e.message==="jszip"?"Couldn't load the zip reader. Check your internet connection, or unzip the export and select the .json files instead.":"Couldn't open this zip file. Try unzipping it and selecting the .json files instead.");
+      }
+      return;
+    }
+    const files=all.filter(f=>/\.json$/i.test(f.name));
+    if(!files.length){alert("Select your Garmin export .zip, or the .json files from inside it.");return}
     let pending=files.length;const parsed=[],bad=[];
     $("garminNote").textContent=`Reading ${files.length} file${files.length===1?"":"s"}…`;
     for(const f of files){
