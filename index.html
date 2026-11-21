@@ -638,6 +638,25 @@
   :root[data-theme="dark"] .hc-score.poor{color:#ff736b}
 
   .layout>div>.goal-card{margin-bottom:10px}
+
+  /* weight goal card, Apple-style hierarchy */
+  .wg-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:6px 0 16px}
+  .wg-big{font-size:30px;font-weight:700;letter-spacing:-.035em;line-height:1.05;color:var(--ink)}
+  .wg-big span{font-size:18px;font-weight:600;color:var(--muted);letter-spacing:-.01em}
+  .wg-sub{margin-top:6px;font-size:14px;line-height:1.4;color:var(--muted);letter-spacing:-.005em}
+  .wg-pct{font-size:34px;font-weight:700;letter-spacing:-.04em;line-height:1;color:#ea3327}
+  .wg-pct span{font-size:18px;font-weight:600;margin-left:1px}
+  .wg-track{height:10px;border-radius:999px;background:rgba(18,18,17,.07);overflow:hidden}
+  .wg-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ea3327,#ff6a5c);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .wg-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--stroke)}
+  .wg-stats span{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+  .wg-stats b{font-size:17px;font-weight:650;letter-spacing:-.02em;color:var(--ink)}
+  .wg-stats b.good{color:#1f9d55}.wg-stats b.bad{color:#d94a43}
+  .wg-empty h3{margin:4px 0 6px;font-size:24px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+  .wg-empty p{margin:0 0 14px;font-size:14px;line-height:1.45;color:var(--muted);max-width:420px}
+  .wg-cta{all:unset;cursor:pointer;font-size:14px;font-weight:600;color:#fff;background:#121211;padding:9px 18px;border-radius:999px}
+  :root[data-theme="dark"] .wg-track{background:rgba(255,255,255,.1)}:root[data-theme="dark"] .wg-cta{background:#f2f1ef;color:#111}:root[data-theme="dark"] .wg-stats b.good{color:#4cd07d}:root[data-theme="dark"] .wg-pct{color:#ff5a4d}
+  @media(max-width:680px){.wg-big{font-size:26px}.wg-pct{font-size:28px}.wg-stats b{font-size:15px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2197,11 +2216,17 @@
   }
   function renderProgress(){
     const b=state.baseline?.weightKg,cur=snapshot()?.weightKg,goal=state.goals.weightKg;
-    if(b==null||cur==null||goal==null||b===goal){$("progress").innerHTML=`<p class="eyebrow">Weight goal</p><div class="progress-top"><span class="goal-line">No weight goal set yet</span><strong>—</strong></div><div class="track"><div class="fill" style="width:0%"></div></div><div class="progress-foot"><span>Set a baseline and a weight goal in Log a measurement</span></div>`;return}
-    const raw=((cur-b)/(goal-b))*100,p=clamp(raw,0,100),change=cur-b,remaining=goal-cur;
-    const verb=goal<b?"Lose":"Gain";
-    $("progress").innerHTML=`<p class="eyebrow">Weight goal</p><div class="progress-top"><span class="goal-line"><b>${verb} ${fmt(Math.abs(goal-b))} kg</b> · ${fmt(b)} → ${fmt(goal)} kg <em>now ${fmt(cur)} kg</em></span><strong>${Math.round(p)}%</strong></div><div class="track"><div class="fill" style="width:${p}%"></div></div><div class="progress-foot"><span>Start ${fmt(b)} kg</span><span>${change>=0?"+":""}${fmt(change)} kg so far</span><span>${raw>=100||Math.abs(remaining)<.05?"Goal reached":`${fmt(Math.abs(remaining))} kg remaining`}</span></div>`;
+    if(b==null||cur==null||goal==null||b===goal){
+      $("progress").innerHTML=`<p class="eyebrow">Weight goal</p><div class="wg-empty"><h3>Set your weight goal</h3><p>Add a starting weight and a target in Log a measurement, and your progress shows up here.</p><button type="button" class="wg-cta" data-go-log>Set goal</button></div>`;
+      const c=$("progress").querySelector("[data-go-log]");if(c)c.addEventListener("click",()=>{setTab("log");scrollTo({top:0,behavior:"smooth"})});return}
+    const raw=((cur-b)/(goal-b))*100,p=clamp(raw,0,100),change=cur-b,remaining=Math.abs(goal-cur),lose=goal<b,done=raw>=100;
+    const moved=lose?-change:change;
+    $("progress").innerHTML=`<p class="eyebrow">Weight goal</p>
+      <div class="wg-head"><div><div class="wg-big">${done?"Goal reached":`${fmt(remaining)} kg <span>to go</span>`}</div><div class="wg-sub">${lose?"Lose":"Gain"} ${fmt(Math.abs(goal-b))} kg to reach ${fmt(goal)} kg</div></div><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
+      <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="Weight goal progress"><i style="width:${p}%"></i></div>
+      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)} kg</b></div><div><span>Now</span><b>${fmt(cur)} kg</b></div><div><span>${moved>=0?(lose?"Lost so far":"Gained so far"):"Off track by"}</span><b class="${moved>=0?"good":"bad"}">${fmt(Math.abs(change))} kg</b></div></div>`;
   }
+
 
   // Human mesh and shape targets: MakeHuman Community core assets, CC0.
   // Source: https://github.com/makehumancommunity/makehuman/tree/master/makehuman/data
