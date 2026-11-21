@@ -1728,7 +1728,7 @@
     // Trend and history run the full width under the two-column block
     move($("metricTabs")?.closest(".card"),"progress");
     historyCard=$("history")?.closest(".card")||null;
-    if(historyCard){historyCard.id="historyCard";move(historyCard,"progress")}
+    if(historyCard){historyCard.id="historyCard";move(historyCard,"log")}
     nav.addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)setTab(b.dataset.tab)});
     nav.addEventListener("keydown",e=>{
       const keys={ArrowLeft:-1,ArrowRight:1};if(!(e.key in keys))return;
@@ -1750,7 +1750,7 @@
     }
     if(focus)$("tab-"+id).focus();
     // One measurement-history card, shown on both Progress and Log
-    if(historyCard&&(id==="progress"||id==="log")){
+    if(historyCard&&id==="log"){
       const host=$("panel-"+id);if(historyCard.parentElement!==host)host.appendChild(historyCard);
     }
     // The model only animates while it is on screen, and needs a redraw after being
