@@ -1022,6 +1022,24 @@
   .wt-chip.bad{background:rgba(240,68,56,.22)!important;color:#ff7a6e!important}
   :root[data-theme="dark"] .wt-chip.good{background:rgba(137,210,91,.25)!important;color:#3f7a1c!important}
   :root[data-theme="dark"] .wt-chip.bad{background:rgba(240,68,56,.14)!important;color:#d2362b!important}
+
+  /* achieved checkbox on body goals + celebration */
+  #gx-body .gx-row{grid-template-columns:minmax(0,1.4fr) auto minmax(80px,1fr) 44px 28px 32px}
+  .gx-check span{transition:transform .2s ease,background .2s ease,border-color .2s ease;position:relative}
+  .gx-check input:checked+span::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+  .gx-check input:checked+span{box-shadow:none!important;animation:gxPop .35s ease}
+  .gx-check:hover span{border-color:#89D25B}
+  @keyframes gxPop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+  .gx-row.gx-win{animation:gxWin .7s ease}
+  @keyframes gxWin{0%{background:var(--card)}30%{background:rgba(137,210,91,.25)}100%{background:var(--card)}}
+  .gx-conf{position:fixed;z-index:9999;width:8px;height:8px;border-radius:2px;pointer-events:none}
+  @media(max-width:680px){
+    #gx-body .gx-row{grid-template-columns:minmax(0,1fr) auto 28px 32px}
+    #gx-body .gx-row .gx-fig{grid-row:1;grid-column:2}#gx-body .gx-row .gx-check{grid-row:1;grid-column:3}#gx-body .gx-row .gx-del{grid-row:1;grid-column:4}
+    #gx-body .gx-row .gx-bar{grid-row:2;grid-column:1/3}#gx-body .gx-row .gx-pct{grid-row:2;grid-column:3/5}
+  }
+  .gx-check input{z-index:1}
+  @media(max-width:680px){#gx-body .gx-row .gx-main{grid-row:1;grid-column:1/3}#gx-body .gx-row .gx-fig{grid-row:2!important;grid-column:1/5!important}#gx-body .gx-row .gx-bar{grid-row:3!important}#gx-body .gx-row .gx-pct{grid-row:3!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2371,7 +2389,7 @@
             km:g=>byGroup.get(g)?.km||0, minutesOf:g=>byGroup.get(g)?.minutes||0};
   }
 
-  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null,customGoals:[]}}
+  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null,customGoals:[],goalsDone:{}}}
   function cleanNumber(v,key){if(v===null||v===""||v===undefined)return null;const n=Number(v),m=metrics[key];return Number.isFinite(n)&&n>=m.min&&n<=m.max?Math.round(n*10)/10:null}
   function cleanHealth(raw){
     const out={},n=(v,lo,hi)=>{
@@ -2429,6 +2447,7 @@
     if(Array.isArray(raw.workouts))s.workouts=dedupeWorkouts(raw.workouts.map(cleanWorkout).filter(Boolean));
     if(raw.health&&typeof raw.health==="object")s.health=cleanHealth(raw.health);
     if(raw.garmin&&typeof raw.garmin==="object")s.garmin=raw.garmin;
+    if(raw.goalsDone&&typeof raw.goalsDone==="object")for(const k of metricKeys){const v=raw.goalsDone[k];if(typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v))s.goalsDone[k]=v}
     if(Array.isArray(raw.customGoals))s.customGoals=raw.customGoals.filter(g=>g&&typeof g==="object").slice(0,200).map(g=>{const kind=g.kind==="blood"?"blood":"fitness";const base={id:String(g.id||uid()),kind,done:!!g.done};
       if(kind==="blood"){const t=Number(g.target);return Number.isFinite(t)&&typeof g.marker==="string"?{...base,marker:g.marker.slice(0,40),dir:g.dir==="min"?"min":"max",target:t}:null}
       const title=String(g.title||"").trim().slice(0,140);return title?{...base,type:g.type==="race"?"race":"achievement",title,target:String(g.target||"").slice(0,60),due:/^\d{4}-\d{2}-\d{2}$/.test(g.due||"")?g.due:""}:null}).filter(Boolean);
@@ -3716,15 +3735,16 @@
     const setKeys=metricKeys.filter(k=>state.goals[k]!=null);
     const bodyRows=setKeys.map(k=>{
       const m=metrics[k],g=state.goals[k],c=cur[k],b=startOf(k);total++;
-      let pct=null,cls="normal",line="Log a measurement to track";
-      if(c!=null){
+      let pct=null,cls="normal",line="Log a measurement to track";const man=state.goalsDone?.[k];
+      if(man){pct=100;cls="great";line=`Achieved · ${man.split("-").reverse().join(".")}`;reached++}
+      else if(c!=null){
         if(b!=null&&b!==g){pct=clamp((c-b)/(g-b)*100,0,100);const away=g>b?c<b:c>b;
           if(pct>=100){cls="great";line="Reached";reached++}else if(away){cls="poor";line=`${fmt(Math.abs(g-c))} ${m.unit} to go · moving away`}else{cls="normal";line=`${fmt(Math.abs(g-c))} ${m.unit} to go`;track++}}
         else if(c===g){pct=100;cls="great";line="Reached";reached++}else{line=`${fmt(Math.abs(g-c))} ${m.unit} to go`;track++}}
       return `<li class="gx-row ${cls}"><div class="gx-main"><div class="gx-title">${esc(m.label)}</div><div class="gx-meta">${b!=null?`Start ${fmt(b)} · `:""}${line}</div></div>
         <div class="gx-fig"><b>${c==null?"—":fmt(c)}</b><i>→</i><input type="number" step="0.1" inputmode="decimal" data-goal="${k}" value="${g}" aria-label="Target for ${esc(m.label)}"><span>${esc(m.unit)}</span></div>
         <div class="gx-bar"><i style="width:${pct==null?0:pct}%"></i></div><span class="gx-pct">${pct==null?"—":Math.round(pct)+"%"}</span>
-        <button type="button" class="gx-del" data-goal-del="${k}" aria-label="Remove ${esc(m.label)} goal">×</button></li>`}).join("");
+        <label class="gx-check" title="I've made it"><input type="checkbox" data-goal-done="${k}" ${man?"checked":""} aria-label="Mark ${esc(m.label)} goal as achieved"><span></span></label><button type="button" class="gx-del" data-goal-del="${k}" aria-label="Remove ${esc(m.label)} goal">×</button></li>`}).join("");
     const freeKeys=metricKeys.filter(k=>state.goals[k]==null);
     const bodyForm=goalForm==="body"?`<form class="gx-form gx-form-body" data-gform="body"><label class="gx-fl"><span>Measurement</span><select name="k" required>${freeKeys.map(k=>`<option value="${k}" data-cur="${cur[k]??""}" data-unit="${esc(metrics[k].unit)}">${esc(metrics[k].label)}</option>`).join("")}</select></label>
       <label class="gx-fl"><span>Current</span><div class="gx-unit"><input name="c" type="number" step="0.1" inputmode="decimal" value="${cur[freeKeys[0]]??""}" placeholder="Now" required><em data-u>${esc(metrics[freeKeys[0]]?.unit||"")}</em></div></label>
@@ -3760,13 +3780,14 @@
     const add=t.closest("[data-gadd]");if(add){goalForm=add.dataset.gadd;renderGoals();const sel=$("goalsPage").querySelector(".gx-form select, .gx-form input");sel&&sel.focus();return}
     if(t.closest("[data-gcancel]")){goalForm=null;renderGoals();return}
     const ty=t.closest("[data-gtype]");if(ty){goalFitType=ty.dataset.gtype;const form=ty.closest("form"),keep=[...form.querySelectorAll("input")].map(i=>i.value);renderGoals();const nf=$("goalsPage").querySelector('[data-gform="fitness"]');if(nf)[...nf.querySelectorAll("input")].forEach((i,n)=>i.value=keep[n]||"");return}
-    const gd=t.closest("[data-goal-del]");if(gd){state.goals[gd.dataset.goalDel]=null;save();renderAll();return}
+    const gd=t.closest("[data-goal-del]");if(gd){state.goals[gd.dataset.goalDel]=null;if(state.goalsDone)delete state.goalsDone[gd.dataset.goalDel];save();renderAll();return}
     const cd=t.closest("[data-cg-del]");if(cd){state.customGoals=state.customGoals.filter(x=>x.id!==cd.dataset.cgDel);save();renderGoals();return}
   });
   document.addEventListener("change",e=>{
     const t=e.target;if(!t.closest||!t.closest("#goalsPage"))return;
     if(t.matches("input[data-goal]")){const k=t.dataset.goal,v=cleanNumber(t.value,k);if(v!=null){state.goals[k]=v;save();renderAll()}else t.value=state.goals[k]??"";return}
-    if(t.matches("input[data-cg-done]")){const g=state.customGoals.find(x=>x.id===t.dataset.cgDone);if(g){g.done=t.checked;save();renderGoals()}}
+    if(t.matches("input[data-cg-done]")){const g=state.customGoals.find(x=>x.id===t.dataset.cgDone);if(g){g.done=t.checked;if(t.checked)celebrate(t);save();setTimeout(renderGoals,t.checked?650:0)}return}
+    if(t.matches("input[data-goal-done]")){const k=t.dataset.goalDone;state.goalsDone=state.goalsDone||{};if(t.checked){state.goalsDone[k]=today();celebrate(t)}else delete state.goalsDone[k];save();setTimeout(renderGoals,t.checked?650:0);return}
     if(t.matches('[data-gform="body"] select[name="k"]')){const o=t.selectedOptions[0],f=t.form;f.querySelector('[name="c"]').value=o.dataset.cur||"";f.querySelectorAll("[data-u]").forEach(u=>u.textContent=o.dataset.unit||"");f.querySelector('[name="v"]').focus();return}
     if(t.matches('select[name="m"]')){const m=bloodMarker(t.value),d=t.form.querySelector('select[name="dir"]');if(m&&d)d.value=m.lo!=null&&m.hi==null?"min":"max"}
   });
@@ -3871,6 +3892,18 @@
     const dir=Number(s.dataset.enstep);if(enView==="day")enEnd=isoAdd(enEnd,dir);else if(enView==="week")enEnd=isoAdd(enEnd,7*dir);else{const d=new Date(enEnd.slice(0,8)+"15T12:00:00");d.setMonth(d.getMonth()+dir);enEnd=d.toISOString().slice(0,10)}
     const rows=energyRows(),last=rows.length?rows[rows.length-1][0]:null;if(last&&enEnd>last)enEnd=last;renderEnergy();
   });
+
+  // little celebration when a goal is ticked off
+  function celebrate(el){
+    try{
+      const row=el.closest(".gx-row");if(row){row.classList.add("gx-win");}
+      if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+      const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,cols=["#89D25B","#0099FF","#F04438","#ffd34d","#121211"];
+      for(let i=0;i<26;i++){const s=document.createElement("i");s.className="gx-conf";s.style.background=cols[i%cols.length];s.style.left=x+"px";s.style.top=y+"px";document.body.appendChild(s);
+        const a=Math.random()*Math.PI*2,d=50+Math.random()*90,dx=Math.cos(a)*d,dy=Math.sin(a)*d-40;
+        s.animate([{transform:"translate(-50%,-50%) scale(1) rotate(0)",opacity:1},{transform:`translate(${dx}px,${dy+60}px) scale(.6) rotate(${Math.random()*540}deg)`,opacity:0}],{duration:900+Math.random()*400,easing:"cubic-bezier(.15,.7,.3,1)"}).onfinish=()=>s.remove()}
+    }catch(e){}
+  }
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
