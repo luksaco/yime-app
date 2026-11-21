@@ -615,6 +615,13 @@
   :root[data-theme="dark"] #panel-log .card,:root[data-theme="dark"] #panel-training .card{background:var(--card);border-color:rgba(255,255,255,.07);box-shadow:var(--shadow)}
   :root[data-theme="dark"] #panel-training .train-analysis{background:rgba(255,255,255,.04)}
   :root[data-theme="dark"] .field input,:root[data-theme="dark"] .blood-field input,:root[data-theme="dark"] .blood-date-row input,:root[data-theme="dark"] .blood-cat-btn,:root[data-theme="dark"] .setup-select-group button{background:var(--soft);border-color:rgba(255,255,255,.1);color:var(--ink)}
+
+  /* header: no hover effects on any button */
+  .top .actions .menu-btn:hover,.top .actions .theme-btn:hover,.top .actions .btn.primary:hover,:root[data-theme="dark"] .top .actions .menu-btn:hover,:root[data-theme="dark"] .top .actions .theme-btn:hover,:root[data-theme="dark"] .top .actions .btn.primary:hover{background:transparent!important}
+  .top .actions .btn.primary:hover{border-color:#121211}:root[data-theme="dark"] .top .actions .btn.primary:hover{border-color:#f2f1ef}
+  .spaces button:not([aria-current]):hover{color:#6b6866}:root[data-theme="dark"] .spaces button:not([aria-current]):hover{color:#9a958f}
+
+  :root[data-theme="dark"] .top .actions .menu-btn{background:transparent;border:0}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
