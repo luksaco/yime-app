@@ -734,6 +734,38 @@
   /* Body health: no duplicate body model, scores use the full width */
   .health-top{grid-template-columns:1fr!important}
   .health-rings{justify-content:center;gap:36px}
+
+  /* ===== Body health hero: three equal tiles + clear bars ===== */
+  .health-rings{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px!important;margin-bottom:26px}
+  .health-rings>.fa-ring,.health-rings>.hs-dial{width:auto!important;height:auto!important;min-height:200px;border-radius:22px!important;border:1px solid rgba(18,18,17,.06)!important;background:#f6f6f4!important;padding:22px 16px 18px!important;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative}
+  .health-rings>.fa-ring::before,.health-rings>.hs-dial::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:28px;height:4px;border-radius:9px;background:var(--acc,#c9c6c0)}
+  .health-rings .fa-val{font-size:52px!important;font-weight:750;letter-spacing:-.05em;color:var(--acc-ink,var(--ink))!important;margin-top:8px}
+  .health-rings .fa-lab{font-size:12px!important;font-weight:650!important;letter-spacing:.02em!important;text-transform:none!important;color:var(--ink)!important;margin-top:6px}
+  .health-rings .fa-lab::first-letter{text-transform:uppercase}
+  .health-rings .fa-cap{font-size:12.5px!important;color:var(--muted)!important;margin-top:4px;max-width:200px;line-height:1.35}
+  .fa-ring.great{--acc:#1f9d55;--acc-ink:#1a8a4a}.fa-ring.good{--acc:#1a84e8;--acc-ink:#1572cc}.fa-ring.ok{--acc:#d9a21b;--acc-ink:#a87a0a}.fa-ring.poor{--acc:#d94a43;--acc-ink:#c23a33}
+  .fa-ring.cap-ring{--acc:#ea3327;--acc-ink:#ea3327}
+  .health-rings .hs-dial{--acc:#121211}
+  .health-rings .hs-dial svg{width:120px!important;height:120px!important;margin-top:6px}
+  .health-rings .hs-centre{inset:auto!important;top:28px!important;left:0;right:0;height:120px!important}
+  .health-rings .hs-centre strong{font-size:36px!important}
+  .health-rings .hs-centre span{font-size:10.5px;letter-spacing:.06em}
+  .health-rings .hs-cap{font-size:12.5px!important;color:var(--muted)!important;margin-top:8px}
+  .health-rings #hsArc{stroke-width:11}
+  /* component bars */
+  .health-components{gap:18px!important}
+  .hc-label{font-size:15px!important;font-weight:650!important}
+  .hc-score{font-size:17px!important}
+  .hc-track{height:10px!important;background:rgba(18,18,17,.07)!important;margin:8px 0 6px!important}
+  .hc-foot{font-size:12px!important}
+  :root[data-theme="dark"] .health-rings>.fa-ring,:root[data-theme="dark"] .health-rings>.hs-dial{background:#1f2024!important;border-color:rgba(255,255,255,.06)!important}
+  :root[data-theme="dark"] .health-rings .hs-dial{--acc:#f2f1ef}
+  :root[data-theme="dark"] .fa-ring.great{--acc-ink:#4cd07d}:root[data-theme="dark"] .fa-ring.good{--acc-ink:#5aa9ff}:root[data-theme="dark"] .fa-ring.ok{--acc-ink:#f0c24a}:root[data-theme="dark"] .fa-ring.poor,:root[data-theme="dark"] .fa-ring.cap-ring{--acc-ink:#ff5a4d}
+  :root[data-theme="dark"] #capValue,:root[data-theme="dark"] .fa-lab{color:inherit}
+  :root[data-theme="dark"] .health-rings .fa-lab{color:var(--ink)!important}:root[data-theme="dark"] .health-rings #capValue{color:#ff5a4d!important}
+  :root[data-theme="dark"] .hc-track{background:rgba(255,255,255,.08)!important}
+  :root[data-theme="dark"] .health-rings circle[stroke="#edeff4"]{stroke:#2a2b30}
+  @media(max-width:680px){.health-rings{grid-template-columns:1fr 1fr!important}.health-rings>.hs-dial{grid-column:1/-1;order:-1}.health-rings>.fa-ring{min-height:170px}.health-rings .fa-val{font-size:42px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
