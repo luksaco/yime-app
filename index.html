@@ -730,6 +730,10 @@
 
   #bodyViewport{container-type:inline-size}
   .scan-floor{bottom:calc(50% - 61.74cqw)!important;height:2.8cqw!important}
+
+  /* Body health: no duplicate body model, scores use the full width */
+  .health-top{grid-template-columns:1fr!important}
+  .health-rings{justify-content:center;gap:36px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1106,7 +1110,6 @@
           </div>
           <div id="healthComponents" class="health-components"></div>
           </div>
-          <div class="health-model" id="modelHomeHealth"></div>
         </div>
         <p class="eyebrow att-head sec-head" id="capHead">Athletic capability</p>
         <p class="cap-read" id="capRead"></p>
@@ -1767,11 +1770,11 @@
     }
     // The model only animates while it is on screen, and needs a redraw after being
     // unhidden because its canvas has no size while the panel is display:none.
-    if(id==="progress"||id==="health"){
+    if(id==="progress"){
       // One WebGL canvas, two homes. Moving the element keeps a single context and
       // a single source of truth; cloning it would mean a second renderer.
       if(modelAside){
-        const host=id==="progress"?modelLayout:$("modelHomeHealth");
+        const host=modelLayout;
         if(host&&modelAside.parentElement!==host){
           if(id==="progress")host.insertBefore(modelAside,host.firstChild);
           else host.appendChild(modelAside);
