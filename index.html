@@ -718,6 +718,18 @@
   :root[data-theme="dark"] .tabbar button{color:#a59d94!important}:root[data-theme="dark"] .tabbar button:not([aria-selected="true"]):hover{color:#f2f1ef!important;background:rgba(255,255,255,.05)!important}
   :root[data-theme="dark"] .tabbar button[aria-selected="true"]{background:#f2f1ef!important;color:#111!important}
   @media(max-width:680px){.tabbar{padding:4px;gap:2px;border-radius:14px}.tabbar button{flex-direction:column;gap:3px;height:56px;padding:0 2px;font-size:11.5px!important;border-radius:11px}.tabbar .t-ic{width:18px;height:18px}}
+
+  /* both columns end on the same line: the body model grows to the right column's
+     height; the figure stays centred and correctly scaled inside the taller frame */
+  @media(min-width:981px){
+    .layout{align-items:stretch}
+    .layout>aside{position:static;align-self:stretch;display:flex;flex-direction:column}
+    .layout>aside>.stage{flex:1;display:flex;flex-direction:column}
+    .layout>aside>.stage>#bodyViewport{flex:1 0 auto}
+  }
+
+  #bodyViewport{container-type:inline-size}
+  .scan-floor{bottom:calc(50% - 61.74cqw)!important;height:2.8cqw!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2575,7 +2587,7 @@
     if(!gl)return createBodyFallback(canvas);
     const shader=(type,source)=>{const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s};
     const program=gl.createProgram();
-    gl.attachShader(program,shader(gl.VERTEX_SHADER,`attribute vec3 position;attribute vec3 normal;attribute float ao;attribute vec2 mat;uniform float yaw;uniform float pitch;uniform float breath;varying vec3 n;varying vec3 p;varying float vao;varying vec2 vmat;
+    gl.attachShader(program,shader(gl.VERTEX_SHADER,`attribute vec3 position;attribute vec3 normal;attribute float ao;attribute vec2 mat;uniform float yaw;uniform float pitch;uniform float breath;uniform vec2 fit;varying vec3 n;varying vec3 p;varying float vao;varying vec2 vmat;
       void main(){
         float band=smoothstep(.58,.70,position.y)*(1.-smoothstep(.79,.88,position.y));
         vec3 q=position;
@@ -2584,7 +2596,7 @@
         q.y+=breath*.0018;
         float c=cos(yaw),s=sin(yaw);mat3 r=mat3(c,0.,-s,0.,1.,0.,s,0.,c);vec3 v=r*vec3(q.x,q.y-.5,q.z);
         float cp=cos(pitch),sp=sin(pitch);mat3 tilt=mat3(1.,0.,0.,0.,cp,sp,0.,-sp,cp);v=tilt*v;n=tilt*r*normal;p=position;vao=ao;vmat=mat;
-        gl_Position=vec4(v.x*2.4,v.y*1.7142857,-v.z*1.5,1.);}`));
+        gl_Position=vec4(v.x*2.4*fit.x,v.y*1.7142857*fit.y,-v.z*1.5,1.);}`));
     gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec3 n;varying vec3 p;varying float vao;varying vec2 vmat;uniform float pass;uniform float mesh;uniform vec4 cloth;
       void main(){vec3 N=normalize(n);float rim=pow(1.-abs(N.z),2.6);
       if(pass>1.5){if(N.z<0.)discard;gl_FragColor=vec4(.94,.65,.36,.2);return;}
@@ -2634,7 +2646,7 @@
       gl_FragColor=vec4(surface,1.);}`));
     gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
-    const loc={ao:gl.getAttribLocation(program,'ao'),mat:gl.getAttribLocation(program,'mat'),position:gl.getAttribLocation(program,'position'),normal:gl.getAttribLocation(program,'normal'),yaw:gl.getUniformLocation(program,'yaw'),pitch:gl.getUniformLocation(program,'pitch'),breath:gl.getUniformLocation(program,'breath'),pass:gl.getUniformLocation(program,'pass'),mesh:gl.getUniformLocation(program,'mesh'),cloth:gl.getUniformLocation(program,'cloth')};
+    const loc={ao:gl.getAttribLocation(program,'ao'),mat:gl.getAttribLocation(program,'mat'),position:gl.getAttribLocation(program,'position'),normal:gl.getAttribLocation(program,'normal'),fit:gl.getUniformLocation(program,'fit'),yaw:gl.getUniformLocation(program,'yaw'),pitch:gl.getUniformLocation(program,'pitch'),breath:gl.getUniformLocation(program,'breath'),pass:gl.getUniformLocation(program,'pass'),mesh:gl.getUniformLocation(program,'mesh'),cloth:gl.getUniformLocation(program,'cloth')};
     const aoBuf=gl.createBuffer(),matBuf=gl.createBuffer(),positions=gl.createBuffer(),normals=gl.createBuffer(),triangles=gl.createBuffer(),edges=gl.createBuffer(),ghost=gl.createBuffer(),ghostNormals=gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,triangles);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,bodyTriangles,gl.STATIC_DRAW);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,edges);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,bodyEdges,gl.STATIC_DRAW);
@@ -2647,7 +2659,7 @@
         const dpr=Math.min(window.devicePixelRatio||1,2),width=Math.max(1,Math.round(canvas.clientWidth*dpr)),height=Math.max(1,Math.round(canvas.clientHeight*dpr));
         if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height}
         gl.viewport(0,0,width,height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
-        gl.uniform1f(loc.yaw,bodyYaw);gl.uniform1f(loc.pitch,BODY_PITCH);gl.uniform1f(loc.breath,bodyBreath);gl.uniform1f(loc.mesh,figureOptions.details?1:0);gl.uniform1f(loc.pass,0);{const bm=bodyMaterial();gl.uniform4f(loc.cloth,bm.shorts[0],bm.shorts[1],bm.top[0],bm.top[1])}
+        {const cw=canvas.clientWidth||5,ch=canvas.clientHeight||7,r=ch/cw;gl.uniform2f(loc.fit,r>1.4?1:r/1.4,r>1.4?1.4/r:1)}gl.uniform1f(loc.yaw,bodyYaw);gl.uniform1f(loc.pitch,BODY_PITCH);gl.uniform1f(loc.breath,bodyBreath);gl.uniform1f(loc.mesh,figureOptions.details?1:0);gl.uniform1f(loc.pass,0);{const bm=bodyMaterial();gl.uniform4f(loc.cloth,bm.shorts[0],bm.shorts[1],bm.top[0],bm.top[1])}
         attribute(positions,loc.position);attribute(normals,loc.normal);
         for(const [buf,where,size] of [[aoBuf,loc.ao,1],[matBuf,loc.mat,2]]){if(where<0)continue;gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(where);gl.vertexAttribPointer(where,size,gl.FLOAT,false,0,0)}
         gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);
