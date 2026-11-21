@@ -622,6 +622,11 @@
   .spaces button:not([aria-current]):hover{color:#6b6866}:root[data-theme="dark"] .spaces button:not([aria-current]):hover{color:#9a958f}
 
   :root[data-theme="dark"] .top .actions .menu-btn{background:transparent;border:0}
+
+  /* spaces: plain black text, no pill, no hover; the current space is just bolder */
+  .spaces button,.spaces button:hover,.spaces button:not([aria-current]):hover,.spaces button[aria-current="page"]{color:#121211!important;background:transparent!important;font-weight:500}
+  .spaces button[aria-current="page"]{font-weight:700}
+  :root[data-theme="dark"] .spaces button,:root[data-theme="dark"] .spaces button:hover,:root[data-theme="dark"] .spaces button:not([aria-current]):hover,:root[data-theme="dark"] .spaces button[aria-current="page"]{color:#f2f1ef!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
