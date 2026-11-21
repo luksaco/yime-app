@@ -784,6 +784,20 @@
   .att-section .att.good{box-shadow:inset 3px 0 0 #1f9d55,0 6px 18px rgba(18,18,17,.04)!important}
   :root[data-theme="dark"] .att-section .att{background:#1f2024!important;border-color:rgba(255,255,255,.07)!important}
   :root[data-theme="dark"] .att-section .att p{color:#b9b2aa!important}
+
+  /* score bars: calm monochrome bars, status shown as a small word pill */
+  .hc-fill.great,.hc-fill.good,.hc-fill.ok,.hc-fill.poor{background:#121211!important}
+  .hc-score.great,.hc-score.good,.hc-score.ok,.hc-score.poor{color:var(--ink)!important;display:inline-flex;align-items:center;gap:8px}
+  .hc-score::before{font-size:11px;font-weight:650;letter-spacing:.01em;padding:3px 9px;border-radius:999px}
+  .hc-score.great::before{content:"Excellent";background:rgba(31,157,85,.12);color:#1a8a4a}
+  .hc-score.good::before{content:"Good";background:rgba(26,132,232,.12);color:#1572cc}
+  .hc-score.ok::before{content:"Fair";background:rgba(18,18,17,.07);color:#5f5a55}
+  .hc-score.poor::before{content:"Low";background:rgba(217,74,67,.12);color:#c23a33}
+  :root[data-theme="dark"] .hc-fill.great,:root[data-theme="dark"] .hc-fill.good,:root[data-theme="dark"] .hc-fill.ok,:root[data-theme="dark"] .hc-fill.poor{background:#f2f1ef!important}
+  :root[data-theme="dark"] .hc-score.great::before{color:#4cd07d;background:rgba(76,208,125,.14)}:root[data-theme="dark"] .hc-score.good::before{color:#5aa9ff;background:rgba(90,169,255,.14)}
+  :root[data-theme="dark"] .hc-score.ok::before{color:#d6d0c9;background:rgba(255,255,255,.08)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff736b;background:rgba(255,115,107,.14)}
+  /* fitness-age tile: no mustard either */
+  .fa-ring.ok{--acc:#8a8580;--acc-ink:var(--ink)}:root[data-theme="dark"] .fa-ring.ok{--acc-ink:var(--ink)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
