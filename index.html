@@ -909,6 +909,64 @@
   :root[data-theme="dark"] #tab-goals{color:#ff5a4d!important;background:rgba(255,90,77,.1)!important}
   @media(prefers-reduced-motion:reduce){#tab-goals,#tab-goals::after{animation:none}}
   @media(max-width:680px){#tab-goals::after{top:5px;right:6px;width:6px;height:6px}}
+
+  /* ===== Goals v2 ===== */
+  .gx-sec{margin-top:12px}
+  .gx-head h3{margin:0;font-size:19px;letter-spacing:-.02em;color:var(--ink)}
+  .gx-head p{margin:3px 0 0;font-size:13.5px;color:#6b6661}
+  .gx-list{list-style:none;margin:14px 0 0;padding:0;border:1px solid rgba(18,18,17,.07);border-radius:16px;overflow:hidden}
+  .gx-row{display:grid;grid-template-columns:minmax(0,1.4fr) auto minmax(80px,1fr) 44px 32px;align-items:center;gap:14px;padding:12px 14px;border-top:1px solid rgba(18,18,17,.06);background:var(--card)}
+  .gx-row:first-child{border-top:0}
+  #gx-fitness .gx-row{grid-template-columns:36px minmax(0,1fr) 28px 32px}
+  #gx-blood .gx-row{grid-template-columns:36px minmax(0,1fr) auto auto 32px}
+  .gx-title{font-size:15px;font-weight:650;color:var(--ink);letter-spacing:-.01em}
+  .gx-title em{font-style:normal;font-weight:600;color:#0099FF;margin-left:6px}
+  .gx-meta{font-size:12.5px;color:#6b6661;margin-top:2px}
+  .gx-row.poor .gx-meta{color:#d2362b}.gx-row.great .gx-meta{color:#4b8a22}
+  .gx-fig{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+  .gx-fig b{font-size:18px;letter-spacing:-.02em;color:var(--ink)}.gx-fig i{font-style:normal;color:#a8a39d}.gx-fig span{font-size:12px;color:#8a8580}
+  .gx-fig input{width:66px;font:inherit;font-size:16px;font-weight:650;color:var(--ink);background:#f4f4f2;border:1px solid transparent;border-radius:9px;padding:4px 7px}
+  .gx-fig input:focus{outline:0;border-color:#121211;background:#fff}
+  .gx-bar{height:8px;border-radius:999px;background:rgba(18,18,17,.07);overflow:hidden}
+  .gx-bar i{display:block;height:100%;border-radius:999px;background:#0099FF}
+  .gx-row.great .gx-bar i{background:#89D25B}.gx-row.poor .gx-bar i{background:#F04438}
+  .gx-pct{font-size:13px;font-weight:700;color:var(--ink);text-align:right}
+  .gx-pill{font-size:12px;font-weight:650;padding:3px 10px;border-radius:999px;background:rgba(0,153,255,.12);color:#0078c8;white-space:nowrap}
+  .gx-row.great .gx-pill{background:rgba(137,210,91,.2);color:#4b8a22}.gx-row.poor .gx-pill{background:rgba(240,68,56,.13);color:#d2362b}
+  .gx-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:rgba(0,153,255,.1);color:#0099FF}
+  .gx-ic svg{width:19px;height:19px}
+  .gx-ic.achievement{background:rgba(137,210,91,.18);color:#4b8a22}.gx-ic.blood{background:rgba(240,68,56,.1);color:#F04438}
+  .gx-row.great .gx-title{}
+  .gx-del{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;font-size:19px;color:#a8a39d}
+  .gx-del:hover{color:#d2362b;background:rgba(240,68,56,.08)}
+  .gx-check{position:relative;width:24px;height:24px}.gx-check input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+  .gx-check span{display:block;width:24px;height:24px;border-radius:50%;border:2px solid #c8c4bf}
+  .gx-check input:checked+span{background:#89D25B;border-color:#89D25B;box-shadow:inset 0 0 0 4px #fff}
+  .gx-check input:focus-visible+span{outline:2px solid #121211;outline-offset:2px}
+  .gx-row.great .gx-title{}#gx-fitness .gx-row.great .gx-title{text-decoration:line-through;color:#8a8580}
+  .gx-empty{margin:14px 0 0;font-size:14px;color:#8a8580}
+  .gx-add{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:14.5px;font-weight:600;color:#121211;padding:10px 16px;border-radius:12px;border:1.5px dashed rgba(18,18,17,.2)}
+  .gx-add span{font-size:18px;line-height:1}
+  .gx-add:hover{border-color:#121211}
+  .gx-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;padding:12px;border-radius:14px;background:#f6f6f4}
+  .gx-form input,.gx-form select{font:inherit;font-size:14.5px;padding:10px 12px;border-radius:11px;border:1px solid rgba(18,18,17,.1);background:#fff;color:var(--ink);min-width:0}
+  .gx-form select{flex:1 1 200px}.gx-form input[type=text]{flex:1 1 180px}.gx-form input[type=number]{flex:0 1 120px}.gx-form input[type=date]{flex:0 1 160px}
+  .gx-save{all:unset;cursor:pointer;background:#121211;color:#fff;font-weight:600;font-size:14px;padding:10px 16px;border-radius:11px}
+  .gx-cancel{all:unset;cursor:pointer;color:#6b6661;font-weight:600;font-size:14px;padding:10px 8px}
+  .gx-seg{display:inline-flex;background:#fff;border:1px solid rgba(18,18,17,.1);border-radius:11px;padding:3px}
+  .gx-seg button{all:unset;cursor:pointer;font-size:13.5px;font-weight:600;padding:7px 12px;border-radius:8px;color:#6b6661}
+  .gx-seg button[aria-pressed="true"]{background:#121211;color:#fff}
+  :root[data-theme="dark"] .gx-list{border-color:rgba(255,255,255,.07)}:root[data-theme="dark"] .gx-row{border-top-color:rgba(255,255,255,.06)}
+  :root[data-theme="dark"] .gx-head p,:root[data-theme="dark"] .gx-meta{color:#b3aca4}:root[data-theme="dark"] .gx-fig input{background:#1f2024}:root[data-theme="dark"] .gx-fig input:focus{border-color:#f2f1ef;background:#24262a}
+  :root[data-theme="dark"] .gx-bar{background:rgba(255,255,255,.08)}:root[data-theme="dark"] .gx-form{background:#1f2024}:root[data-theme="dark"] .gx-form input,:root[data-theme="dark"] .gx-form select,:root[data-theme="dark"] .gx-seg{background:#17181b;border-color:rgba(255,255,255,.1)}
+  :root[data-theme="dark"] .gx-save,:root[data-theme="dark"] .gx-seg button[aria-pressed="true"]{background:#f2f1ef;color:#111}:root[data-theme="dark"] .gx-add{color:#f2f1ef;border-color:rgba(255,255,255,.25)}
+  :root[data-theme="dark"] .gx-check input:checked+span{box-shadow:inset 0 0 0 4px #17181b}:root[data-theme="dark"] .gx-row.great .gx-meta{color:#89D25B}:root[data-theme="dark"] .gx-row.poor .gx-meta{color:#ff6a5e}
+  @media(max-width:680px){
+    .gx-row{grid-template-columns:minmax(0,1fr) auto 32px;row-gap:8px}
+    #gx-body .gx-row .gx-bar{grid-column:1/3}#gx-body .gx-row .gx-pct{grid-column:3}
+    #gx-body .gx-row .gx-del{grid-row:1;grid-column:3}#gx-body .gx-row .gx-fig{grid-row:1;grid-column:2}
+    #gx-blood .gx-row{grid-template-columns:36px minmax(0,1fr) auto 32px}#gx-blood .gx-pill{grid-column:2/4;justify-self:start}
+  }
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1936,6 +1994,7 @@
   function setTab(id,focus){
     if(!APP_TABS.some(t=>t.id===id))return;
     activeTab=id;
+    if(id==="goals")try{renderGoals()}catch(e){}
     for(const t of APP_TABS){
       const on=t.id===id;
       $("panel-"+t.id).classList.toggle("hidden",!on);
@@ -2307,7 +2366,9 @@
     if(Array.isArray(raw.workouts))s.workouts=dedupeWorkouts(raw.workouts.map(cleanWorkout).filter(Boolean));
     if(raw.health&&typeof raw.health==="object")s.health=cleanHealth(raw.health);
     if(raw.garmin&&typeof raw.garmin==="object")s.garmin=raw.garmin;
-    if(Array.isArray(raw.customGoals))s.customGoals=raw.customGoals.filter(g=>g&&typeof g.title==="string"&&g.title.trim()).slice(0,100).map(g=>({id:String(g.id||uid()),title:String(g.title).slice(0,140),due:/^\d{4}-\d{2}-\d{2}$/.test(g.due||"")?g.due:"",done:!!g.done}));
+    if(Array.isArray(raw.customGoals))s.customGoals=raw.customGoals.filter(g=>g&&typeof g==="object").slice(0,200).map(g=>{const kind=g.kind==="blood"?"blood":"fitness";const base={id:String(g.id||uid()),kind,done:!!g.done};
+      if(kind==="blood"){const t=Number(g.target);return Number.isFinite(t)&&typeof g.marker==="string"?{...base,marker:g.marker.slice(0,40),dir:g.dir==="min"?"min":"max",target:t}:null}
+      const title=String(g.title||"").trim().slice(0,140);return title?{...base,type:g.type==="race"?"race":"achievement",title,target:String(g.target||"").slice(0,60),due:/^\d{4}-\d{2}-\d{2}$/.test(g.due||"")?g.due:""}:null}).filter(Boolean);
     return s;
   }
   let loadFailed=false;
@@ -3578,38 +3639,77 @@
     document.querySelector(".wrap").prepend(el);
   }
 
-  // ===== Goals page: every body-related target in one place =====
+  // ===== Goals page: body measurements, training & races, blood results =====
+  let goalForm=null,goalFitType="race";
+  const GICON={race:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',achievement:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4ZM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>',blood:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>'};
+  function bloodNow(){try{return JSON.parse(localStorage.getItem("blood_current")||"{}")}catch(e){return {}}}
+  function bloodMarker(id){const B=window.YIME_BLOOD;if(!B)return null;for(const c in B.MARKERS){const m=B.MARKERS[c].find(x=>x.id===id);if(m)return m}return null}
   function renderGoals(){
     const host=$("goalsPage");if(!host)return;
-    const cur=snapshot()||{},keys=metricKeys;
+    const cur=snapshot()||{},cg=state.customGoals||[];
     const startOf=k=>{if(state.baseline?.[k]!=null)return state.baseline[k];const e=state.entries.find(x=>x[k]!=null);return e?e[k]:null};
-    let set=0,done=0,onTrack=0;
-    const cards=keys.map(k=>{
-      const m=metrics[k],g=state.goals[k],c=cur[k],b=startOf(k);
-      let pct=null,cls="none",line="No target yet";
-      if(g!=null){set++;
-        if(c!=null&&b!=null&&b!==g){pct=clamp((c-b)/(g-b)*100,0,100);const away=(g>b)?c<b:c>b;
-          if(pct>=100){cls="great";done++;line="Goal reached"}else if(away){cls="poor";line=`${fmt(Math.abs(g-c))} ${m.unit} to go · moving away`}else{cls="normal";onTrack++;line=`${fmt(Math.abs(g-c))} ${m.unit} to go`}}
-        else if(c!=null&&c===g){pct=100;cls="great";done++;line="Goal reached"}
-        else line=c==null?"Log a measurement to track":`${fmt(Math.abs(g-c))} ${m.unit} to go`}
-      return `<div class="gl-card ${cls}"><div class="gl-top"><span class="gl-name">${esc(m.label)}</span>${pct!=null?`<span class="gl-pct">${Math.round(pct)}%</span>`:""}</div>
-        <div class="gl-vals"><b>${c==null?"—":fmt(c)}</b><span>${c==null?"":esc(m.unit)}</span><i>→</i><label class="gl-target"><span class="sr">Target for ${esc(m.label)}</span><input type="number" inputmode="decimal" step="0.1" data-goal="${k}" value="${g==null?"":g}" placeholder="Set"><em>${esc(m.unit)}</em></label></div>
-        <div class="gl-track"><i style="width:${pct==null?0:pct}%"></i></div><div class="gl-line">${line}</div></div>`}).join("");
-    const cg=state.customGoals||[];
-    const list=cg.map(g=>`<li class="${g.done?"done":""}"><label class="gl-check"><input type="checkbox" data-cg-done="${esc(g.id)}" ${g.done?"checked":""}><span></span></label><div class="gl-ct"><b>${esc(g.title)}</b>${g.due?`<small>by ${esc(g.due.split("-").reverse().join("."))}</small>`:""}</div><button type="button" class="gl-del" data-cg-del="${esc(g.id)}" aria-label="Delete goal">×</button></li>`).join("");
-    host.innerHTML=`<div class="card gl-head"><div><p class="eyebrow">Goals</p><h2>Every body goal in one place</h2><p class="gl-sub">Set a target next to any measurement. Progress is measured from your starting baseline to the target.</p></div>
-      <div class="gl-sum"><div><b>${set}</b><span>targets set</span></div><div><b>${onTrack}</b><span>on track</span></div><div><b>${done}</b><span>reached</span></div></div></div>
-      <p class="eyebrow gl-sec">Body measurements</p><div class="gl-grid">${cards}</div>
-      <p class="eyebrow gl-sec">Personal goals</p><div class="card gl-custom"><form id="cgForm" class="gl-add"><input id="cgTitle" type="text" maxlength="140" placeholder="e.g. Run a sub-3 marathon" required><input id="cgDue" type="date" aria-label="Target date"><button type="submit">Add goal</button></form>
-      ${cg.length?`<ul class="gl-list">${list}</ul>`:`<p class="gl-empty">No personal goals yet. Add things like a race time, a strength milestone or a habit.</p>`}</div>`;
+    let total=0,reached=0,track=0;
+    // body measurement goals
+    const setKeys=metricKeys.filter(k=>state.goals[k]!=null);
+    const bodyRows=setKeys.map(k=>{
+      const m=metrics[k],g=state.goals[k],c=cur[k],b=startOf(k);total++;
+      let pct=null,cls="normal",line="Log a measurement to track";
+      if(c!=null){
+        if(b!=null&&b!==g){pct=clamp((c-b)/(g-b)*100,0,100);const away=g>b?c<b:c>b;
+          if(pct>=100){cls="great";line="Reached";reached++}else if(away){cls="poor";line=`${fmt(Math.abs(g-c))} ${m.unit} to go · moving away`}else{cls="normal";line=`${fmt(Math.abs(g-c))} ${m.unit} to go`;track++}}
+        else if(c===g){pct=100;cls="great";line="Reached";reached++}else{line=`${fmt(Math.abs(g-c))} ${m.unit} to go`;track++}}
+      return `<li class="gx-row ${cls}"><div class="gx-main"><div class="gx-title">${esc(m.label)}</div><div class="gx-meta">${b!=null?`Start ${fmt(b)} · `:""}${line}</div></div>
+        <div class="gx-fig"><b>${c==null?"—":fmt(c)}</b><i>→</i><input type="number" step="0.1" inputmode="decimal" data-goal="${k}" value="${g}" aria-label="Target for ${esc(m.label)}"><span>${esc(m.unit)}</span></div>
+        <div class="gx-bar"><i style="width:${pct==null?0:pct}%"></i></div><span class="gx-pct">${pct==null?"—":Math.round(pct)+"%"}</span>
+        <button type="button" class="gx-del" data-goal-del="${k}" aria-label="Remove ${esc(m.label)} goal">×</button></li>`}).join("");
+    const freeKeys=metricKeys.filter(k=>state.goals[k]==null);
+    const bodyForm=goalForm==="body"?`<form class="gx-form" data-gform="body"><select name="k" required>${freeKeys.map(k=>`<option value="${k}">${esc(metrics[k].label)} (${esc(metrics[k].unit)})</option>`).join("")}</select><input name="v" type="number" step="0.1" inputmode="decimal" placeholder="Target" required><button type="submit" class="gx-save">Save goal</button><button type="button" class="gx-cancel" data-gcancel>Cancel</button></form>`:"";
+    // training & race goals
+    const fit=cg.filter(g=>g.kind==="fitness");
+    const fitRows=fit.map(g=>{total++;if(g.done)reached++;else track++;
+      const days=g.due?Math.ceil((new Date(g.due+"T00:00:00")-new Date(new Date().toDateString()))/864e5):null;
+      return `<li class="gx-row ${g.done?"great":"normal"}"><span class="gx-ic ${g.type}">${GICON[g.type]}</span><div class="gx-main"><div class="gx-title">${esc(g.title)}${g.target?` <em>${esc(g.target)}</em>`:""}</div><div class="gx-meta">${g.type==="race"?"Race":"Achievement"}${g.due?` · ${esc(g.due.split("-").reverse().join("."))}${days!=null&&!g.done?(days>=0?` · ${days} days left`:" · date passed"):""}`:""}${g.done?" · Done":""}</div></div>
+        <label class="gx-check"><input type="checkbox" data-cg-done="${esc(g.id)}" ${g.done?"checked":""} aria-label="Mark done"><span></span></label><button type="button" class="gx-del" data-cg-del="${esc(g.id)}" aria-label="Delete goal">×</button></li>`}).join("");
+    const fitForm=goalForm==="fitness"?`<form class="gx-form" data-gform="fitness"><div class="gx-seg"><button type="button" data-gtype="race" aria-pressed="${goalFitType==="race"}">Race</button><button type="button" data-gtype="achievement" aria-pressed="${goalFitType==="achievement"}">Achievement</button></div><input name="t" type="text" maxlength="140" placeholder="${goalFitType==="race"?"e.g. Vilnius Marathon":"e.g. Deadlift"}" required><input name="x" type="text" maxlength="60" placeholder="${goalFitType==="race"?"Target time, e.g. 2:59:59":"Target, e.g. 140 kg"}"><input name="d" type="date" aria-label="Date"><button type="submit" class="gx-save">Save goal</button><button type="button" class="gx-cancel" data-gcancel>Cancel</button></form>`:"";
+    // blood goals
+    const bn=bloodNow(),bl=cg.filter(g=>g.kind==="blood");
+    const bloodRows=bl.map(g=>{total++;const m=bloodMarker(g.marker)||{label:g.marker,unit:""},v=bn[g.marker]!=null&&bn[g.marker]!==""?Number(bn[g.marker]):null;
+      let cls="normal",st="No result yet";if(v!=null&&Number.isFinite(v)){const ok=g.dir==="max"?v<=g.target:v>=g.target;cls=ok?"great":"poor";st=ok?"Reached":"Not yet";if(ok)reached++;else track++}
+      return `<li class="gx-row ${cls}"><span class="gx-ic blood">${GICON.blood}</span><div class="gx-main"><div class="gx-title">${esc(m.label)}</div><div class="gx-meta">Goal ${g.dir==="max"?"≤":"≥"} ${fmt(g.target)} ${esc(m.unit)}</div></div>
+        <div class="gx-fig"><b>${v==null?"—":fmt(v)}</b><span>${esc(m.unit)}</span></div><span class="gx-pill">${st}</span><button type="button" class="gx-del" data-cg-del="${esc(g.id)}" aria-label="Delete goal">×</button></li>`}).join("");
+    const B=window.YIME_BLOOD;
+    const bloodForm=goalForm==="blood"&&B?`<form class="gx-form" data-gform="blood"><select name="m" required>${Object.keys(B.MARKERS).map(c=>`<optgroup label="${esc(B.CAT_LABELS[c]||c)}">${B.MARKERS[c].map(m=>`<option value="${m.id}">${esc(m.label)} (${esc(m.unit)})</option>`).join("")}</optgroup>`).join("")}</select><select name="dir"><option value="max">at most ≤</option><option value="min">at least ≥</option></select><input name="v" type="number" step="any" inputmode="decimal" placeholder="Target" required><button type="submit" class="gx-save">Save goal</button><button type="button" class="gx-cancel" data-gcancel>Cancel</button></form>`:"";
+    const section=(id,title,sub,rows,empty,form,addLabel,canAdd=true)=>`<section class="card gx-sec" id="${id}"><div class="gx-head"><div><h3>${title}</h3><p>${sub}</p></div></div>
+      ${rows?`<ul class="gx-list">${rows}</ul>`:`<p class="gx-empty">${empty}</p>`}${form||(canAdd?`<button type="button" class="gx-add" data-gadd="${id.replace("gx-","")}"><span>+</span>${addLabel}</button>`:"")}</section>`;
+    host.innerHTML=`<div class="card gl-head"><div><p class="eyebrow">Goals</p><h2>Your goals</h2><p class="gl-sub">Body measurements, training and race targets, and blood results, all in one place.</p></div>
+      <div class="gl-sum"><div><b>${total}</b><span>goals</span></div><div><b>${track}</b><span>in progress</span></div><div><b>${reached}</b><span>reached</span></div></div></div>
+      ${section("gx-body","Body measurements","Pick a measurement and set a target. Progress runs from your starting value.",bodyRows,"No measurement goals yet.",bodyForm,"Add body measurement goal",freeKeys.length>0)}
+      ${section("gx-fitness","Training & race goals","A race with a target time, or an achievement like a lift or a distance.",fitRows,"No training goals yet.",fitForm,"Add training goal")}
+      ${section("gx-blood","Blood result goals","Set a target for any marker. It is checked against your latest blood results.",bloodRows,"No blood goals yet.",bloodForm,"Add blood goal")}`;
+    const f=host.querySelector(".gx-form input:not([type=hidden]),.gx-form select");if(f&&document.activeElement===document.body)f.focus({preventScroll:true});
   }
-  document.addEventListener("change",e=>{
-    const t=e.target;
-    if(t.matches&&t.matches("#goalsPage input[data-goal]")){const k=t.dataset.goal;state.goals[k]=cleanNumber(t.value,k);save();renderAll();return}
-    if(t.matches&&t.matches("#goalsPage input[data-cg-done]")){const g=state.customGoals.find(x=>x.id===t.dataset.cgDone);if(g){g.done=t.checked;save();renderGoals()}}
+  document.addEventListener("click",e=>{
+    const t=e.target.closest?e.target:null;if(!t||!t.closest("#goalsPage"))return;
+    const add=t.closest("[data-gadd]");if(add){goalForm=add.dataset.gadd;renderGoals();const sel=$("goalsPage").querySelector(".gx-form select, .gx-form input");sel&&sel.focus();return}
+    if(t.closest("[data-gcancel]")){goalForm=null;renderGoals();return}
+    const ty=t.closest("[data-gtype]");if(ty){goalFitType=ty.dataset.gtype;const form=ty.closest("form"),keep=[...form.querySelectorAll("input")].map(i=>i.value);renderGoals();const nf=$("goalsPage").querySelector('[data-gform="fitness"]');if(nf)[...nf.querySelectorAll("input")].forEach((i,n)=>i.value=keep[n]||"");return}
+    const gd=t.closest("[data-goal-del]");if(gd){state.goals[gd.dataset.goalDel]=null;save();renderAll();return}
+    const cd=t.closest("[data-cg-del]");if(cd){state.customGoals=state.customGoals.filter(x=>x.id!==cd.dataset.cgDel);save();renderGoals();return}
   });
-  document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#goalsPage [data-cg-del]");if(!b)return;state.customGoals=state.customGoals.filter(x=>x.id!==b.dataset.cgDel);save();renderGoals()});
-  document.addEventListener("submit",e=>{if(e.target.id!=="cgForm")return;e.preventDefault();const t=$("cgTitle").value.trim();if(!t)return;(state.customGoals||(state.customGoals=[])).push({id:uid(),title:t.slice(0,140),due:$("cgDue").value||"",done:false});save();renderGoals();setTimeout(()=>$("cgTitle")?.focus(),0)});
+  document.addEventListener("change",e=>{
+    const t=e.target;if(!t.closest||!t.closest("#goalsPage"))return;
+    if(t.matches("input[data-goal]")){const k=t.dataset.goal,v=cleanNumber(t.value,k);if(v!=null){state.goals[k]=v;save();renderAll()}else t.value=state.goals[k]??"";return}
+    if(t.matches("input[data-cg-done]")){const g=state.customGoals.find(x=>x.id===t.dataset.cgDone);if(g){g.done=t.checked;save();renderGoals()}}
+    if(t.matches('select[name="m"]')){const m=bloodMarker(t.value),d=t.form.querySelector('select[name="dir"]');if(m&&d)d.value=m.lo!=null&&m.hi==null?"min":"max"}
+  });
+  document.addEventListener("submit",e=>{
+    const f=e.target;if(!f.closest||!f.closest("#goalsPage"))return;e.preventDefault();
+    const kind=f.dataset.gform,fd=new FormData(f);state.customGoals=state.customGoals||[];
+    if(kind==="body"){const k=fd.get("k"),v=cleanNumber(fd.get("v"),k);if(v==null){f.querySelector('[name="v"]').setCustomValidity("Enter a valid value");f.reportValidity();return}state.goals[k]=v;goalForm=null;save();renderAll();return}
+    if(kind==="fitness"){const title=String(fd.get("t")||"").trim();if(!title)return;state.customGoals.push({id:uid(),kind:"fitness",type:goalFitType,title:title.slice(0,140),target:String(fd.get("x")||"").trim().slice(0,60),due:fd.get("d")||"",done:false})}
+    if(kind==="blood"){const v=Number(fd.get("v"));if(!Number.isFinite(v))return;state.customGoals.push({id:uid(),kind:"blood",marker:String(fd.get("m")),dir:fd.get("dir")==="min"?"min":"max",target:v,done:false})}
+    goalForm=null;save();renderGoals();
+  });
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
@@ -4016,6 +4116,7 @@
     metabolic:"Metabolic / Kidneys",liver:"Liver",thyroid:"Thyroid",
     iron:"Iron",vitamins:"Vitamins",hormones:"Hormones / Inflammation",
   };
+  try{window.YIME_BLOOD={MARKERS,CAT_LABELS}}catch(e){}
   // ── Clinical thresholds from research pack (clinical_thresholds.json) ──
   // Each entry: id, analyte→app marker, kind, criteria (in app display units),
   // interpretation, source, caveats. NONE is clinician-validated.
