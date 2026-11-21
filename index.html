@@ -1017,6 +1017,11 @@
   @media(max-width:560px){.gx-arrow{display:none}.gx-fl:first-child{flex-basis:100%}.gx-fbtn{width:100%}}
   .gx-fl select,.gx-fl input{flex:none!important}.gx-form input:invalid{box-shadow:none}
   .gx-form input:focus,.gx-form select:focus{outline:0;border-color:#121211;box-shadow:0 0 0 3px rgba(18,18,17,.08)}:root[data-theme="dark"] .gx-form input:focus,:root[data-theme="dark"] .gx-form select:focus{border-color:#f2f1ef}
+
+  .wt-chip.good{background:rgba(137,210,91,.2)!important;color:#9be06c!important}
+  .wt-chip.bad{background:rgba(240,68,56,.22)!important;color:#ff7a6e!important}
+  :root[data-theme="dark"] .wt-chip.good{background:rgba(137,210,91,.25)!important;color:#3f7a1c!important}
+  :root[data-theme="dark"] .wt-chip.bad{background:rgba(240,68,56,.14)!important;color:#d2362b!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2537,7 +2542,7 @@
     if(v!=null&&base!=null&&goal!=null&&base!==goal){const pc=clamp((v-base)/(goal-base)*100,0,100),left=Math.abs(goal-v);
       prog=`<div class="wt-goal"><div class="wt-bar"><i style="width:${pc.toFixed(1)}%"></i></div><span>${Math.round(pc)}% to ${fmt(goal)} kg · ${fmt(left)} kg to go</span></div>`}
     return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div>${spark}</div>
-      <div class="wt-row"><span class="wt-chip ${tone}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-total">${total==null?"Set a baseline":`${sg(total)} from start`}</span></div>${prog}</div>`;
+      <div class="wt-row"><span class="wt-chip ${recent==null||recent===0?"":recent<0?"good":"bad"}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-total">${total==null?"Set a baseline":`${sg(total)} from start`}</span></div>${prog}</div>`;
   }
   // Full health-score trend on the Body health tab, under the headline rings
   function renderHealthTrend(){
