@@ -424,6 +424,20 @@
   .bm-link{display:flex;justify-content:space-between;align-items:center;margin:12px -16px 0;padding:10px 16px;background:#1a6fe8;font-size:12.5px;font-weight:650;color:#fff}
   .bm-health:hover .bm-link{background:#155bc0}
   #modelHomeHealth .bm-health{display:none}
+  /* weight hero card */
+  .stats-top .stat.wt-hero{background:#121211;border-color:#121211;color:#fff;box-shadow:0 12px 30px rgba(18,18,17,.22);padding:14px 16px 14px;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
+  .wt-hero .k{color:rgba(255,255,255,.62);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .wt-hero .v{color:#fff;font-size:38px;font-weight:800;letter-spacing:-.04em;margin:4px 0 0;line-height:1}
+  .wt-hero .unit{color:rgba(255,255,255,.6);font-size:14px;font-weight:600;margin-left:3px;letter-spacing:0}
+  .wt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .wt-spark{width:46%;max-width:160px;height:46px;flex:0 1 auto}
+  .wt-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .wt-chip{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.1);color:#fff}
+  .wt-chip.good{background:rgba(52,199,89,.18);color:#6ee08e}.wt-chip.bad{background:rgba(255,149,0,.18);color:#ffb84d}
+  .wt-total{font-size:11.5px;color:rgba(255,255,255,.6);font-weight:500}
+  .wt-goal span{display:block;font-size:11px;color:rgba(255,255,255,.62);margin-top:6px}
+  .wt-bar{height:5px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden}.wt-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#e2822c,#ffb46b)}
+
   /* phone: all five tabs fit on one line, no sideways scrolling */
   .tabbar .t-short{display:none}
   @media(max-width:680px){.tabbar{overflow:visible;gap:2px;padding:3px}.tabbar button{min-width:0;flex:1 1 0;padding:10px 2px;font-size:13px;letter-spacing:-.02em}.tabbar .t-long{display:none}.tabbar .t-short{display:inline}}
@@ -440,7 +454,7 @@
 
   @media(min-width:981px){#panel-progress>#vo2Card .vo2-wrap{grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:56px;padding:0 24px}}
   /* Progress: health score, weight and VO2 on one line; body measurements below */
-  .stats-top{display:grid;grid-template-columns:2.2fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
+  .stats-top{display:grid;grid-template-columns:1.45fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
   .stats-top .stat-slot{display:flex}.stats-top .stat-slot>.stat{flex:1}
   .stats-top .stat .v{font-size:28px}
   .stats-top .bm-health{margin:0;padding:13px 14px 0;border-radius:16px;background:var(--card);border:1px solid var(--glass-brd);box-shadow:0 4px 18px rgba(17,24,39,.06);display:flex;flex-direction:column;justify-content:space-between}
@@ -2005,9 +2019,25 @@
       const signed=x=>x==null?"—":`${x>0?"+":""}${fmt(x)} ${m.unit}`;
       return `<div class="stat" data-key="${k}"${k!=="weightKg"&&k!=="vo2max"?' tabindex="0"':""}><div class="k">${m.label}</div><div class="v">${fmt(v)} <span class="unit">${v==null?"":m.unit}</span></div><div class="delta ${tone}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${signed(recent)} latest`}</div><div class="delta sub neutral">${total==null?"Set a baseline":`${signed(total)} from start`}</div></div>`
     };
-    $("statWeight").innerHTML=tile("weightKg");
+    $("statWeight").innerHTML=weightTile(cur);
     $("stats").innerHTML=metricKeys.filter(k=>k!=="weightKg"&&k!=="vo2max").map(tile).join("");
     renderBodyHealthScore();
+  }
+  // Weight gets its own hero card: dark, large number, trend line and goal progress
+  function weightTile(cur){
+    const v=cur?.weightKg,base=state.baseline?.weightKg,prev=previousValue("weightKg"),goal=state.goals?.weightKg;
+    const recent=v!=null&&prev!=null?v-prev:null,total=v!=null&&base!=null?v-base:null,tone=goalTone("weightKg",v,prev);
+    const sg=x=>`${x>0?"+":""}${fmt(x)} kg`;
+    const pts=[...(state.baseline?.weightKg!=null?[state.baseline]:[]),...state.entries].filter(e=>e.weightKg!=null).sort((a,b)=>dateValue(a.date)-dateValue(b.date)).slice(-10).map(e=>e.weightKg);
+    let spark="";
+    if(pts.length>=2){const W=160,H=46,p=4,lo=Math.min(...pts,goal??Infinity)-.3,hi=Math.max(...pts)+.3,x=i=>p+i*(W-2*p)/(pts.length-1),y=w=>p+(1-(w-lo)/(hi-lo))*(H-2*p);
+      const line=pts.map((w,i)=>`${i?"L":"M"}${x(i).toFixed(1)} ${y(w).toFixed(1)}`).join(" ");
+      spark=`<svg class="wt-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true">${goal!=null&&goal>=lo&&goal<=hi?`<line x1="0" x2="${W}" y1="${y(goal).toFixed(1)}" y2="${y(goal).toFixed(1)}" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 4"/>`:""}<path d="${line} L${x(pts.length-1)} ${H} L${x(0)} ${H} Z" fill="rgba(255,255,255,.08)"/><path d="${line}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(pts.length-1)}" cy="${y(pts.at(-1))}" r="3.2" fill="#fff"/></svg>`}
+    let prog="";
+    if(v!=null&&base!=null&&goal!=null&&base!==goal){const pc=clamp((v-base)/(goal-base)*100,0,100),left=Math.abs(goal-v);
+      prog=`<div class="wt-goal"><div class="wt-bar"><i style="width:${pc.toFixed(1)}%"></i></div><span>${Math.round(pc)}% to ${fmt(goal)} kg · ${fmt(left)} kg to go</span></div>`}
+    return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div>${spark}</div>
+      <div class="wt-row"><span class="wt-chip ${tone}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-total">${total==null?"Set a baseline":`${sg(total)} from start`}</span></div>${prog}</div>`;
   }
   // Full health-score trend on the Body health tab, under the headline rings
   function renderHealthTrend(){
