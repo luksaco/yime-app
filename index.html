@@ -841,6 +841,55 @@
   :root[data-theme="dark"] .health-rings #capValue{color:var(--acc-ink)!important}
   :root[data-theme="dark"] .hc-fill.great{background:#89D25B!important}:root[data-theme="dark"] .hc-fill.good,:root[data-theme="dark"] .hc-fill.ok{background:#B8BCC2!important}:root[data-theme="dark"] .hc-fill.poor{background:#F04438!important}
   :root[data-theme="dark"] .hc-score.great::before{color:#89D25B;background:rgba(137,210,91,.15)}:root[data-theme="dark"] .hc-score.good::before,:root[data-theme="dark"] .hc-score.ok::before{color:#d4d7db;background:rgba(184,188,194,.14)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff6a5e;background:rgba(240,68,56,.16)}
+
+  /* ===== Goals page ===== */
+  .gl-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+  .gl-head h2{margin:4px 0 6px;font-size:28px;letter-spacing:-.03em;color:var(--ink)}
+  .gl-sub{margin:0;color:var(--muted);font-size:14px;max-width:520px}
+  .gl-sum{display:flex;gap:10px}
+  .gl-sum>div{background:#f6f6f4;border-radius:14px;padding:10px 16px;min-width:88px;text-align:center}
+  .gl-sum b{display:block;font-size:26px;letter-spacing:-.03em;color:var(--ink)}.gl-sum span{font-size:12px;color:var(--muted)}
+  .gl-sec{margin:26px 0 10px!important}
+  .gl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .gl-card{background:var(--card);border:1px solid rgba(18,18,17,.06);border-radius:18px;padding:14px 16px;box-shadow:0 1px 2px rgba(18,18,17,.03),0 6px 18px rgba(18,18,17,.04)}
+  .gl-top{display:flex;justify-content:space-between;align-items:center}
+  .gl-name{font-size:13px;font-weight:650;color:var(--muted)}
+  .gl-pct{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(184,188,194,.28);color:#5f6368}
+  .gl-card.great .gl-pct{background:rgba(137,210,91,.2);color:#4b8a22}.gl-card.poor .gl-pct{background:rgba(240,68,56,.13);color:#d2362b}
+  .gl-vals{display:flex;align-items:baseline;gap:6px;margin:8px 0 10px}
+  .gl-vals b{font-size:24px;letter-spacing:-.03em;color:var(--ink)}.gl-vals>span{font-size:12px;color:var(--muted)}.gl-vals i{font-style:normal;color:var(--muted2);margin:0 4px}
+  .gl-target{display:inline-flex;align-items:baseline;gap:4px}
+  .gl-target input{width:84px;font:inherit;font-size:18px;font-weight:650;letter-spacing:-.02em;color:var(--ink);background:#f6f6f4;border:1px solid transparent;border-radius:10px;padding:4px 8px}
+  .gl-target input:focus{outline:0;border-color:#121211;background:#fff}
+  .gl-target em{font-style:normal;font-size:12px;color:var(--muted)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .gl-track{height:8px;border-radius:999px;background:rgba(18,18,17,.07);overflow:hidden}
+  .gl-track i{display:block;height:100%;border-radius:999px;background:#B8BCC2;transition:width .5s ease}
+  .gl-card.great .gl-track i{background:#89D25B}.gl-card.poor .gl-track i{background:#F04438}
+  .gl-line{margin-top:7px;font-size:12.5px;color:var(--muted)}
+  .gl-card.poor .gl-line{color:#d2362b}.gl-card.great .gl-line{color:#4b8a22;font-weight:600}
+  .gl-add{display:flex;gap:8px;flex-wrap:wrap}
+  .gl-add input{flex:1 1 220px;font:inherit;font-size:14.5px;padding:11px 14px;border-radius:12px;border:1px solid rgba(18,18,17,.1);background:#fff;color:var(--ink)}
+  .gl-add input[type=date]{flex:0 1 170px}
+  .gl-add button{all:unset;cursor:pointer;background:#121211;color:#fff;font-weight:600;font-size:14px;padding:11px 18px;border-radius:12px}
+  .gl-list{list-style:none;margin:14px 0 0;padding:0}
+  .gl-list li{display:flex;align-items:center;gap:12px;padding:12px 4px;border-top:1px solid rgba(18,18,17,.06)}
+  .gl-ct{flex:1;min-width:0}.gl-ct b{display:block;font-size:15px;font-weight:600;color:var(--ink)}.gl-ct small{font-size:12px;color:var(--muted)}
+  .gl-list li.done .gl-ct b{text-decoration:line-through;color:var(--muted)}
+  .gl-check{position:relative;width:22px;height:22px;flex:none}.gl-check input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+  .gl-check span{display:block;width:22px;height:22px;border-radius:50%;border:2px solid #B8BCC2}
+  .gl-check input:checked+span{background:#89D25B;border-color:#89D25B;box-shadow:inset 0 0 0 4px #fff}
+  .gl-check input:focus-visible+span{outline:2px solid #121211;outline-offset:2px}
+  .gl-del{all:unset;cursor:pointer;font-size:20px;line-height:1;color:var(--muted2);padding:4px 8px;border-radius:8px}.gl-del:hover{color:#d2362b}
+  .gl-empty{margin:12px 0 0;color:var(--muted);font-size:14px}
+  :root[data-theme="dark"] .gl-sum>div,:root[data-theme="dark"] .gl-target input{background:#1f2024}:root[data-theme="dark"] .gl-card{border-color:rgba(255,255,255,.06)}
+  :root[data-theme="dark"] .gl-target input:focus{border-color:#f2f1ef;background:#24262a}:root[data-theme="dark"] .gl-track{background:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] .gl-add input{background:#1f2024;border-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .gl-add button{background:#f2f1ef;color:#111}
+  :root[data-theme="dark"] .gl-list li{border-top-color:rgba(255,255,255,.06)}:root[data-theme="dark"] .gl-check input:checked+span{box-shadow:inset 0 0 0 4px #17181b}
+  :root[data-theme="dark"] .gl-card.great .gl-line,:root[data-theme="dark"] .gl-card.great .gl-pct{color:#89D25B}:root[data-theme="dark"] .gl-pct{color:#d4d7db}
+  @media(max-width:900px){.gl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:560px){.gl-grid{grid-template-columns:1fr}.gl-sum{width:100%}.gl-sum>div{flex:1}}
+  .gl-target input::placeholder{color:#a8a39d;font-weight:500;font-size:15px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1046,6 +1095,7 @@
               <button type="button" data-go="health">Body health</button>
               <button type="button" data-go="training">Training</button>
               <button type="button" data-go="blood">Blood Results</button>
+              <button type="button" data-go="goals">Goals</button>
               <button type="button" data-go="log">Log a measurement</button>
             </div>
             <div class="mega-col">
@@ -1815,12 +1865,13 @@
      The cards are regrouped into tabs at runtime rather than in the markup. Moving
      the existing elements keeps every id and every listener attached exactly as it
      was, which is far safer than restructuring a file this size by hand. */
-  const TAB_ICONS={progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3" /></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
+  const TAB_ICONS={goals:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3" /></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
   const APP_TABS=[
     {id:"progress",label:"Progress",short:"Progress"},
     {id:"health",label:"Body health",short:"Health"},
     {id:"training",label:"Training",short:"Training"},
     {id:"blood",label:"Blood Results",short:"Blood"},
+    {id:"goals",label:"Goals",short:"Goals"},
     {id:"log",label:"Log a measurement",short:"Log"}
   ];
   let activeTab="progress",modelAside=null,modelLayout=null,historyCard=null;
@@ -1843,7 +1894,8 @@
     const move=(el,to)=>{if(el)panels[to].appendChild(el)};
     move($("measurementTitle")?.closest(".card"),"log");
     move($("baselineCard"),"log");
-    move($("goalsCard"),"log");
+    move($("goalsCard"),"goals");if($("goalsCard"))$("goalsCard").classList.add("hidden");
+    {const g=document.createElement("div");g.id="goalsPage";panels.goals.insertBefore(g,panels.goals.firstChild)}
     move($("healthCard"),"health");
     move($("trainingCard"),"training");
     move($("bloodCard"),"blood");
@@ -2178,7 +2230,7 @@
             km:g=>byGroup.get(g)?.km||0, minutesOf:g=>byGroup.get(g)?.minutes||0};
   }
 
-  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null}}
+  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null,customGoals:[]}}
   function cleanNumber(v,key){if(v===null||v===""||v===undefined)return null;const n=Number(v),m=metrics[key];return Number.isFinite(n)&&n>=m.min&&n<=m.max?Math.round(n*10)/10:null}
   function cleanHealth(raw){
     const out={},n=(v,lo,hi)=>{
@@ -2236,6 +2288,7 @@
     if(Array.isArray(raw.workouts))s.workouts=dedupeWorkouts(raw.workouts.map(cleanWorkout).filter(Boolean));
     if(raw.health&&typeof raw.health==="object")s.health=cleanHealth(raw.health);
     if(raw.garmin&&typeof raw.garmin==="object")s.garmin=raw.garmin;
+    if(Array.isArray(raw.customGoals))s.customGoals=raw.customGoals.filter(g=>g&&typeof g.title==="string"&&g.title.trim()).slice(0,100).map(g=>({id:String(g.id||uid()),title:String(g.title).slice(0,140),due:/^\d{4}-\d{2}-\d{2}$/.test(g.due||"")?g.due:"",done:!!g.done}));
     return s;
   }
   let loadFailed=false;
@@ -3505,7 +3558,40 @@
     el.innerHTML='<strong>Your saved data could not be read.</strong> A copy has been kept in this browser under <code>bodyprogress_v3_recovery</code>, so nothing is lost. Restore your most recent backup file, or ask for help recovering it \u2014 but do not clear this browser\u2019s data first.';
     document.querySelector(".wrap").prepend(el);
   }
-  function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex()}
+
+  // ===== Goals page: every body-related target in one place =====
+  function renderGoals(){
+    const host=$("goalsPage");if(!host)return;
+    const cur=snapshot()||{},keys=metricKeys;
+    const startOf=k=>{if(state.baseline?.[k]!=null)return state.baseline[k];const e=state.entries.find(x=>x[k]!=null);return e?e[k]:null};
+    let set=0,done=0,onTrack=0;
+    const cards=keys.map(k=>{
+      const m=metrics[k],g=state.goals[k],c=cur[k],b=startOf(k);
+      let pct=null,cls="none",line="No target yet";
+      if(g!=null){set++;
+        if(c!=null&&b!=null&&b!==g){pct=clamp((c-b)/(g-b)*100,0,100);const away=(g>b)?c<b:c>b;
+          if(pct>=100){cls="great";done++;line="Goal reached"}else if(away){cls="poor";line=`${fmt(Math.abs(g-c))} ${m.unit} to go · moving away`}else{cls="normal";onTrack++;line=`${fmt(Math.abs(g-c))} ${m.unit} to go`}}
+        else if(c!=null&&c===g){pct=100;cls="great";done++;line="Goal reached"}
+        else line=c==null?"Log a measurement to track":`${fmt(Math.abs(g-c))} ${m.unit} to go`}
+      return `<div class="gl-card ${cls}"><div class="gl-top"><span class="gl-name">${esc(m.label)}</span>${pct!=null?`<span class="gl-pct">${Math.round(pct)}%</span>`:""}</div>
+        <div class="gl-vals"><b>${c==null?"—":fmt(c)}</b><span>${c==null?"":esc(m.unit)}</span><i>→</i><label class="gl-target"><span class="sr">Target for ${esc(m.label)}</span><input type="number" inputmode="decimal" step="0.1" data-goal="${k}" value="${g==null?"":g}" placeholder="Set"><em>${esc(m.unit)}</em></label></div>
+        <div class="gl-track"><i style="width:${pct==null?0:pct}%"></i></div><div class="gl-line">${line}</div></div>`}).join("");
+    const cg=state.customGoals||[];
+    const list=cg.map(g=>`<li class="${g.done?"done":""}"><label class="gl-check"><input type="checkbox" data-cg-done="${esc(g.id)}" ${g.done?"checked":""}><span></span></label><div class="gl-ct"><b>${esc(g.title)}</b>${g.due?`<small>by ${esc(g.due.split("-").reverse().join("."))}</small>`:""}</div><button type="button" class="gl-del" data-cg-del="${esc(g.id)}" aria-label="Delete goal">×</button></li>`).join("");
+    host.innerHTML=`<div class="card gl-head"><div><p class="eyebrow">Goals</p><h2>Every body goal in one place</h2><p class="gl-sub">Set a target next to any measurement. Progress is measured from your starting baseline to the target.</p></div>
+      <div class="gl-sum"><div><b>${set}</b><span>targets set</span></div><div><b>${onTrack}</b><span>on track</span></div><div><b>${done}</b><span>reached</span></div></div></div>
+      <p class="eyebrow gl-sec">Body measurements</p><div class="gl-grid">${cards}</div>
+      <p class="eyebrow gl-sec">Personal goals</p><div class="card gl-custom"><form id="cgForm" class="gl-add"><input id="cgTitle" type="text" maxlength="140" placeholder="e.g. Run a sub-3 marathon" required><input id="cgDue" type="date" aria-label="Target date"><button type="submit">Add goal</button></form>
+      ${cg.length?`<ul class="gl-list">${list}</ul>`:`<p class="gl-empty">No personal goals yet. Add things like a race time, a strength milestone or a habit.</p>`}</div>`;
+  }
+  document.addEventListener("change",e=>{
+    const t=e.target;
+    if(t.matches&&t.matches("#goalsPage input[data-goal]")){const k=t.dataset.goal;state.goals[k]=cleanNumber(t.value,k);save();renderAll();return}
+    if(t.matches&&t.matches("#goalsPage input[data-cg-done]")){const g=state.customGoals.find(x=>x.id===t.dataset.cgDone);if(g){g.done=t.checked;save();renderGoals()}}
+  });
+  document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#goalsPage [data-cg-del]");if(!b)return;state.customGoals=state.customGoals.filter(x=>x.id!==b.dataset.cgDel);save();renderGoals()});
+  document.addEventListener("submit",e=>{if(e.target.id!=="cgForm")return;e.preventDefault();const t=$("cgTitle").value.trim();if(!t)return;(state.customGoals||(state.customGoals=[])).push({id:uid(),title:t.slice(0,140),due:$("cgDue").value||"",done:false});save();renderGoals();setTimeout(()=>$("cgTitle")?.focus(),0)});
+  function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
   function resetMeasurementForm(){editingId=null;$("measurementTitle").textContent="Log a measurement";$("saveMeasurement").textContent="Log measurement";$("cancelEdit").classList.add("hidden");$("measurementError").textContent="";$("m-date").value=today();metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,null))}
