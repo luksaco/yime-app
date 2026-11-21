@@ -372,7 +372,7 @@
   .eyebrow{font-weight:600;letter-spacing:.06em}
   h2,h3{letter-spacing:-.025em}
   .top .actions .btn{background:#fff}
-  .top .actions .btn.primary{background:transparent;border:1.5px solid #121211;color:#121211;box-shadow:none;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;padding:0 20px;height:44px}.top .actions .btn.primary svg{transition:transform .18s ease}.top .actions .btn.primary:hover{background:rgba(18,18,17,.05);border-color:#121211}.top .actions .btn.primary:hover svg{transform:translateX(3px)}.top .actions{flex-wrap:nowrap}.menu-wrap{position:relative}.top .actions .menu-btn{width:44px;height:44px;padding:0;display:grid;place-items:center;background:transparent;border:0;box-shadow:none;color:#121211}.top .actions .menu-btn:hover{background:rgba(18,18,17,.06);border:0}.menu-pop{position:absolute;right:0;top:calc(100% + 8px);z-index:50;min-width:170px;background:#fff;border:1px solid var(--stroke2);border-radius:16px;box-shadow:0 18px 40px rgba(20,18,16,.14);padding:6px;display:flex;flex-direction:column}.menu-pop[hidden]{display:none}html,body{overflow-x:clip}.top{position:relative;z-index:20;padding-bottom:18px;margin-bottom:26px}.top::before{content:"";position:absolute;z-index:-1;left:50%;transform:translateX(-50%);width:100vw;top:-300px;bottom:0;background:#fff;border-bottom:1px solid rgba(18,18,17,.06)}@media(max-width:680px){.top{display:flex;align-items:center}.top .actions{margin-top:0;justify-content:flex-end}.top .actions .btn.primary{padding:0 18px;height:44px}}.menu-pop button{all:unset;cursor:pointer;padding:11px 14px;border-radius:10px;font-size:14px;font-weight:500;color:var(--ink)}.menu-pop button:hover,.menu-pop button:focus-visible{background:#f3f1ec}
+  .top .actions .btn.primary{background:transparent;border:1.5px solid #121211;color:#121211;box-shadow:none;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;padding:0 20px;height:44px}.top .actions .btn.primary svg{transition:transform .18s ease}.top .actions .btn.primary:hover{background:rgba(18,18,17,.05);border-color:#121211}.top .actions .btn.primary:hover svg{transform:translateX(3px)}.top .actions{flex-wrap:nowrap}.menu-wrap{position:static}.top .actions .menu-btn{width:44px;height:44px;padding:0;display:grid;place-items:center;background:transparent;border:0;box-shadow:none;color:#121211}.top .actions .menu-btn:hover{background:rgba(18,18,17,.06);border:0}.menu-pop[hidden]{display:none}.menu-pop{position:absolute;left:50%;transform:translateX(-50%);width:100vw;top:100%;z-index:60;background:#fafafc;border-bottom:1px solid rgba(18,18,17,.06);box-shadow:0 30px 60px rgba(20,18,16,.08);animation:megaIn .22s ease}@keyframes megaIn{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}.mega{max-width:1200px;margin:0 auto;padding:44px 24px 56px;box-sizing:border-box;display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:40px}.mega-col{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.mega-h{margin:0 0 14px;font-size:13px;font-weight:500;color:#86868b}.mega button{all:unset;cursor:pointer;font-size:16px;font-weight:600;color:#1d1d1f;padding:6px 0;line-height:1.3}.mega-main button{font-size:30px;font-weight:650;letter-spacing:-.02em;padding:5px 0}.mega button:hover,.mega button:focus-visible{color:#ea3327}.menu-scrim{position:fixed;inset:0;z-index:15;background:rgba(240,240,239,.55);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}.menu-scrim[hidden]{display:none}@media(max-width:680px){.mega{grid-template-columns:1fr;gap:30px;padding:28px 16px 36px;max-height:calc(100vh - 110px);overflow-y:auto}.mega-main button{font-size:26px}}html,body{overflow-x:clip}.top{position:relative;z-index:20;padding-bottom:18px;margin-bottom:26px}.top::before{content:"";position:absolute;z-index:-1;left:50%;transform:translateX(-50%);width:100vw;top:-300px;bottom:0;background:#fff;border-bottom:1px solid rgba(18,18,17,.06)}@media(max-width:680px){.top{display:flex;align-items:center}.top .actions{margin-top:0;justify-content:flex-end}.top .actions .btn.primary{padding:0 18px;height:44px}}
   
 
   /* tab bar: stays in place (does not float over the page), clear labels */
@@ -689,15 +689,36 @@
       <button class="btn primary" type="button" id="setupBtn">Set up</button>
       <div class="menu-wrap">
         <button class="btn menu-btn" type="button" id="menuBtn" aria-label="More options" aria-haspopup="true" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
-        <div class="menu-pop" id="menuPop" role="menu" hidden>
-          <button type="button" role="menuitem" id="exportJson">Backup</button>
-          <button type="button" role="menuitem" id="exportCsv">CSV</button>
-          <button type="button" role="menuitem" id="importBtn">Restore</button>
+        <div class="menu-pop" id="menuPop" hidden>
+          <div class="mega">
+            <div class="mega-col mega-main">
+              <p class="mega-h">Explore yime</p>
+              <button type="button" data-go="progress">Progress</button>
+              <button type="button" data-go="health">Body health</button>
+              <button type="button" data-go="training">Training</button>
+              <button type="button" data-go="blood">Blood Results</button>
+              <button type="button" data-go="log">Log a measurement</button>
+            </div>
+            <div class="mega-col">
+              <p class="mega-h">Your data</p>
+              <button type="button" id="exportJson">Backup</button>
+              <button type="button" id="exportCsv">Export CSV</button>
+              <button type="button" id="importBtn">Restore backup</button>
+            </div>
+            <div class="mega-col">
+              <p class="mega-h">Import and set up</p>
+              <button type="button" data-proxy="setupBtn">Set up profile</button>
+              <button type="button" data-go="health" data-proxy="importGarminBtn">Import Garmin data</button>
+              <button type="button" data-go="training" data-proxy="importStrava">Import workouts</button>
+              <button type="button" data-go="blood" data-proxy="bloodImportBtn">Import blood results</button>
+            </div>
+          </div>
         </div>
       </div>
       <input class="hidden" type="file" id="importFile" accept="application/json,.json">
     </div>
   </header>
+  <div class="menu-scrim" id="menuScrim" hidden></div>
 
   <section class="layout">
     <aside>
@@ -3234,10 +3255,12 @@
     initSetup();
     if(setupNeedsShow())openSetupFresh();
     $("setupBtn").addEventListener("click",openSetupFresh);
-    (()=>{const mb=$("menuBtn"),mp=$("menuPop");const close=()=>{mp.hidden=true;mb.setAttribute("aria-expanded","false")};
-      mb.addEventListener("click",e=>{e.stopPropagation();const open=mp.hidden;mp.hidden=!open;mb.setAttribute("aria-expanded",String(open))});
-      mp.addEventListener("click",e=>{if(e.target.closest("button"))close()});
-      document.addEventListener("click",e=>{if(!mp.hidden&&!e.target.closest(".menu-wrap"))close()});
+    (()=>{const mb=$("menuBtn"),mp=$("menuPop"),ms=$("menuScrim");const set=open=>{mp.hidden=!open;ms.hidden=!open;mb.setAttribute("aria-expanded",String(open))};const close=()=>set(false);
+      mb.addEventListener("click",e=>{e.stopPropagation();set(mp.hidden)});
+      ms.addEventListener("click",close);
+      mp.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;close();
+        if(b.dataset.go){setTab(b.dataset.go);window.scrollTo({top:0,behavior:"smooth"})}
+        if(b.dataset.proxy){const t=$(b.dataset.proxy);if(t)setTimeout(()=>t.click(),b.dataset.go?60:0)}});
       document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});})();
     $("saveMeasurement").addEventListener("click",saveMeasurement);$("cancelEdit").addEventListener("click",resetMeasurementForm);$("saveBaseline").addEventListener("click",saveBaseline);$("editBaseline").addEventListener("click",openBaselineEdit);$("cancelBaselineEdit").addEventListener("click",closeBaselineEdit);$("saveGoals").addEventListener("click",saveGoals);
     $("figureOptions").addEventListener("click",e=>{const b=e.target.closest('button[data-option]');if(!b)return;
