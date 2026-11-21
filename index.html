@@ -967,6 +967,44 @@
     #gx-body .gx-row .gx-del{grid-row:1;grid-column:3}#gx-body .gx-row .gx-fig{grid-row:1;grid-column:2}
     #gx-blood .gx-row{grid-template-columns:36px minmax(0,1fr) auto 32px}#gx-blood .gx-pill{grid-column:2/4;justify-self:start}
   }
+
+  /* ===== Energy & activity card ===== */
+  #energyCard{margin-top:14px}
+  .en-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .en-h{margin:2px 0 0;font-size:20px;letter-spacing:-.02em;color:var(--ink)}
+  .en-ctrl{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .en-seg{display:inline-flex;background:#f4f4f2;border-radius:11px;padding:3px}
+  .en-seg button{all:unset;cursor:pointer;font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:8px;color:#6b6661}
+  .en-seg button[aria-pressed="true"]{background:#121211;color:#fff}
+  .en-nav{display:flex;align-items:center;gap:8px}.en-nav strong{font-size:15px;min-width:150px;text-align:center;color:var(--ink)}
+  .en-nav button{all:unset;cursor:pointer;font-size:20px;line-height:1;padding:4px 10px;border-radius:8px;color:var(--ink)}.en-nav button:disabled{opacity:.3;cursor:default}
+  .en-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 8px}
+  .en-tile{background:#f6f6f4;border-radius:16px;padding:14px 16px}
+  .en-tile span{display:block;font-size:12.5px;font-weight:600;color:#6b6661}.en-tile b{display:block;font-size:24px;letter-spacing:-.03em;margin:4px 0 2px;color:var(--ink)}.en-tile small{font-size:12.5px;color:#6b6661}
+  .en-chart{width:100%;height:auto;display:block;margin-top:6px}
+  .en-chart rect{fill:#0099FF}.en-chart rect.hit{fill:#89D25B}.en-chart text{font-size:11px;fill:#8a8580}
+  .en-goal{stroke:#c8c4bf;stroke-dasharray:4 5}.en-goal-t{font-size:10.5px!important;fill:#8a8580}
+  .en-split{margin:6px 0 4px}.en-split-bar{display:flex;height:14px;border-radius:999px;overflow:hidden;background:#f0f0ee}
+  .en-split-bar i.a,.en-split-key i.a{background:#F04438}.en-split-bar i.r,.en-split-key i.r{background:#0099FF}
+  .en-split-key{display:flex;gap:18px;margin-top:8px;font-size:13px;color:#6b6661}.en-split-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .en-empty{margin:16px 0 4px;color:#6b6661;font-size:14px}
+  .en-plan{margin-top:22px;padding-top:18px;border-top:1px solid rgba(18,18,17,.07)}
+  .en-plan-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+  .en-plan-head p{margin:3px 0 0;font-size:13.5px;color:#6b6661}
+  .en-target{text-align:right;background:#121211;color:#fff;border-radius:16px;padding:12px 18px}
+  .en-target span,.en-target small{display:block;font-size:12px;color:rgba(255,255,255,.65)}.en-target b{display:block;font-size:30px;letter-spacing:-.03em;line-height:1.1}
+  .en-table td:first-child{font-weight:600}
+  .en-macros{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+  .en-macros>div{background:#f6f6f4;border-radius:14px;padding:12px 14px}.en-macros span{display:block;font-size:12.5px;font-weight:600;color:#6b6661}.en-macros b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--ink)}.en-macros small{font-size:12px;color:#6b6661}
+  .en-warn{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:rgba(240,68,56,.08);color:#c23a33;font-size:13.5px}
+  .en-note{margin:12px 0 0;font-size:12.5px;line-height:1.5;color:#6b6661}
+  :root[data-theme="dark"] .en-seg{background:#1f2024}:root[data-theme="dark"] .en-seg button[aria-pressed="true"]{background:#f2f1ef;color:#111}
+  :root[data-theme="dark"] .en-tile,:root[data-theme="dark"] .en-macros>div{background:#1f2024}:root[data-theme="dark"] .en-tile span,:root[data-theme="dark"] .en-tile small,:root[data-theme="dark"] .en-macros span,:root[data-theme="dark"] .en-macros small,:root[data-theme="dark"] .en-plan-head p,:root[data-theme="dark"] .en-note,:root[data-theme="dark"] .en-empty,:root[data-theme="dark"] .en-split-key{color:#b3aca4}
+  :root[data-theme="dark"] .en-target{background:#f2f1ef;color:#111}:root[data-theme="dark"] .en-target span,:root[data-theme="dark"] .en-target small{color:rgba(0,0,0,.55)}:root[data-theme="dark"] .en-plan{border-top-color:rgba(255,255,255,.08)}:root[data-theme="dark"] .en-split-bar{background:#2a2b30}
+  @media(max-width:760px){.en-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.en-macros{grid-template-columns:1fr}.en-target{text-align:left;width:100%}}
+
+  .history.en-table{min-width:0!important}
+  @media(max-width:760px){.en-table th:nth-child(3),.en-table td:nth-child(3){display:none}.en-tile b{font-size:19px}.en-chart text{font-size:16px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1541,6 +1579,9 @@
           t.sleepH=((Number(r.deepSleepSeconds)||0)+(Number(r.lightSleepSeconds)||0)+(Number(r.remSleepSeconds)||0))/3600;
           if(r.sleepScores&&r.sleepScores.overallScore)t.sleepScore=Number(r.sleepScores.overallScore);
         }
+        if(r.totalSteps!=null)t.steps=Number(r.totalSteps)||0;
+        if(r.activeKilocalories!=null)t.kcalA=Math.round(Number(r.activeKilocalories)||0);
+        if(r.bmrKilocalories!=null)t.kcalR=Math.round(Number(r.bmrKilocalories)||0);
         for(const m of r.metrics||[]){
           if(m.type==="HRV"&&m.value){t.hrv=Number(m.value);t.hrvLo=Number(m.baselineLowerLimit)||null;t.hrvHi=Number(m.baselineUpperLimit)||null}
         }
@@ -1569,6 +1610,7 @@
       weeklyMinutes:(()=>{const v=recent.map(r=>r.minutes).filter(x=>x!=null);
         return v.length?v.reduce((a,b)=>a+b,0)/v.length*7:null})(),
       birthDate:profile.birthDate||null, heightCm:profile.heightCm||null,
+      energy:dates.filter(d=>day[d].steps!=null||day[d].kcalA!=null||day[d].kcalR!=null).slice(-800).map(d=>[d,day[d].steps??null,day[d].kcalA??null,day[d].kcalR??null]),
       found:{days:dates.length,
              rhr:recent.filter(r=>r.rhr!=null).length,
              sleep:nights.length,
@@ -1635,6 +1677,9 @@
             if(n("intensity_minutes")!=null){o.moderateIntensityMinutes=n("intensity_minutes");o.vigorousIntensityMinutes=0}
             if(n("sleep_hours")!=null){o.deepSleepSeconds=n("sleep_hours")*3600;o.lightSleepSeconds=0;o.remSleepSeconds=0;
               if(n("sleep_score")!=null)o.sleepScores={overallScore:n("sleep_score")}}
+            if(n("steps")!=null)o.totalSteps=n("steps");
+            if(n("active_kcal")!=null)o.activeKilocalories=n("active_kcal");
+            if(n("resting_kcal")!=null)o.bmrKilocalories=n("resting_kcal");
             if(n("hrv")!=null)o.metrics=[{type:"HRV",value:n("hrv"),baselineLowerLimit:n("hrv_low"),baselineUpperLimit:n("hrv_high")}];
             out.push(o);
             if(n("vo2max")!=null)out.push({calendarDate:d,vo2MaxValue:n("vo2max")});
@@ -1975,6 +2020,7 @@
     {const g=document.createElement("div");g.id="goalsPage";panels.goals.insertBefore(g,panels.goals.firstChild)}
     move($("healthCard"),"health");
     move($("trainingCard"),"training");
+    {const e=document.createElement("div");e.className="card";e.id="energyCard";panels.training.appendChild(e)}
     move($("bloodCard"),"blood");
     // Trend and history run the full width under the two-column block
     move($("metricTabs")?.closest(".card"),"progress");
@@ -3710,7 +3756,91 @@
     if(kind==="blood"){const v=Number(fd.get("v"));if(!Number.isFinite(v))return;state.customGoals.push({id:uid(),kind:"blood",marker:String(fd.get("m")),dir:fd.get("dir")==="min"?"min":"max",target:v,done:false})}
     goalForm=null;save();renderGoals();
   });
-  function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}}
+
+  // ===== Energy & activity: steps, active / resting calories, daily intake target =====
+  let enView="week",enEnd=null;
+  function energyRows(){const e=state.garmin?.energy;return Array.isArray(e)?e:[]}
+  function isoAdd(iso,days){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+days);return d.toISOString().slice(0,10)}
+  function energyPlan(){
+    const cur=snapshot()||{},w=cur.weightKg,hc=state.health?.heightCm,age=state.health?.birthDate?ageFromBirth(state.health.birthDate):null,male=state.sex!=="female";
+    const rows=energyRows(),lastD=rows.length?rows[rows.length-1][0]:null;
+    // last 28 complete days with both active and resting calories
+    const win=rows.filter(r=>r[2]!=null&&r[3]!=null&&lastD&&r[0]<lastD&&r[0]>isoAdd(lastD,-29));
+    const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+    const gRest=avg(win.map(r=>r[3])),gAct=avg(win.map(r=>r[2])),gTot=gRest!=null&&gAct!=null?gRest+gAct:null;
+    const bmr=w&&hc&&age?Math.round(10*w+6.25*hc-5*age+(male?5:-161)):null;
+    const wk=(()=>{const since=Date.now()-28*864e5;const m=(state.workouts||[]).filter(x=>new Date(x.date).getTime()>=since).reduce((a,x)=>a+(Number(x.minutes)||0),0);return m/4})();
+    const pal=wk>=500?1.9:wk>=300?1.725:wk>=150?1.55:wk>=60?1.45:1.375;
+    const fTot=bmr?Math.round(bmr*pal):null;
+    const maint=gTot&&fTot?Math.min(gTot,fTot):(gTot||fTot);
+    const goal=state.goals?.weightKg,lose=w&&goal&&goal<w;
+    let deficit=0;if(lose)deficit=Math.max(250,Math.min(500,Math.round(w*0.005*7700/7/10)*10));
+    const target=maint?Math.round((maint-deficit)/10)*10:null;
+    const floor=bmr?Math.round(bmr*1.2):null;
+    const intake=target&&floor?Math.max(target,floor):target;
+    const kgWeek=lose?deficit*7/7700:0,weeks=lose&&kgWeek?Math.ceil((w-goal)/kgWeek):null;
+    const protein=w?Math.round(w*2.0):null,fat=w?Math.round(w*0.9):null;
+    const carbs=intake&&protein&&fat?Math.max(0,Math.round((intake-protein*4-fat*9)/4)):null;
+    return {w,hc,age,bmr,pal,wk,fTot,gRest,gAct,gTot,maint,goal,lose,deficit,intake,kgWeek,weeks,protein,fat,carbs,days:win.length};
+  }
+  function renderEnergy(){
+    const host=$("energyCard");if(!host)return;
+    const rows=energyRows(),byD=Object.fromEntries(rows.map(r=>[r[0],r]));
+    const last=rows.length?rows[rows.length-1][0]:null;
+    const lastFull=rows.length>1?rows[rows.length-2][0]:last;
+    if(!enEnd||(last&&(enEnd>last||enEnd<rows[0][0])))enEnd=lastFull||new Date().toISOString().slice(0,10);
+    let from,to=enEnd,label;
+    if(enView==="day"){from=to;label=new Date(to+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
+    else if(enView==="week"){from=isoAdd(to,-6);label=`${new Date(from+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})} – ${new Date(to+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}`}
+    else{from=to.slice(0,8)+"01";const d=new Date(from+"T12:00:00");d.setMonth(d.getMonth()+1);d.setDate(0);to=d.toISOString().slice(0,10);label=new Date(from+"T12:00:00").toLocaleDateString("en-GB",{month:"long",year:"numeric"})}
+    const span=[];for(let d=from;d<=to;d=isoAdd(d,1))span.push(d);
+    const got=span.map(d=>byD[d]).filter(Boolean);
+    const sum=i=>got.reduce((a,r)=>a+(r[i]||0),0),n=got.length||1;
+    const steps=sum(1),act=sum(2),rest=sum(3),tot=act+rest;
+    const nf=x=>Math.round(x).toLocaleString("en-GB");
+    const tile=(k,v,sub)=>`<div class="en-tile"><span>${k}</span><b>${v}</b><small>${sub}</small></div>`;
+    const tiles=got.length?[
+      tile("Steps",nf(steps),enView==="day"?(steps>=10000?"goal reached":`${nf(Math.max(0,10000-steps))} to 10,000`):`${nf(steps/n)} per day`),
+      tile("Active calories",nf(act)+" kcal",enView==="day"?"movement & training":`${nf(act/n)} kcal per day`),
+      tile("Resting calories",nf(rest)+" kcal",enView==="day"?"body at rest":`${nf(rest/n)} kcal per day`),
+      tile("Total burned",nf(tot)+" kcal",enView==="day"?"active + resting":`${nf(tot/n)} kcal per day`)].join(""):"";
+    let chart="";
+    if(got.length&&enView!=="day"){
+      const W=760,H=150,pad=22,bw=(W-pad*2)/span.length,mx=Math.max(10000,...span.map(d=>byD[d]?.[1]||0));
+      chart=`<svg class="en-chart" viewBox="0 0 ${W} ${H+24}" role="img" aria-label="Steps per day"><line x1="${pad}" x2="${W-pad}" y1="${H-H*10000/mx*0.9}" y2="${H-H*10000/mx*0.9}" class="en-goal"/>${span.map((d,i)=>{const s=byD[d]?.[1]||0,bh=Math.max(s?2:0,H*s/mx*0.9),x=pad+i*bw+bw*.18;return `<rect x="${x.toFixed(1)}" y="${(H-bh).toFixed(1)}" width="${(bw*.64).toFixed(1)}" height="${bh.toFixed(1)}" rx="${Math.min(5,bw*.3).toFixed(1)}" class="${s>=10000?"hit":""}"><title>${d}: ${nf(s)} steps</title></rect>${enView==="week"||i%5===0||i===span.length-1?`<text x="${(x+bw*.32).toFixed(1)}" y="${H+16}" text-anchor="middle">${enView==="week"?new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short"}):Number(d.slice(8))}</text>`:""}`}).join("")}<text x="${W-pad}" y="${(H-H*10000/mx*0.9-5).toFixed(1)}" text-anchor="end" class="en-goal-t">10k</text></svg>`;
+    } else if(got.length){
+      const r=got[0],a=r[2]||0,s=r[3]||0,t=a+s||1;
+      chart=`<div class="en-split"><div class="en-split-bar"><i class="a" style="width:${(a/t*100).toFixed(1)}%"></i><i class="r" style="width:${(s/t*100).toFixed(1)}%"></i></div><div class="en-split-key"><span><i class="a"></i>Active ${nf(a)} kcal</span><span><i class="r"></i>Resting ${nf(s)} kcal</span></div></div>`;
+    }
+    const p=energyPlan(),k=x=>x==null?"—":nf(x)+" kcal";
+    const missing=[!p.w&&"weight",!p.hc&&"height",!p.age&&"date of birth"].filter(Boolean);
+    const planRows=[
+      ["Resting burn (BMR)",p.bmr?`${nf(p.bmr)} kcal`:"—","Mifflin-St Jeor formula"+(p.gRest?` · Garmin says ${nf(p.gRest)}`:"")],
+      ["Daily burn from training",p.fTot?`${nf(p.fTot)} kcal`:"—",`BMR × ${p.pal} for ~${Math.round(p.wk)} training min/week`],
+      ["Measured daily burn",p.gTot?`${nf(p.gTot)} kcal`:"—",p.gTot?`Garmin average, last ${p.days} days`:"Import Garmin data to add this"],
+      ["Maintenance",k(p.maint),p.gTot&&p.fTot?"the lower of the two, as watches tend to overestimate":"calories to keep weight steady"],
+      ["Deficit",p.lose?`− ${nf(p.deficit)} kcal`:"—",p.lose?`≈ ${(p.kgWeek).toFixed(2)} kg per week (0.5% of body weight)`:"set a lower weight goal on Goals"],
+    ];
+    host.innerHTML=`<div class="en-top"><div><p class="eyebrow">Energy & activity</p><h3 class="en-h">Steps and calories</h3></div>
+      <div class="en-ctrl"><div class="en-seg">${["day","week","month"].map(v=>`<button type="button" data-enview="${v}" aria-pressed="${enView===v}">${v[0].toUpperCase()+v.slice(1)}</button>`).join("")}</div>
+      <div class="en-nav"><button type="button" data-enstep="-1" aria-label="Previous">‹</button><strong>${label}</strong><button type="button" data-enstep="1" aria-label="Next" ${last&&to>=last?"disabled":""}>›</button></div></div></div>
+      ${rows.length?(got.length?`<div class="en-tiles">${tiles}</div>${chart}`:`<p class="en-empty">No Garmin data for this period.</p>`):`<p class="en-empty">Import your Garmin export (Body health → Health inputs and Garmin import) to see steps, active and resting calories here.</p>`}
+      <div class="en-plan"><div class="en-plan-head"><div><h3 class="en-h">Daily calorie target</h3><p>${p.lose?`To reach ${fmt(p.goal)} kg while you keep training`:"To keep your weight steady while you train"}</p></div>
+        <div class="en-target"><span>Eat about</span><b>${p.intake?nf(p.intake):"—"}</b><small>kcal per day</small></div></div>
+        ${missing.length?`<p class="en-warn">Add your ${missing.join(", ")} (Body health → Health inputs) for an exact target.</p>`:""}
+        <div class="table-scroll"><table class="history en-table"><thead><tr><th>Step</th><th class="num">Value</th><th>How</th></tr></thead><tbody>
+        ${planRows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="muted-cell">${esc(r[2])}</td></tr>`).join("")}
+        <tr class="total-row"><td>Daily intake target</td><td class="num">${k(p.intake)}</td><td class="muted-cell">${p.weeks?`goal in about ${p.weeks} weeks`:""}</td></tr></tbody></table></div>
+        ${p.intake?`<div class="en-macros"><div><span>Protein</span><b>${p.protein} g</b><small>2.0 g per kg, protects muscle in a deficit</small></div><div><span>Carbs</span><b>${p.carbs} g</b><small>≈ ${(p.carbs/p.w).toFixed(1)} g per kg. Add 1–2 g/kg on long-run days</small></div><div><span>Fat</span><b>${p.fat} g</b><small>0.9 g per kg</small></div></div>`:""}
+        <p class="en-note">Never go below about 1.2 × your resting burn, and don't cut on hard or long-run days: eat to fuel those, and take the deficit on easy days. Sources: Mifflin-St Jeor (1990); ISSN and IOC guidance on protein (1.6–2.4 g/kg) and carbohydrate (5–7 g/kg for ~1 h training a day). Estimates, not medical advice.</p></div>`;
+  }
+  document.addEventListener("click",e=>{
+    const v=e.target.closest&&e.target.closest("#energyCard [data-enview]");if(v){enView=v.dataset.enview;renderEnergy();return}
+    const s=e.target.closest&&e.target.closest("#energyCard [data-enstep]");if(!s)return;
+    const dir=Number(s.dataset.enstep);if(enView==="day")enEnd=isoAdd(enEnd,dir);else if(enView==="week")enEnd=isoAdd(enEnd,7*dir);else{const d=new Date(enEnd.slice(0,8)+"15T12:00:00");d.setMonth(d.getMonth()+dir);enEnd=d.toISOString().slice(0,10)}
+    const rows=energyRows(),last=rows.length?rows[rows.length-1][0]:null;if(last&&enEnd>last)enEnd=last;renderEnergy();
+  });
+  function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
   function resetMeasurementForm(){editingId=null;$("measurementTitle").textContent="Log a measurement";$("saveMeasurement").textContent="Log measurement";$("cancelEdit").classList.add("hidden");$("measurementError").textContent="";$("m-date").value=today();metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,null))}
