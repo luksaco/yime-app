@@ -630,6 +630,12 @@
 
   /* spaces sit on the right, just before SET UP */
   .spaces{position:static;transform:none;margin-left:auto;margin-right:22px;gap:4px}
+
+  /* dark mode: no dark text on dark surfaces */
+  :root[data-theme="dark"] .bm-trend em,:root[data-theme="dark"] .bm-trend.muted{color:#bdb6ae}
+  :root[data-theme="dark"] .muted-cell{color:#a59d94}
+  :root[data-theme="dark"] #capValue,:root[data-theme="dark"] .fa-lab{color:#ff6fa3!important}
+  :root[data-theme="dark"] .hc-score.poor{color:#ff736b}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2086,7 +2092,7 @@
   }
   const shortDate=d=>{const [y,m,dd]=d.split("-");return `${dd}.${m}${y!==today().slice(0,4)?"."+y.slice(2):""}`};
   const TREND_TXT={up:"Going up",down:"Going down",steady:"Steady"},TREND_ARROW={up:"↑",down:"↓",steady:"→"};
-  const TREND_COL={up:"#1f9d55",down:"#d94a43",steady:"#111"};
+  const TREND_COL={up:"#1f9d55",down:"#d94a43",get steady(){return document.documentElement.getAttribute("data-theme")==="dark"?"#f2f1ef":"#111"}};
   function previousValue(key){const s=series(key);return s.length>1?s[s.length-2].value:null}
   function daysBetween(a,b){return Math.max(0,(dateValue(b)-dateValue(a))/86400000)}
   function setInput(id,v){$(id).value=v==null?"":v}
