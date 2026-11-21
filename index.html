@@ -424,6 +424,10 @@
   .bm-link{display:flex;justify-content:space-between;align-items:center;margin:12px -16px 0;padding:10px 16px;background:#1a6fe8;font-size:12.5px;font-weight:650;color:#fff}
   .bm-health:hover .bm-link{background:#155bc0}
   #modelHomeHealth .bm-health{display:none}
+  /* phone: all five tabs fit on one line, no sideways scrolling */
+  .tabbar .t-short{display:none}
+  @media(max-width:680px){.tabbar{overflow:visible;gap:2px;padding:3px}.tabbar button{min-width:0;flex:1 1 0;padding:10px 2px;font-size:13px;letter-spacing:-.02em}.tabbar .t-long{display:none}.tabbar .t-short{display:inline}}
+
   /* hovering a measurement tile spotlights that ring on the body model */
   #figure .measurement-ring,#figure .measurement-label{transition:opacity .25s ease}
   #figure[data-focus] .measurement-ring,#figure[data-focus] .measurement-label{opacity:.12}
@@ -1491,18 +1495,18 @@
      the existing elements keeps every id and every listener attached exactly as it
      was, which is far safer than restructuring a file this size by hand. */
   const APP_TABS=[
-    {id:"progress",label:"Progress"},
-    {id:"health",label:"Body health"},
-    {id:"training",label:"Training"},
-    {id:"blood",label:"Blood Results"},
-    {id:"log",label:"Log a measurement"}
+    {id:"progress",label:"Progress",short:"Progress"},
+    {id:"health",label:"Body health",short:"Health"},
+    {id:"training",label:"Training",short:"Training"},
+    {id:"blood",label:"Blood Results",short:"Blood"},
+    {id:"log",label:"Log a measurement",short:"Log"}
   ];
   let activeTab="progress",modelAside=null,modelLayout=null,historyCard=null;
   function buildShell(){
     const layout=document.querySelector(".layout"),wrap=document.querySelector(".wrap");
     const nav=document.createElement("nav");
     nav.className="tabbar";nav.id="appTabs";nav.setAttribute("role","tablist");
-    nav.innerHTML=APP_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false">${esc(t.label)}</button>`).join("");
+    nav.innerHTML=APP_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}"><span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
     layout.parentNode.insertBefore(nav,layout);
     const panels={};
     for(const t of APP_TABS){
