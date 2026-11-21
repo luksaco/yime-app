@@ -404,8 +404,7 @@
     .layout>aside>.stage>#bodyViews{margin-top:auto}
     /* and the VO2 card grows if the body model is the taller column */
     .layout>div{display:flex;flex-direction:column}
-    .layout>div>#vo2Card{flex:1;display:flex;flex-direction:column}
-    .layout>div>#vo2Card>.vo2-wrap{flex:1;align-content:center}
+    .layout>div>.card:has(#progress){flex:1;display:flex;flex-direction:column;justify-content:center}
   }
   /* VO2 tile spans two columns, filling the last row of the stats grid */
   .stat.stat-wide{grid-column:span 2}
@@ -425,6 +424,7 @@
   .bm-link{display:flex;justify-content:space-between;align-items:center;margin:12px -16px 0;padding:10px 16px;background:#1a6fe8;font-size:12.5px;font-weight:650;color:#fff}
   .bm-health:hover .bm-link{background:#155bc0}
   #modelHomeHealth .bm-health{display:none}
+  @media(min-width:981px){#panel-progress>#vo2Card .vo2-wrap{grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:56px;padding:0 24px}}
   /* Progress: health score, weight and VO2 on one line; body measurements below */
   .stats-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
   .stats-top .stat-slot{display:flex}.stats-top .stat-slot>.stat{flex:1}
@@ -1513,6 +1513,7 @@
     move($("trainingCard"),"training");
     move($("bloodCard"),"blood");
     // Trend and history run the full width under the two-column block
+    move($("vo2Card"),"progress");
     move($("metricTabs")?.closest(".card"),"progress");
     historyCard=$("history")?.closest(".card")||null;
     if(historyCard){historyCard.id="historyCard";move(historyCard,"progress")}
