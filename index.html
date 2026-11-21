@@ -405,7 +405,7 @@
     .layout>aside>.stage>#bodyViews{margin-top:auto}
     /* and the VO2 card grows if the body model is the taller column */
     .layout>div{display:flex;flex-direction:column}
-    .layout>div>.card:has(#progress){flex:1;display:flex;flex-direction:column;justify-content:center}
+    .layout>div>#stats{flex:1;grid-auto-rows:1fr}
   }
   /* VO2 tile spans two columns, filling the last row of the stats grid */
   .stat.stat-wide{grid-column:span 2}
@@ -636,6 +636,8 @@
   :root[data-theme="dark"] .muted-cell{color:#a59d94}
   :root[data-theme="dark"] #capValue,:root[data-theme="dark"] .fa-lab{color:#ff6fa3!important}
   :root[data-theme="dark"] .hc-score.poor{color:#ff736b}
+
+  .layout>div>.goal-card{margin-bottom:10px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -904,9 +906,8 @@
         <button type="button" class="bm-health" id="bmHealth" aria-label="Health score. Open Body health"></button>
         <div class="stat-slot" id="statWeight"></div>
       </div>
+      <div class="card goal-card"><div id="progress"></div></div>
       <div class="stats" id="stats" aria-live="polite"></div>
-
-      <div class="card"><div id="progress"></div></div>
 
       <div class="card" id="vo2Card">
         <div class="card-title-row"><p class="eyebrow">VO₂ max</p><span class="vo2-chip" id="vo2Chip">Not logged</span></div>
