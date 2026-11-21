@@ -798,6 +798,32 @@
   :root[data-theme="dark"] .hc-score.ok::before{color:#d6d0c9;background:rgba(255,255,255,.08)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff736b;background:rgba(255,115,107,.14)}
   /* fitness-age tile: no mustard either */
   .fa-ring.ok{--acc:#8a8580;--acc-ink:var(--ink)}:root[data-theme="dark"] .fa-ring.ok{--acc-ink:var(--ink)}
+
+  /* ===== Tables: clean, readable (training summary + measurement history) ===== */
+  .table-scroll{border:1px solid rgba(18,18,17,.08);border-radius:16px;overflow:auto;background:#fff}
+  .history{font-size:14px!important}
+  .history th{background:#f6f6f4!important;color:#6b6866!important;font-size:11.5px!important;font-weight:650;letter-spacing:.06em!important;padding:12px 16px!important;border-bottom:1px solid rgba(18,18,17,.08)}
+  .history td{padding:14px 16px!important;border-top:1px solid rgba(18,18,17,.06)!important;color:var(--ink)}
+  .history tbody tr:first-child td{border-top:0!important}
+  .history th.num,.history td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .history .num{font-weight:600}
+  .history tbody tr:hover td{background:rgba(18,18,17,.025)}
+  .history tr.total-row td{background:#f6f6f4;font-weight:700;border-top:1px solid rgba(18,18,17,.1)!important}
+  .history td.muted-cell{color:#8a8580!important;font-size:13px}
+  .history.train-table td:first-child{font-weight:650}
+  :root[data-theme="dark"] .table-scroll{background:#17181b;border-color:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] .history th{background:#1f2024!important;color:#a59d94!important;border-bottom-color:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] .history td{border-top-color:rgba(255,255,255,.06)!important}
+  :root[data-theme="dark"] .history tbody tr:hover td{background:rgba(255,255,255,.03)}
+  :root[data-theme="dark"] .history tr.total-row td{background:#1f2024}
+  /* training card */
+  #panel-training .card{background:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:1px solid rgba(18,18,17,.06)!important;box-shadow:0 1px 2px rgba(18,18,17,.04),0 10px 30px rgba(18,18,17,.05)!important}
+  :root[data-theme="dark"] #panel-training .card{background:var(--card)!important;border-color:rgba(255,255,255,.07)!important}
+  .train-tiles .stat{background:#f6f6f4!important;border:0!important;box-shadow:none!important;border-radius:16px;padding:14px 16px}
+  .train-tiles .v{font-size:26px!important;letter-spacing:-.03em}
+  :root[data-theme="dark"] .train-tiles .stat{background:#1f2024!important}
+  .month-partial{display:inline-block;color:#6b6866!important;background:rgba(18,18,17,.06);padding:4px 10px;border-radius:999px;font-size:11px!important;letter-spacing:.04em;margin-left:6px}
+  :root[data-theme="dark"] .month-partial{color:#c9c2ba!important;background:rgba(255,255,255,.08)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
