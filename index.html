@@ -827,20 +827,20 @@
 
   /* status colours: excellent = lemon green, normal = silver, below par = tomato red */
   .fa-ring.great{--acc:#89D25B;--acc-ink:#5e9e34}
-  .fa-ring.good,.fa-ring.ok{--acc:#B8BCC2;--acc-ink:var(--ink)}
+  .fa-ring.good,.fa-ring.ok{--acc:#0099FF;--acc-ink:var(--ink)}
   .fa-ring.poor{--acc:#F04438;--acc-ink:#F04438}
-  .fa-ring.cap-ring.great{--acc:#89D25B;--acc-ink:#5e9e34}.fa-ring.cap-ring.good,.fa-ring.cap-ring.ok{--acc:#B8BCC2;--acc-ink:var(--ink)}.fa-ring.cap-ring.poor{--acc:#F04438;--acc-ink:#F04438}
+  .fa-ring.cap-ring.great{--acc:#89D25B;--acc-ink:#5e9e34}.fa-ring.cap-ring.good,.fa-ring.cap-ring.ok{--acc:#0099FF;--acc-ink:var(--ink)}.fa-ring.cap-ring.poor{--acc:#F04438;--acc-ink:#F04438}
   .health-rings #capValue{color:var(--acc-ink)!important}
-  .hc-fill.great{background:#89D25B!important}.hc-fill.good,.hc-fill.ok{background:#B8BCC2!important}.hc-fill.poor{background:#F04438!important}
+  .hc-fill.great{background:#89D25B!important}.hc-fill.good,.hc-fill.ok{background:#0099FF!important}.hc-fill.poor{background:#F04438!important}
   .hc-score.great::before{content:"Excellent";background:rgba(137,210,91,.2);color:#4b8a22}
-  .hc-score.good::before{content:"Normal";background:rgba(184,188,194,.28);color:#5f6368}
-  .hc-score.ok::before{content:"Normal";background:rgba(184,188,194,.28);color:#5f6368}
+  .hc-score.good::before{content:"Normal";background:rgba(0,153,255,.12);color:#0078c8}
+  .hc-score.ok::before{content:"Normal";background:rgba(0,153,255,.12);color:#0078c8}
   .hc-score.poor::before{content:"Below par";background:rgba(240,68,56,.13);color:#d2362b}
   .bm-word{color:#121211!important}
   :root[data-theme="dark"] .fa-ring.great,:root[data-theme="dark"] .fa-ring.cap-ring.great{--acc-ink:#89D25B}:root[data-theme="dark"] .fa-ring.poor,:root[data-theme="dark"] .fa-ring.cap-ring.poor{--acc-ink:#ff6a5e}
   :root[data-theme="dark"] .health-rings #capValue{color:var(--acc-ink)!important}
-  :root[data-theme="dark"] .hc-fill.great{background:#89D25B!important}:root[data-theme="dark"] .hc-fill.good,:root[data-theme="dark"] .hc-fill.ok{background:#B8BCC2!important}:root[data-theme="dark"] .hc-fill.poor{background:#F04438!important}
-  :root[data-theme="dark"] .hc-score.great::before{color:#89D25B;background:rgba(137,210,91,.15)}:root[data-theme="dark"] .hc-score.good::before,:root[data-theme="dark"] .hc-score.ok::before{color:#d4d7db;background:rgba(184,188,194,.14)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff6a5e;background:rgba(240,68,56,.16)}
+  :root[data-theme="dark"] .hc-fill.great{background:#89D25B!important}:root[data-theme="dark"] .hc-fill.good,:root[data-theme="dark"] .hc-fill.ok{background:#0099FF!important}:root[data-theme="dark"] .hc-fill.poor{background:#F04438!important}
+  :root[data-theme="dark"] .hc-score.great::before{color:#89D25B;background:rgba(137,210,91,.15)}:root[data-theme="dark"] .hc-score.good::before,:root[data-theme="dark"] .hc-score.ok::before{color:#4db8ff;background:rgba(0,153,255,.16)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff6a5e;background:rgba(240,68,56,.16)}
 
   /* ===== Goals page ===== */
   .gl-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
@@ -854,7 +854,7 @@
   .gl-card{background:var(--card);border:1px solid rgba(18,18,17,.06);border-radius:18px;padding:14px 16px;box-shadow:0 1px 2px rgba(18,18,17,.03),0 6px 18px rgba(18,18,17,.04)}
   .gl-top{display:flex;justify-content:space-between;align-items:center}
   .gl-name{font-size:13px;font-weight:650;color:var(--muted)}
-  .gl-pct{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(184,188,194,.28);color:#5f6368}
+  .gl-pct{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(0,153,255,.12);color:#0078c8}
   .gl-card.great .gl-pct{background:rgba(137,210,91,.2);color:#4b8a22}.gl-card.poor .gl-pct{background:rgba(240,68,56,.13);color:#d2362b}
   .gl-vals{display:flex;align-items:baseline;gap:6px;margin:8px 0 10px}
   .gl-vals b{font-size:24px;letter-spacing:-.03em;color:var(--ink)}.gl-vals>span{font-size:12px;color:var(--muted)}.gl-vals i{font-style:normal;color:var(--muted2);margin:0 4px}
@@ -864,7 +864,7 @@
   .gl-target em{font-style:normal;font-size:12px;color:var(--muted)}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   .gl-track{height:8px;border-radius:999px;background:rgba(18,18,17,.07);overflow:hidden}
-  .gl-track i{display:block;height:100%;border-radius:999px;background:#B8BCC2;transition:width .5s ease}
+  .gl-track i{display:block;height:100%;border-radius:999px;background:#0099FF;transition:width .5s ease}
   .gl-card.great .gl-track i{background:#89D25B}.gl-card.poor .gl-track i{background:#F04438}
   .gl-line{margin-top:7px;font-size:12.5px;color:var(--muted)}
   .gl-card.poor .gl-line{color:#d2362b}.gl-card.great .gl-line{color:#4b8a22;font-weight:600}
@@ -877,7 +877,7 @@
   .gl-ct{flex:1;min-width:0}.gl-ct b{display:block;font-size:15px;font-weight:600;color:var(--ink)}.gl-ct small{font-size:12px;color:var(--muted)}
   .gl-list li.done .gl-ct b{text-decoration:line-through;color:var(--muted)}
   .gl-check{position:relative;width:22px;height:22px;flex:none}.gl-check input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-  .gl-check span{display:block;width:22px;height:22px;border-radius:50%;border:2px solid #B8BCC2}
+  .gl-check span{display:block;width:22px;height:22px;border-radius:50%;border:2px solid #c8c4bf}
   .gl-check input:checked+span{background:#89D25B;border-color:#89D25B;box-shadow:inset 0 0 0 4px #fff}
   .gl-check input:focus-visible+span{outline:2px solid #121211;outline-offset:2px}
   .gl-del{all:unset;cursor:pointer;font-size:20px;line-height:1;color:var(--muted2);padding:4px 8px;border-radius:8px}.gl-del:hover{color:#d2362b}
@@ -886,7 +886,7 @@
   :root[data-theme="dark"] .gl-target input:focus{border-color:#f2f1ef;background:#24262a}:root[data-theme="dark"] .gl-track{background:rgba(255,255,255,.08)}
   :root[data-theme="dark"] .gl-add input{background:#1f2024;border-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .gl-add button{background:#f2f1ef;color:#111}
   :root[data-theme="dark"] .gl-list li{border-top-color:rgba(255,255,255,.06)}:root[data-theme="dark"] .gl-check input:checked+span{box-shadow:inset 0 0 0 4px #17181b}
-  :root[data-theme="dark"] .gl-card.great .gl-line,:root[data-theme="dark"] .gl-card.great .gl-pct{color:#89D25B}:root[data-theme="dark"] .gl-pct{color:#d4d7db}
+  :root[data-theme="dark"] .gl-card.great .gl-line,:root[data-theme="dark"] .gl-card.great .gl-pct{color:#89D25B}:root[data-theme="dark"] .gl-pct{color:#4db8ff}
   @media(max-width:900px){.gl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media(max-width:560px){.gl-grid{grid-template-columns:1fr}.gl-sum{width:100%}.gl-sum>div{flex:1}}
   .gl-target input::placeholder{color:#a8a39d;font-weight:500;font-size:15px}
@@ -1645,7 +1645,7 @@
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
     const R=52,C=2*Math.PI*R;
     $("hsArc").setAttribute("stroke-dasharray",`${(score||0)/100*C} ${C}`);
-    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#89D25B":score>=50?"#B8BCC2":"#F04438");
+    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#89D25B":score>=50?"#0099FF":"#F04438");
 
     // components
     $("healthComponents").innerHTML=comps.length?comps.map(c=>{
@@ -2449,7 +2449,7 @@
     const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}<em>${tr.dir==="steady"?"":`${tr.delta>0?"+":""}${Math.round(tr.delta)} `}since ${shortDate(tr.from)}</em></div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
     el.innerHTML=`<div class="bm-row"><div class="bm-num">${s==null?"—":s}</div>
-      <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#B8BCC2":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
+      <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
   }
   function renderProgress(){
