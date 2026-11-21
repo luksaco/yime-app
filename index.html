@@ -824,6 +824,23 @@
   :root[data-theme="dark"] .train-tiles .stat{background:#1f2024!important}
   .month-partial{display:inline-block;color:#6b6866!important;background:rgba(18,18,17,.06);padding:4px 10px;border-radius:999px;font-size:11px!important;letter-spacing:.04em;margin-left:6px}
   :root[data-theme="dark"] .month-partial{color:#c9c2ba!important;background:rgba(255,255,255,.08)}
+
+  /* status colours: excellent = lemon green, normal = silver, below par = tomato red */
+  .fa-ring.great{--acc:#89D25B;--acc-ink:#5e9e34}
+  .fa-ring.good,.fa-ring.ok{--acc:#B8BCC2;--acc-ink:var(--ink)}
+  .fa-ring.poor{--acc:#F04438;--acc-ink:#F04438}
+  .fa-ring.cap-ring.great{--acc:#89D25B;--acc-ink:#5e9e34}.fa-ring.cap-ring.good,.fa-ring.cap-ring.ok{--acc:#B8BCC2;--acc-ink:var(--ink)}.fa-ring.cap-ring.poor{--acc:#F04438;--acc-ink:#F04438}
+  .health-rings #capValue{color:var(--acc-ink)!important}
+  .hc-fill.great{background:#89D25B!important}.hc-fill.good,.hc-fill.ok{background:#B8BCC2!important}.hc-fill.poor{background:#F04438!important}
+  .hc-score.great::before{content:"Excellent";background:rgba(137,210,91,.2);color:#4b8a22}
+  .hc-score.good::before{content:"Normal";background:rgba(184,188,194,.28);color:#5f6368}
+  .hc-score.ok::before{content:"Normal";background:rgba(184,188,194,.28);color:#5f6368}
+  .hc-score.poor::before{content:"Below par";background:rgba(240,68,56,.13);color:#d2362b}
+  .bm-word{color:#121211!important}
+  :root[data-theme="dark"] .fa-ring.great,:root[data-theme="dark"] .fa-ring.cap-ring.great{--acc-ink:#89D25B}:root[data-theme="dark"] .fa-ring.poor,:root[data-theme="dark"] .fa-ring.cap-ring.poor{--acc-ink:#ff6a5e}
+  :root[data-theme="dark"] .health-rings #capValue{color:var(--acc-ink)!important}
+  :root[data-theme="dark"] .hc-fill.great{background:#89D25B!important}:root[data-theme="dark"] .hc-fill.good,:root[data-theme="dark"] .hc-fill.ok{background:#B8BCC2!important}:root[data-theme="dark"] .hc-fill.poor{background:#F04438!important}
+  :root[data-theme="dark"] .hc-score.great::before{color:#89D25B;background:rgba(137,210,91,.15)}:root[data-theme="dark"] .hc-score.good::before,:root[data-theme="dark"] .hc-score.ok::before{color:#d4d7db;background:rgba(184,188,194,.14)}:root[data-theme="dark"] .hc-score.poor::before{color:#ff6a5e;background:rgba(240,68,56,.16)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1578,7 +1595,7 @@
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
     const R=52,C=2*Math.PI*R;
     $("hsArc").setAttribute("stroke-dasharray",`${(score||0)/100*C} ${C}`);
-    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#2aa35c":score>=65?"#1a84e8":score>=50?"#c9a206":"#d94a43");
+    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#89D25B":score>=50?"#B8BCC2":"#F04438");
 
     // components
     $("healthComponents").innerHTML=comps.length?comps.map(c=>{
@@ -2379,7 +2396,7 @@
     const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}<em>${tr.dir==="steady"?"":`${tr.delta>0?"+":""}${Math.round(tr.delta)} `}since ${shortDate(tr.from)}</em></div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
     el.innerHTML=`<div class="bm-row"><div class="bm-num">${s==null?"—":s}</div>
-      <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#1f9d55":s>=65?"#5c9e2e":s>=50?"#e2822c":"#d94a43"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
+      <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#B8BCC2":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
   }
   function renderProgress(){
