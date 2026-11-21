@@ -707,6 +707,17 @@
 
   .layout #vo2Card{margin-top:0}
   .layout #vo2Card .vo2-row .vo2-sw{display:inline-block!important;vertical-align:middle;margin-right:7px}
+
+  /* section tabs: clear, professional segmented control */
+  .tabbar{display:flex;gap:4px;padding:5px;background:#fff!important;border:1px solid rgba(18,18,17,.07)!important;border-radius:16px;box-shadow:0 1px 2px rgba(18,18,17,.04),0 8px 24px rgba(18,18,17,.05)!important;margin-bottom:26px}
+  .tabbar button{display:flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 14px;border-radius:12px;font-size:14.5px!important;font-weight:600!important;letter-spacing:-.015em;color:#6b6866!important;background:transparent!important;box-shadow:none!important;transition:background .2s ease,color .2s ease}
+  .tabbar button:not([aria-selected="true"]):hover{color:#121211!important;background:rgba(18,18,17,.04)!important}
+  .tabbar button[aria-selected="true"]{background:#121211!important;color:#fff!important;box-shadow:0 6px 16px rgba(18,18,17,.18)!important}
+  .tabbar .t-ic{width:17px;height:17px;flex:none;opacity:.9}
+  :root[data-theme="dark"] .tabbar{background:#17181b!important;border-color:rgba(255,255,255,.07)!important;box-shadow:none!important}
+  :root[data-theme="dark"] .tabbar button{color:#a59d94!important}:root[data-theme="dark"] .tabbar button:not([aria-selected="true"]):hover{color:#f2f1ef!important;background:rgba(255,255,255,.05)!important}
+  :root[data-theme="dark"] .tabbar button[aria-selected="true"]{background:#f2f1ef!important;color:#111!important}
+  @media(max-width:680px){.tabbar{padding:4px;gap:2px;border-radius:14px}.tabbar button{flex-direction:column;gap:3px;height:56px;padding:0 2px;font-size:11.5px!important;border-radius:11px}.tabbar .t-ic{width:18px;height:18px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1682,6 +1693,7 @@
      The cards are regrouped into tabs at runtime rather than in the markup. Moving
      the existing elements keeps every id and every listener attached exactly as it
      was, which is far safer than restructuring a file this size by hand. */
+  const TAB_ICONS={progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3" /></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
   const APP_TABS=[
     {id:"progress",label:"Progress",short:"Progress"},
     {id:"health",label:"Body health",short:"Health"},
@@ -1694,7 +1706,7 @@
     const layout=document.querySelector(".layout"),wrap=document.querySelector(".wrap");
     const nav=document.createElement("nav");
     nav.className="tabbar";nav.id="appTabs";nav.setAttribute("role","tablist");
-    nav.innerHTML=APP_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}"><span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
+    nav.innerHTML=APP_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}">${TAB_ICONS[t.id]||""}<span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
     layout.parentNode.insertBefore(nav,layout);
     const panels={};
     for(const t of APP_TABS){
