@@ -657,6 +657,10 @@
   .wg-cta{all:unset;cursor:pointer;font-size:14px;font-weight:600;color:#fff;background:#121211;padding:9px 18px;border-radius:999px}
   :root[data-theme="dark"] .wg-track{background:rgba(255,255,255,.1)}:root[data-theme="dark"] .wg-cta{background:#f2f1ef;color:#111}:root[data-theme="dark"] .wg-stats b.good{color:#4cd07d}:root[data-theme="dark"] .wg-pct{color:#ff5a4d}
   @media(max-width:680px){.wg-big{font-size:26px}.wg-pct{font-size:28px}.wg-stats b{font-size:15px}}
+
+  /* flat background, no colour gradients */
+  body,:root[data-theme="dark"] body{background:var(--bg)!important}
+  body::before{display:none}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
