@@ -1040,6 +1040,50 @@
   }
   .gx-check input{z-index:1}
   @media(max-width:680px){#gx-body .gx-row .gx-main{grid-row:1;grid-column:1/3}#gx-body .gx-row .gx-fig{grid-row:2!important;grid-column:1/5!important}#gx-body .gx-row .gx-bar{grid-row:3!important}#gx-body .gx-row .gx-pct{grid-row:3!important}}
+
+  /* ===== Calendar space ===== */
+  .cal-space{display:none;margin:8px 0 60px}
+  body.space-cal .cal-space{display:block}body.space-cal .space-soon{display:none!important}
+  .cal-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .cal-head h2{margin:0;font-size:38px;letter-spacing:-.035em;color:var(--ink)}.cal-head h2 span{color:#ea3327}
+  .cal-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .cal-nav{display:inline-flex;background:var(--card);border:1px solid rgba(18,18,17,.08);border-radius:12px;overflow:hidden}
+  .cal-nav button{all:unset;cursor:pointer;padding:9px 14px;font-size:14px;font-weight:600;color:var(--ink)}.cal-nav button+button{border-left:1px solid rgba(18,18,17,.08)}
+  .cal-btn{all:unset;cursor:pointer;padding:9px 14px;font-size:14px;font-weight:600;border-radius:12px;background:var(--card);border:1px solid rgba(18,18,17,.08);color:var(--ink)}
+  .cal-btn.primary{background:#121211;color:#fff;border-color:#121211}
+  .cal-body{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+  .cal-grid-wrap{background:var(--card);border-radius:22px;border:1px solid rgba(18,18,17,.06);box-shadow:0 1px 2px rgba(18,18,17,.04),0 10px 30px rgba(18,18,17,.05);overflow:hidden}
+  .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid rgba(18,18,17,.07)}
+  .cal-dow span{padding:12px 10px;font-size:12px;font-weight:650;color:#8a8580;text-align:right;letter-spacing:.02em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+  .cal-cell{all:unset;box-sizing:border-box;cursor:pointer;min-height:112px;padding:8px;border-right:1px solid rgba(18,18,17,.06);border-bottom:1px solid rgba(18,18,17,.06);display:flex;flex-direction:column;gap:4px;min-width:0}
+  .cal-cell:nth-child(7n){border-right:0}.cal-cell:hover{background:rgba(18,18,17,.025)}
+  .cal-cell.out .cal-num{color:#c2bdb7}
+  .cal-num{align-self:flex-end;font-size:14px;font-weight:600;color:var(--ink);width:28px;height:28px;display:grid;place-items:center;border-radius:50%}
+  .cal-cell.today .cal-num{background:#ea3327;color:#fff}
+  .cal-cell.sel{background:rgba(0,153,255,.06);box-shadow:inset 0 0 0 2px rgba(0,153,255,.5)}
+  .cal-evs{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .cal-ev{font-size:11.5px;font-weight:600;line-height:1.3;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--c) 14%,transparent);color:color-mix(in srgb,var(--c) 75%,#121211);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid var(--c)}
+  .cal-ev b{font-weight:700}.cal-more{font-size:11px;color:#8a8580;padding-left:4px}
+  .cal-dots{display:none;gap:3px;justify-content:center}.cal-dots i{width:6px;height:6px;border-radius:50%}
+  .cal-legend{display:flex;gap:14px;flex-wrap:wrap;padding:12px 14px;font-size:12.5px;color:#6b6661;border-top:1px solid rgba(18,18,17,.07)}.cal-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+  .cal-side{background:var(--card);border-radius:22px;border:1px solid rgba(18,18,17,.06);padding:20px;box-shadow:0 1px 2px rgba(18,18,17,.04),0 10px 30px rgba(18,18,17,.05);position:sticky;top:16px}
+  .cal-side-d{margin:0;font-size:13px;font-weight:650;color:#ea3327;text-transform:uppercase;letter-spacing:.06em}.cal-side h3{margin:2px 0 14px;font-size:22px;letter-spacing:-.02em;color:var(--ink)}
+  .cal-list{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-direction:column;gap:8px}
+  .cal-list li{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 0;border-radius:12px;background:#f6f6f4}
+  .cal-bar{width:4px;align-self:stretch;border-radius:4px;background:var(--c);margin-left:0}
+  .cal-list li>div{flex:1;min-width:0}.cal-list b{display:block;font-size:14.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis}.cal-list small{font-size:12px;color:#6b6661}
+  .cal-none{margin:0 0 8px;color:#8a8580;font-size:14px}
+  .cal-form{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:12px;border-radius:14px;background:#f6f6f4}
+  .cal-form input,.cal-form select{font:inherit;font-size:14px;padding:9px 11px;border-radius:10px;border:1px solid rgba(18,18,17,.1);background:#fff;color:var(--ink);min-width:0}
+  .cal-row{display:flex;gap:6px}.cal-row input{flex:1}
+  .cal-tip{margin:14px 0 0;font-size:12.5px;line-height:1.5;color:#8a8580}
+  :root[data-theme="dark"] .cal-nav,:root[data-theme="dark"] .cal-btn{border-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .cal-nav button+button{border-left-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .cal-btn.primary{background:#f2f1ef;color:#111;border-color:#f2f1ef}
+  :root[data-theme="dark"] .cal-grid-wrap,:root[data-theme="dark"] .cal-side{border-color:rgba(255,255,255,.07)}:root[data-theme="dark"] .cal-dow,:root[data-theme="dark"] .cal-legend{border-color:rgba(255,255,255,.07)}
+  :root[data-theme="dark"] .cal-cell{border-color:rgba(255,255,255,.06)}:root[data-theme="dark"] .cal-cell.out .cal-num{color:#5b5752}:root[data-theme="dark"] .cal-ev{color:color-mix(in srgb,var(--c) 70%,#fff)}
+  :root[data-theme="dark"] .cal-list li,:root[data-theme="dark"] .cal-form{background:#1f2024}:root[data-theme="dark"] .cal-form input,:root[data-theme="dark"] .cal-form select{background:#17181b;border-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .cal-list small,:root[data-theme="dark"] .cal-legend{color:#b3aca4}
+  @media(max-width:980px){.cal-body{grid-template-columns:1fr}.cal-side{position:static}}
+  @media(max-width:680px){.cal-head h2{font-size:30px}.cal-cell{min-height:56px;padding:4px;align-items:center}.cal-num{align-self:center;font-size:13px;width:26px;height:26px}.cal-evs{display:none}.cal-dots{display:flex}.cal-dow span{text-align:center;padding:10px 0}.cal-tools{width:100%}.cal-btn.primary{margin-left:auto}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2389,7 +2433,7 @@
             km:g=>byGroup.get(g)?.km||0, minutesOf:g=>byGroup.get(g)?.minutes||0};
   }
 
-  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null,customGoals:[],goalsDone:{}}}
+  function emptyState(){return {version:VERSION,sex:"male",goals:{weightKg:null,chestCm:null,waistCm:null,hipCm:null,leftBicepsCm:null,rightBicepsCm:null,leftThighCm:null,rightThighCm:null,leftCalfCm:null,rightCalfCm:null,vo2max:null},baseline:null,entries:[],workouts:[],health:{},garmin:null,customGoals:[],goalsDone:{},calEvents:[]}}
   function cleanNumber(v,key){if(v===null||v===""||v===undefined)return null;const n=Number(v),m=metrics[key];return Number.isFinite(n)&&n>=m.min&&n<=m.max?Math.round(n*10)/10:null}
   function cleanHealth(raw){
     const out={},n=(v,lo,hi)=>{
@@ -2447,6 +2491,7 @@
     if(Array.isArray(raw.workouts))s.workouts=dedupeWorkouts(raw.workouts.map(cleanWorkout).filter(Boolean));
     if(raw.health&&typeof raw.health==="object")s.health=cleanHealth(raw.health);
     if(raw.garmin&&typeof raw.garmin==="object")s.garmin=raw.garmin;
+    if(Array.isArray(raw.calEvents))s.calEvents=raw.calEvents.filter(e=>e&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||"")&&String(e.title||"").trim()).slice(-4000).map(e=>({id:String(e.id||uid()).slice(0,80),title:String(e.title).slice(0,160),date:e.date,start:/^\d{2}:\d{2}$/.test(e.start||"")?e.start:"",end:/^\d{2}:\d{2}$/.test(e.end||"")?e.end:"",cat:["training","race","measure","health","personal","calendar"].includes(e.cat)?e.cat:"personal",src:e.src==="ics"?"ics":"yime"}));
     if(raw.goalsDone&&typeof raw.goalsDone==="object")for(const k of metricKeys){const v=raw.goalsDone[k];if(typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v))s.goalsDone[k]=v}
     if(Array.isArray(raw.customGoals))s.customGoals=raw.customGoals.filter(g=>g&&typeof g==="object").slice(0,200).map(g=>{const kind=g.kind==="blood"?"blood":"fitness";const base={id:String(g.id||uid()),kind,done:!!g.done};
       if(kind==="blood"){const t=Number(g.target);return Number.isFinite(t)&&typeof g.marker==="string"?{...base,marker:g.marker.slice(0,40),dir:g.dir==="min"?"min":"max",target:t}:null}
@@ -3904,6 +3949,77 @@
         s.animate([{transform:"translate(-50%,-50%) scale(1) rotate(0)",opacity:1},{transform:`translate(${dx}px,${dy+60}px) scale(.6) rotate(${Math.random()*540}deg)`,opacity:0}],{duration:900+Math.random()*400,easing:"cubic-bezier(.15,.7,.3,1)"}).onfinish=()=>s.remove()}
     }catch(e){}
   }
+
+  // ===== Calendar space =====
+  const CAL_CATS={training:["Training","#0099FF"],race:["Race","#F04438"],measure:["Measurement","#89D25B"],health:["Health","#8e6cff"],personal:["Personal","#8a8580"],calendar:["Imported","#5f6c7b"]};
+  let calMonth=null,calSel=null,calForm=false;
+  const pad2=n=>String(n).padStart(2,"0"),isoOf=d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`,todayIso=()=>isoOf(new Date());
+  function calItems(){
+    const out=[];
+    for(const e of state.calEvents||[])out.push({...e,mine:true});
+    for(const w of state.workouts||[])out.push({id:"w"+w.id,title:`${w.sport||"Session"}${w.minutes?` · ${Math.round(w.minutes)} min`:""}${w.km?` · ${fmt(w.km)} km`:""}`,date:w.date,cat:"training",auto:true});
+    for(const e of state.entries||[])out.push({id:"m"+e.id,title:`Measurement · ${fmt(e.weightKg)} kg`,date:e.date,cat:"measure",auto:true});
+    for(const g of state.customGoals||[])if(g.kind==="fitness"&&g.due)out.push({id:"g"+g.id,title:`${g.title}${g.target?` · ${g.target}`:""}`,date:g.due,cat:g.type==="race"?"race":"personal",auto:true});
+    return out.sort((a,b)=>(a.start||"99")<(b.start||"99")?-1:1);
+  }
+  function renderCalendar(){
+    const host=$("calSpace");if(!host)return;
+    const t=todayIso();if(!calMonth)calMonth=t.slice(0,7);if(!calSel)calSel=t;
+    const [Y,M]=calMonth.split("-").map(Number),first=new Date(Y,M-1,1),startDow=(first.getDay()+6)%7,daysIn=new Date(Y,M,0).getDate();
+    const items=calItems(),byDay={};for(const it of items)(byDay[it.date]=byDay[it.date]||[]).push(it);
+    const cells=[];const gridStart=new Date(Y,M-1,1-startDow);const weeks=Math.ceil((startDow+daysIn)/7);
+    for(let i=0;i<weeks*7;i++){const d=new Date(gridStart);d.setDate(gridStart.getDate()+i);const iso=isoOf(d),list=byDay[iso]||[],inM=d.getMonth()===M-1;
+      cells.push(`<button type="button" class="cal-cell${inM?"":" out"}${iso===t?" today":""}${iso===calSel?" sel":""}" data-cday="${iso}" aria-label="${d.toDateString()}, ${list.length} events"><span class="cal-num">${d.getDate()}</span>
+        <span class="cal-evs">${list.slice(0,3).map(e=>`<span class="cal-ev" style="--c:${CAL_CATS[e.cat][1]}">${e.start?`<b>${e.start}</b> `:""}${esc(e.title)}</span>`).join("")}${list.length>3?`<span class="cal-more">+${list.length-3} more</span>`:""}</span>
+        ${list.length?`<span class="cal-dots">${[...new Set(list.map(e=>e.cat))].slice(0,4).map(c=>`<i style="background:${CAL_CATS[c][1]}"></i>`).join("")}</span>`:""}</button>`)}
+    const sel=byDay[calSel]||[],selD=new Date(calSel+"T12:00:00");
+    const monthName=first.toLocaleDateString("en-GB",{month:"long"});
+    host.innerHTML=`<div class="cal-head"><div><h2>${monthName} <span>${Y}</span></h2></div>
+      <div class="cal-tools"><div class="cal-nav"><button type="button" data-cnav="-1" aria-label="Previous month">‹</button><button type="button" data-cnav="0">Today</button><button type="button" data-cnav="1" aria-label="Next month">›</button></div>
+      <button type="button" class="cal-btn" data-cimport>Import .ics</button><button type="button" class="cal-btn" data-cexport>Export .ics</button><button type="button" class="cal-btn primary" data-cnew>+ New event</button>
+      <input type="file" id="calIcs" accept=".ics,text/calendar" hidden></div></div>
+      <div class="cal-body"><div class="cal-grid-wrap"><div class="cal-dow">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<span>${d}</span>`).join("")}</div><div class="cal-grid">${cells.join("")}</div>
+        <div class="cal-legend">${Object.entries(CAL_CATS).map(([k,[n,c]])=>`<span><i style="background:${c}"></i>${n}</span>`).join("")}</div></div>
+      <aside class="cal-side"><p class="cal-side-d">${selD.toLocaleDateString("en-GB",{weekday:"long"})}</p><h3>${selD.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</h3>
+        ${sel.length?`<ul class="cal-list">${sel.map(e=>`<li style="--c:${CAL_CATS[e.cat][1]}"><span class="cal-bar"></span><div><b>${esc(e.title)}</b><small>${e.start?`${e.start}${e.end?`–${e.end}`:""} · `:"All day · "}${CAL_CATS[e.cat][0]}${e.auto?" · from yime":e.src==="ics"&&e.cat!=="calendar"?" · imported":""}</small></div>${e.mine?`<button type="button" class="gx-del" data-cdel="${esc(e.id)}" aria-label="Delete event">×</button>`:""}</li>`).join("")}</ul>`:`<p class="cal-none">Nothing planned.</p>`}
+        ${calForm?`<form class="cal-form" id="calForm"><input name="t" type="text" maxlength="160" placeholder="Event title" required><div class="cal-row"><input name="d" type="date" value="${calSel}" required><input name="s" type="time" aria-label="Start"><input name="e" type="time" aria-label="End"></div><select name="c">${Object.entries(CAL_CATS).filter(([k])=>k!=="calendar").map(([k,[n]])=>`<option value="${k}">${n}</option>`).join("")}</select><div class="cal-row"><button type="submit" class="gx-save">Add event</button><button type="button" class="gx-cancel" data-ccancel>Cancel</button></div></form>`:`<button type="button" class="gx-add" data-cnew><span>+</span>Add event on this day</button>`}
+        <p class="cal-tip">Training sessions, measurement days and race dates from yime appear here automatically. Bring in Google or Apple Calendar with Import .ics.</p></aside></div>`;
+  }
+  function parseIcs(text){
+    const lines=text.replace(/\r\n[ \t]/g,"").replace(/\n[ \t]/g,"").split(/\r?\n/),out=[];let ev=null;
+    const val=l=>l.slice(l.indexOf(":")+1).replace(/\\n/gi," ").replace(/\\([,;\\])/g,"$1");
+    const dt=l=>{const v=val(l).trim(),m=v.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2}))?/);if(!m)return null;
+      if(m[4]&&/Z$/.test(v)){const d=new Date(Date.UTC(+m[1],m[2]-1,+m[3],+m[4],+m[5]));return {date:isoOf(d),time:`${pad2(d.getHours())}:${pad2(d.getMinutes())}`}}
+      return {date:`${m[1]}-${m[2]}-${m[3]}`,time:m[4]?`${m[4]}:${m[5]}`:""}};
+    for(const l of lines){
+      if(l==="BEGIN:VEVENT")ev={};else if(l==="END:VEVENT"){if(ev&&ev.title&&ev.date)out.push(ev);ev=null}
+      else if(ev){if(/^SUMMARY[;:]/.test(l))ev.title=val(l).slice(0,160);else if(/^DTSTART[;:]/.test(l)){const d=dt(l);if(d){ev.date=d.date;ev.start=d.time}}else if(/^DTEND[;:]/.test(l)){const d=dt(l);if(d&&d.time)ev.end=d.time}else if(/^UID[;:]/.test(l))ev.uid=val(l).slice(0,80)}
+    }
+    return out;
+  }
+  function exportIcs(){
+    const esc2=s=>String(s).replace(/[\;,]/g,m=>"\\"+m),stamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+    const ev=calItems().filter(e=>!(e.src==="ics")).map(e=>{const d=e.date.replace(/-/g,"");const s=e.start?`DTSTART:${d}T${e.start.replace(":","")}00`:`DTSTART;VALUE=DATE:${d}`;const en=e.start&&e.end?`\r\nDTEND:${d}T${e.end.replace(":","")}00`:"";
+      return `BEGIN:VEVENT\r\nUID:${e.id}@yime\r\nDTSTAMP:${stamp}\r\n${s}${en}\r\nSUMMARY:${esc2(e.title)}\r\nCATEGORIES:${CAL_CATS[e.cat][0]}\r\nEND:VEVENT`}).join("\r\n");
+    const blob=new Blob([`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//yime//calendar//EN\r\n${ev}\r\nEND:VCALENDAR\r\n`],{type:"text/calendar"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="yime-calendar.ics";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+  }
+  document.addEventListener("click",e=>{
+    const t=e.target.closest?e.target:null;if(!t||!t.closest("#calSpace"))return;
+    const day=t.closest("[data-cday]");if(day){calSel=day.dataset.cday;if(calSel.slice(0,7)!==calMonth)calMonth=calSel.slice(0,7);renderCalendar();return}
+    const nav=t.closest("[data-cnav]");if(nav){const d=Number(nav.dataset.cnav);if(!d){calMonth=todayIso().slice(0,7);calSel=todayIso()}else{const [y,m]=calMonth.split("-").map(Number),n=new Date(y,m-1+d,1);calMonth=isoOf(n).slice(0,7)}renderCalendar();return}
+    if(t.closest("[data-cnew]")){calForm=true;renderCalendar();$("calForm")?.querySelector("input")?.focus();return}
+    if(t.closest("[data-ccancel]")){calForm=false;renderCalendar();return}
+    const del=t.closest("[data-cdel]");if(del){state.calEvents=state.calEvents.filter(x=>x.id!==del.dataset.cdel);save();renderCalendar();return}
+    if(t.closest("[data-cexport]")){exportIcs();return}
+    if(t.closest("[data-cimport]")){$("calIcs").click();return}
+  });
+  document.addEventListener("submit",e=>{if(e.target.id!=="calForm")return;e.preventDefault();const f=new FormData(e.target),title=String(f.get("t")||"").trim();if(!title)return;
+    (state.calEvents=state.calEvents||[]).push({id:uid(),title:title.slice(0,160),date:f.get("d"),start:f.get("s")||"",end:f.get("e")||"",cat:f.get("c")||"personal",src:"yime"});calSel=f.get("d");calMonth=calSel.slice(0,7);calForm=false;save();renderCalendar()});
+  document.addEventListener("change",async e=>{if(e.target.id!=="calIcs"||!e.target.files[0])return;
+    try{const evs=parseIcs(await e.target.files[0].text());const have=new Set((state.calEvents||[]).map(x=>x.id));let added=0;
+      for(const v of evs){const id=("ics-"+(v.uid||v.date+v.title)).replace(/[^\w@.-]/g,"").slice(0,80);if(have.has(id))continue;have.add(id);state.calEvents.push({id,title:v.title,date:v.date,start:v.start||"",end:v.end||"",cat:"calendar",src:"ics"});added++}
+      save();renderCalendar();alert(added?`Imported ${added} event${added===1?"":"s"}.`:"No new events found in this file.")}catch(err){alert("Couldn't read this calendar file.")}e.target.value=""});
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
@@ -4165,9 +4281,10 @@
     (()=>{const INFO={finance:["My Finance","Budgets, spending, savings goals and your investment portfolio, in the same clean style as your health tracker."],calendar:["Calendar","Training sessions, races, measurement days and appointments together in one plan, so health and life line up."]};
       let box=document.getElementById("spaceSoon");
       if(!box){box=document.createElement("section");box.id="spaceSoon";box.className="space-soon";const tabs=$("appTabs");(tabs?.parentNode||document.querySelector("main")).insertBefore(box,tabs||null)}
-      const show=sp=>{const other=sp!=="health";document.body.classList.toggle("space-other",other);
+      let cal=document.getElementById("calSpace");if(!cal){cal=document.createElement("section");cal.id="calSpace";cal.className="cal-space";box.parentNode.insertBefore(cal,box.nextSibling)}
+      const show=sp=>{const other=sp!=="health";document.body.classList.toggle("space-other",other);document.body.classList.toggle("space-cal",sp==="calendar");if(sp==="calendar")try{renderCalendar()}catch(e){console.error(e)}
         document.querySelectorAll("[data-space]").forEach(b=>{if(b.dataset.space===sp)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-        if(other){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Personal Health</button>`}
+        if(other&&sp!=="calendar"){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Personal Health</button>`}
         try{history.replaceState(null,"",other?"#"+sp:"#"+(activeTab||"progress"))}catch(e){}
         window.scrollTo({top:0})};
       document.addEventListener("click",e=>{const b=e.target.closest("[data-space]");if(b)show(b.dataset.space);else if(e.target.closest(".mega [data-go]")&&document.body.classList.contains("space-other"))show("health")});
