@@ -436,16 +436,16 @@
 
   @media(min-width:981px){#panel-progress>#vo2Card .vo2-wrap{grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:56px;padding:0 24px}}
   /* Progress: health score, weight and VO2 on one line; body measurements below */
-  .stats-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
+  .stats-top{display:grid;grid-template-columns:2.2fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
   .stats-top .stat-slot{display:flex}.stats-top .stat-slot>.stat{flex:1}
   .stats-top .stat .v{font-size:28px}
   .stats-top .bm-health{margin:0;padding:13px 14px 0;border-radius:16px;background:var(--card);border:1px solid var(--glass-brd);box-shadow:0 4px 18px rgba(17,24,39,.06);display:flex;flex-direction:column;justify-content:space-between}
   .stats-top .bm-num{font-size:38px;min-width:0}
   .stats-top .bm-row{gap:10px}
-  .stats-top .bm-spark{width:84px;flex-basis:84px;height:34px}
+  .stats-top .bm-spark{width:180px;flex-basis:180px;height:44px}.stats-top .bm-num{font-size:44px}
   .stats-top .bm-link{margin:10px -14px 0;padding:8px 14px}
   #stats{grid-template-columns:repeat(3,minmax(0,1fr))}
-  @media(max-width:680px){.stats-top{grid-template-columns:1fr 1fr}.stats-top .bm-health{grid-column:1/-1}#stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:680px){.stats-top{grid-template-columns:1fr}.stats-top .bm-spark{width:96px;flex-basis:96px}#stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
   @media(max-width:520px){.bm-spark{width:92px;flex-basis:92px}.bm-num{font-size:38px;min-width:46px}}
   /* health trend on the Body health tab */
@@ -781,7 +781,6 @@
       <div class="stats-top" id="statsTop">
         <button type="button" class="bm-health" id="bmHealth" aria-label="Health score. Open Body health"></button>
         <div class="stat-slot" id="statWeight"></div>
-        <div class="stat-slot" id="statVo2"></div>
       </div>
       <div class="stats" id="stats" aria-live="polite"></div>
 
@@ -2002,7 +2001,7 @@
       const signed=x=>x==null?"—":`${x>0?"+":""}${fmt(x)} ${m.unit}`;
       return `<div class="stat" data-key="${k}"${k!=="weightKg"&&k!=="vo2max"?' tabindex="0"':""}><div class="k">${m.label}</div><div class="v">${fmt(v)} <span class="unit">${v==null?"":m.unit}</span></div><div class="delta ${tone}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${signed(recent)} latest`}</div><div class="delta sub neutral">${total==null?"Set a baseline":`${signed(total)} from start`}</div></div>`
     };
-    $("statWeight").innerHTML=tile("weightKg");$("statVo2").innerHTML=tile("vo2max");
+    $("statWeight").innerHTML=tile("weightKg");
     $("stats").innerHTML=metricKeys.filter(k=>k!=="weightKg"&&k!=="vo2max").map(tile).join("");
     renderBodyHealthScore();
   }
