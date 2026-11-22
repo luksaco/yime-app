@@ -1562,6 +1562,9 @@
   .fx-tile span .fx-ysel:hover{background-color:#e2efe6}.fx-tile span .fx-ysel:focus-visible{outline:2px solid #1A5140;outline-offset:1px}
   @media(max-width:680px){.fin-space .fx-tabs .fx-more{order:8}.fin-space .fx-tabs #fin-tab-goals{order:9}}
   .fx-newsec{margin-top:8px}.fx-newsec>.fx-ch{margin-bottom:12px}
+  #stats .st-d .sub.since.good{color:#2e9e4f;font-weight:650}#stats .st-d .sub.since.bad{color:#F04438;font-weight:650}
+  :root[data-theme="dark"] #stats .st-d .sub.since.good{color:#5cc27a}:root[data-theme="dark"] #stats .st-d .sub.since.bad{color:#ff6a5c}
+  #stats .st-d .delta.good{color:#2e9e4f!important}#stats .st-d .delta.bad{color:#F04438!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3099,12 +3102,13 @@
   }
   function renderStats(){
     const cur=snapshot();
+    const startTone=(k,t)=>{if(Math.abs(t)<.05)return "flat";const g=state.goals?.[k],b=state.baseline?.[k];const dir=g!=null&&b!=null&&g!==b?Math.sign(g-b):(/^(weight|chest|waist|hip)|Thigh/.test(k)?-1:1);return t*dir>0?"good":"bad"};
     const tile=k=>{
       const m=metrics[k],v=cur?.[k],base=state.baseline?.[k],prev=previousValue(k);
       const total=v!=null&&base!=null?v-base:null,recent=v!=null&&prev!=null?v-prev:null,tone=goalTone(k,v,prev);
       const sg=x=>`${x>0?"+":x<0?"−":""}${fmt(Math.abs(x))}`;
       const arrow=recent==null?"":recent>0?"↑":recent<0?"↓":"→";
-      return `<div class="stat st-c" data-key="${k}"${k!=="weightKg"&&k!=="vo2max"?' tabindex="0"':""}><div class="k">${m.label}</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" "+m.unit}</span></div><div class="st-d">${recent==null?`<span class="sub">${total==null?"No baseline yet":"No recent change"}</span>`:`<span class="delta ${tone}">${arrow} ${sg(recent)}</span>`}${total!=null&&recent!=null?`<span class="sub">${sg(total)} since start</span>`:""}</div></div>`;
+      return `<div class="stat st-c" data-key="${k}"${k!=="weightKg"&&k!=="vo2max"?' tabindex="0"':""}><div class="k">${m.label}</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" "+m.unit}</span></div><div class="st-d">${recent==null?`<span class="sub">${total==null?"No baseline yet":"No recent change"}</span>`:`<span class="delta ${tone==="neutral"&&Math.abs(recent)>=.05?startTone(k,recent):tone}">${arrow} ${sg(recent)}</span>`}${total!=null&&recent!=null?`<span class="sub since ${startTone(k,total)}">${sg(total)} since start</span>`:""}</div></div>`;
     };
 
     $("statWeight").innerHTML=weightTile(cur);
