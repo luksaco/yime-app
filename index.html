@@ -1535,6 +1535,29 @@
   :root[data-theme="dark"] .fx-chart .gl{stroke:rgba(255,255,255,.07)}:root[data-theme="dark"] .fx-chart .gl.base{stroke:rgba(255,255,255,.18)}:root[data-theme="dark"] .fx-chart .xl.sel{fill:#f2f1ef}
   :root[data-theme="dark"] .fx-chart rect.out{fill:#ff6a5c}:root[data-theme="dark"] .fx-chart rect.in{fill:#5cc27a}
   @media(max-width:680px){.fx-cfsum b{font-size:16px}.fx-chart .yl{font-size:24px}.fx-chart .xl{font-size:25px}.fx-chart .vl{font-size:24px}.fx-avgrow{flex-direction:column;align-items:flex-start;gap:4px}.fx-spark{width:70px;height:22px}}
+  /* finance tab bar v2: icons + labels like Health; phones: 4 main tabs + More sheet */
+  .fin-space .fx-tabs{position:relative;overflow:visible}
+  .fin-space .fx-tabs button{display:flex;align-items:center;justify-content:center;gap:8px;flex:1 1 0;min-width:0;height:44px;padding:0 10px!important;font-size:14px}
+  .fin-space .fx-tabs .fx-ic{width:17px;height:17px;flex:none}
+  .fin-space .fx-tabs .t-short{display:none}
+  .fin-space .fx-tabs .fx-more{display:none}
+  .fx-moresheet{display:none}
+  @media(max-width:1100px) and (min-width:681px){.fin-space .fx-tabs .t-long{display:none}.fin-space .fx-tabs .t-short{display:inline}}
+  @media(max-width:680px){
+    .fin-space .fx-tabs{display:flex;gap:2px;padding:4px!important;overflow:visible!important}
+    .fin-space .fx-tabs button.sec{display:none}
+    .fin-space .fx-tabs .fx-more{display:flex}
+    .fin-space .fx-tabs button{flex-direction:column;gap:3px;height:56px;padding:0 2px!important;font-size:11.5px;font-weight:600;border-radius:16px!important}
+    .fin-space .fx-tabs .fx-ic{width:20px;height:20px}
+    .fin-space .fx-tabs .t-long{display:none}.fin-space .fx-tabs .t-short{display:inline}
+    .fin-space .fx-tabs .fx-more[aria-selected="true"]{background:linear-gradient(180deg,rgba(40,110,84,.95),rgba(26,81,64,.97))!important;color:#fff!important}
+    #fin-tab-goals::after{top:6px;right:calc(50% - 16px)}
+    .fx-moresheet{display:grid;gap:2px;position:absolute;right:4px;bottom:calc(100% + 8px);min-width:220px;padding:6px;border-radius:18px;background:#fff;border:1px solid rgba(18,18,17,.08);box-shadow:0 18px 40px rgba(17,24,39,.22)}
+    .fin-space .fx-tabs .fx-moresheet button{all:unset;box-sizing:border-box;width:100%;display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center;gap:12px;height:auto!important;padding:13px 14px!important;border-radius:12px!important;font-size:15px!important;font-weight:600;color:#121211!important;background:transparent!important;box-shadow:none!important;cursor:pointer}
+    .fx-moresheet button .fx-ic{width:20px;height:20px;color:#1A5140}
+    .fin-space .fx-tabs .fx-moresheet button[aria-current="true"]{background:rgba(92,168,124,.14)!important}
+    :root[data-theme="dark"] .fx-moresheet{background:#1c1d20;border-color:rgba(255,255,255,.08)}:root[data-theme="dark"] .fx-moresheet button{color:#f2f1ef}:root[data-theme="dark"] .fx-moresheet button .fx-ic{color:#B7E5BA}
+  }
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4694,12 +4717,27 @@
   }
   const catBars=(cats,total)=>Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>{const [n,col]=FIN_CATS[c]||FIN_CATS.other;return `<div class="fx-cat"><span class="fx-cdot" style="background:${col}"></span><span class="fx-cn">${n}</span><span class="fx-cbar"><i style="width:${(v/(total||1)*100).toFixed(1)}%;background:${col}"></i></span><b>${eur(v)}</b><small>${(v/(total||1)*100).toFixed(0)}%</small></div>`}).join("");
   // ---- tabs ----
-  const FIN_TABS=[["overview","Overview"],["goals","Goals"],["spending","Spending"],["income","Income"],["bills","Bills & subscriptions"],["invest","Investments"],["insights","Investor lens"],["news","News"]];
+  const FIN_TABS=[["overview","Overview","Overview",1],["goals","Goals","Goals",1],["spending","Spending","Spending",1],["income","Income","Income",0],["bills","Bills & subs","Bills",0],["invest","Investments","Invest",1],["insights","Investor lens","Lens",0],["news","News","News",0]];
+  const FIN_IC=(p)=>`<svg class="fx-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const FIN_ICONS={overview:FIN_IC('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>'),
+    goals:FIN_IC('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>'),
+    spending:FIN_IC('<rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>'),
+    income:FIN_IC('<path d="M12 3.5v12M7 10.5l5 5 5-5"/><path d="M4 20.5h16"/>'),
+    bills:FIN_IC('<path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9 8.5h6M9 12.5h6"/>'),
+    invest:FIN_IC('<path d="M3.5 19.5h17"/><path d="M5 15l4.5-4.5 3.5 3 6-6.5"/><path d="M15 7h4v4"/>'),
+    insights:FIN_IC('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>'),
+    news:FIN_IC('<rect x="3.5" y="4.5" width="14" height="15" rx="2"/><path d="M17.5 8.5h3v9a2 2 0 0 1-2 2"/><path d="M7 8.5h7M7 12h7M7 15.5h4"/>'),
+    more:FIN_IC('<circle cx="5.5" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor"/>')};
+  let finMoreOpen=false;
+  document.addEventListener("click",e=>{if(!finMoreOpen)return;const t=e.target;if(t.closest&&(t.closest(".fx-moresheet")||t.closest("[data-fmore]")))return;finMoreOpen=false;renderFinance()},true);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&finMoreOpen){finMoreOpen=false;renderFinance()}});
   function renderFinance(){
     const host=$("finSpace");if(!host)return;rollRecurring();
     if(!finMonth)finMonth=ymOf(todayISOf());try{recordPortfolio()}catch(e){}
     const body={overview:finOverview,goals:finGoals,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInsights,news:finNews}[finTab]();
-    host.innerHTML=`<nav class="fx-tabs" aria-label="Finance sections">${FIN_TABS.map(([id,l])=>`<button type="button" data-ftab="${id}" ${id==="goals"?'id="fin-tab-goals"':""} aria-selected="${finTab===id}">${l}</button>`).join("")}</nav>
+    const secSel=FIN_TABS.find(t=>t[0]===finTab&&!t[3]);
+    host.innerHTML=`<nav class="fx-tabs" aria-label="Finance sections">${FIN_TABS.map(([id,l,s,pri])=>`<button type="button" data-ftab="${id}" class="${pri?"pri":"sec"}" ${id==="goals"?'id="fin-tab-goals"':""} aria-selected="${finTab===id}" aria-label="${esc(l)}">${FIN_ICONS[id]}<span class="t-long">${esc(l)}</span><span class="t-short" aria-hidden="true">${esc(s)}</span></button>`).join("")}<button type="button" class="fx-more" data-fmore aria-expanded="${finMoreOpen}" aria-selected="${!!secSel}" aria-label="More sections">${secSel?FIN_ICONS[secSel[0]]:FIN_ICONS.more}<span class="t-short">${secSel?esc(secSel[2]):"More"}</span></button>
+      ${finMoreOpen?`<div class="fx-moresheet" role="menu">${FIN_TABS.filter(t=>!t[3]).map(([id,l])=>`<button type="button" role="menuitem" data-ftab="${id}" aria-current="${finTab===id}">${FIN_ICONS[id]}<span>${esc(l)}</span></button>`).join("")}</div>`:""}</nav>
       ${finMsg?`<div class="fx-msg" role="status">${esc(finMsg)}</div>`:""}<div class="fx-body">${body}</div>
       <p class="fx-foot">Finance data stays in this browser, separate from your health data. <button type="button" class="fx-link" data-fexport>Back up finance data</button> · <button type="button" class="fx-link" data-fimportjson>Restore</button><input type="file" id="fxJson" accept="application/json,.json" hidden> · Not financial advice.</p>`;
     finMsg="";
@@ -4966,7 +5004,8 @@
   // ---- events ----
   document.addEventListener("click",async e=>{
     const t=e.target.closest?e.target:null;if(!t||!t.closest("#finSpace"))return;
-    const tab=t.closest("[data-ftab]");if(tab){finTab=tab.dataset.ftab;finForm=null;renderFinance();scrollTo({top:0});return}
+    if(t.closest("[data-fmore]")){finMoreOpen=!finMoreOpen;renderFinance();return}
+    const tab=t.closest("[data-ftab]");if(tab){finTab=tab.dataset.ftab;finForm=null;finMoreOpen=false;renderFinance();scrollTo({top:0});return}
     const mo=t.closest("[data-fmonth]");if(mo){finMonth=addMonths(finMonth,Number(mo.dataset.fmonth));renderFinance();return}
     const nw=t.closest("[data-fnew]");if(nw){finForm=nw.dataset.fnew;renderFinance();$("finSpace").querySelector(".fx-form input:not([type=date]),.fx-form input")?.focus();return}
     if(t.closest("[data-fcancel]")){finForm=null;renderFinance();return}
