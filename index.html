@@ -1151,7 +1151,6 @@
   .fx-tabs{display:flex;gap:4px;padding:5px;margin:0 0 22px;overflow-x:auto;scrollbar-width:none;border-radius:16px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.85);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 30px -14px rgba(26,81,64,.25);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%)}
   .fx-tabs::-webkit-scrollbar{display:none}
   .fx-tabs button{all:unset;cursor:pointer;flex:1 0 auto;text-align:center;white-space:nowrap;padding:11px 16px;border-radius:12px;font-size:14.5px;font-weight:600;letter-spacing:-.015em;color:#3d5249;transition:background .15s ease,color .15s ease}
-  .fx-tabs button:hover{color:var(--fx-ink);background:rgba(255,255,255,.6)}
   .fx-tabs button[aria-selected="true"]{background:var(--fx-jade);color:#fff;box-shadow:0 6px 16px -4px rgba(26,81,64,.45)}
   .fx-tabs button:focus-visible{outline:2px solid var(--fx-jade);outline-offset:-2px}
 
@@ -1340,6 +1339,36 @@
   :root[data-theme="dark"] .scan-stage.studio .seg{background:#26272b!important}:root[data-theme="dark"] .scan-stage.studio .seg button[aria-pressed="true"],:root[data-theme="dark"] .scan-stage.studio .body-view-controls button[aria-pressed="true"]{background:#f2f1ef!important;color:#111!important}
   :root[data-theme="dark"] .scan-stage.studio .figure-controls button[aria-pressed="true"]{background:#f2f1ef!important;border-color:#f2f1ef!important;color:#111!important}
   :root[data-theme="dark"] .scan-stage.studio .scan-grid{background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)!important;background-size:38px 38px!important}
+
+  /* finance v2: white page, solid white cards and tabs; the jade design lives in the hero */
+  :root body.space-fin{background:#fff!important}
+  .fin-space{--fx-glass:#fff;--fx-glass-brd:rgba(18,18,17,.07);--fx-line:rgba(18,18,17,.07)}
+  .fx-tabs{background:#fff;border:1px solid rgba(18,18,17,.07);box-shadow:0 1px 2px rgba(18,18,17,.04),0 8px 24px rgba(18,18,17,.05);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .fx-tabs button{color:#6b6866}
+  .fin-space .fx-tabs button:not([aria-selected="true"]):hover{background:rgba(18,18,17,.04);color:#121211}
+  .fin-space .fx-tabs button[aria-selected="true"],.fin-space .fx-tabs button[aria-selected="true"]:hover{background:#1A5140;color:#fff}
+  :root[data-theme="dark"] .fin-space .fx-tabs button[aria-selected="true"],:root[data-theme="dark"] .fin-space .fx-tabs button[aria-selected="true"]:hover{background:#B7E5BA;color:#0b1f17}
+  :root[data-theme="dark"] .fin-space .fx-tabs button:not([aria-selected="true"]):hover{background:rgba(255,255,255,.06);color:#fff}
+  .fx-card,.fx-lens,.fx-nc{box-shadow:0 1px 2px rgba(18,18,17,.04),0 10px 30px rgba(18,18,17,.05);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .fx-card .fx-tile,.fx-form,.fx-mnav,.fx-msg{background:#f7f8f7}
+  .fx-scroll{background:#fff}.fx-table th{background:#f5f7f5}
+  .fx-alert{background:#fff}
+  .fx-hero{padding:34px 34px 30px;
+    background:radial-gradient(560px 300px at 8% -10%,rgba(183,229,186,.75),transparent 70%),radial-gradient(520px 420px at 105% 110%,rgba(92,168,124,.75),transparent 70%),radial-gradient(700px 260px at 40% 55%,rgba(26,81,64,.55),transparent 75%),
+    linear-gradient(rgba(255,255,255,.11) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,.11) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(160deg,#6fb58a 0%,#3d9468 38%,#235f4b 72%,#1A5140 100%)}
+  .fx-eyebrow{font-size:13px;color:#fff;opacity:.92}
+  .fx-big{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#fff;font-size:60px;text-shadow:0 2px 18px rgba(10,40,30,.25)}
+  .fx-hero>div>small{font-size:15px;color:#fff;opacity:.9}
+  .fx-hero .fx-tile{background:rgba(10,45,34,.30);border:1px solid rgba(255,255,255,.20)}
+  .fx-hero .fx-tile span{color:#fff!important;opacity:.85;font-size:13px}
+  .fx-hero .fx-tile small{color:#fff!important;opacity:.8}
+  .fx-hero .fx-tile b{font-size:26px}.fx-hero .fx-tile b.pos{color:#c9f7a9!important}.fx-hero .fx-tile b.neg{color:#ffc9c3!important}
+  :root[data-theme="dark"] body.space-fin{background:#0d0e10!important}
+  :root[data-theme="dark"] .fin-space{--fx-glass:#17181b;--fx-glass-brd:rgba(255,255,255,.07);--fx-line:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] .fx-tabs{background:#17181b;border-color:rgba(255,255,255,.07)}
+  :root[data-theme="dark"] .fx-card .fx-tile,:root[data-theme="dark"] .fx-form,:root[data-theme="dark"] .fx-mnav,:root[data-theme="dark"] .fx-msg,:root[data-theme="dark"] .fx-scroll,:root[data-theme="dark"] .fx-alert{background:#1f2024}
+  :root[data-theme="dark"] .fx-table th{background:#232428}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
