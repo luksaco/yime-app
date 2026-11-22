@@ -3455,9 +3455,9 @@
         gl_Position=vec4(v.x*2.4*fit.x,v.y*1.7142857*fit.y,-v.z*1.5,1.);}`));
     gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec3 n;varying vec3 p;varying float vao;varying vec2 vmat;varying float vglow;uniform float pass;uniform float mesh;uniform vec4 cloth;uniform float fAmt;uniform float fT;
       void main(){vec3 N=normalize(n);float rim=pow(1.-abs(N.z),2.6);float g=vglow*fAmt*(.84+.16*sin(fT*3.4));
-      if(pass>2.5){if(g<.003)discard;float e=pow(1.-abs(N.z),1.35);gl_FragColor=vec4(mix(vec3(.30,.92,.40),vec3(.55,1.,.6),e),g*e*(mesh>.5?.55:.7));return;}
+      if(pass>2.5){if(g<.003)discard;float e=pow(1.-abs(N.z),1.35);gl_FragColor=vec4(mix(vec3(.918,.20,.153),vec3(1.,.48,.40),e),g*e*(mesh>.5?.6:.7));return;}
       if(pass>1.5){if(N.z<0.)discard;gl_FragColor=vec4(.94,.65,.36,.2);return;}
-      if(pass>.5){gl_FragColor=vec4(mix(vec3(.04,.45,.58),vec3(.16,.70,.30),g),(.22+rim*.30+g*.30)*smoothstep(.055,.115,p.y));return;}
+      if(pass>.5){gl_FragColor=vec4(mix(vec3(.04,.45,.58),vec3(.86,.16,.12),g),(.22+rim*.30+g*.30)*smoothstep(.055,.115,p.y));return;}
       vec3 V=vec3(0.,0.,1.);
       vec3 K=normalize(vec3(-.55,.72,.80));
       vec3 F=normalize(vec3(.85,.05,.40));
@@ -3494,8 +3494,8 @@
         col+=vec3(.92,.95,1.)*fres*.30*gloss*occ;
         col*=mix(.78,1.,smoothstep(.0,.30,p.y));
         surface=clamp(col,0.,1.);
-        surface=mix(surface,surface*vec3(.50,.98,.56)+vec3(.04,.26,.07),clamp(g*.95,0.,1.));surface+=vec3(.08,.40,.12)*g*(.15+rim*1.5);
-      }else{surface=mix(surface,vec3(.48,.90,.56),clamp(g*.8,0.,1.));surface+=vec3(.04,.28,.08)*g*rim;}
+        surface=mix(surface,surface*vec3(1.,.42,.36)+vec3(.30,.03,.02),clamp(g*.95,0.,1.));surface+=vec3(.45,.06,.04)*g*(.15+rim*1.5);
+      }else{surface=mix(surface,vec3(.92,.26,.20)*(.75+.35*key),clamp(g*.92,0.,1.));surface+=vec3(.25,.03,.02)*g*rim;}
       gl_FragColor=vec4(surface,1.);}`));
     gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
