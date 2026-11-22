@@ -1466,6 +1466,8 @@
   html body #appTabs,html body .fin-space .fx-tabs{background:linear-gradient(180deg,#ffffff 0%,#f7f7f6 100%)!important;-webkit-backdrop-filter:blur(30px) saturate(180%)!important;backdrop-filter:blur(30px) saturate(180%)!important}
   @media(max-width:680px){html body #appTabs,html body .fin-space .fx-tabs{background:linear-gradient(180deg,rgba(255,255,255,.985),rgba(248,248,247,.985))!important}}
   :root[data-theme="dark"] body #appTabs,:root[data-theme="dark"] body .fin-space .fx-tabs{background:linear-gradient(180deg,#232427,#1a1b1e)!important}
+  #bodyViewport:focus,#bodyViewport:focus-visible{outline:none!important}
+  #bodyViewport:focus-visible .scan-floor{border-color:#0891b2!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3402,7 +3404,7 @@
       void main(){vec3 N=normalize(n);float rim=pow(1.-abs(N.z),2.6);float g=vglow*fAmt*(.84+.16*sin(fT*3.4));
       if(pass>2.5){if(g<.003)discard;float e=pow(1.-abs(N.z),1.35);gl_FragColor=vec4(mix(vec3(.30,.92,.40),vec3(.55,1.,.6),e),g*e*(mesh>.5?.55:.7));return;}
       if(pass>1.5){if(N.z<0.)discard;gl_FragColor=vec4(.94,.65,.36,.2);return;}
-      if(pass>.5){gl_FragColor=vec4(mix(vec3(.23,.82,.96),vec3(.45,1.,.5),g),(.13+rim*.38+g*.35)*smoothstep(.055,.115,p.y));return;}
+      if(pass>.5){gl_FragColor=vec4(mix(vec3(.04,.45,.58),vec3(.16,.70,.30),g),(.22+rim*.30+g*.30)*smoothstep(.055,.115,p.y));return;}
       vec3 V=vec3(0.,0.,1.);
       vec3 K=normalize(vec3(-.55,.72,.80));
       vec3 F=normalize(vec3(.85,.05,.40));
@@ -3410,12 +3412,12 @@
       float fill=max(0.,dot(N,F));
       float spec=pow(max(0.,dot(reflect(-K,N),V)),24.)*step(.01,key);
       float ao=mix(.80,1.,smoothstep(.0,.34,p.y));
-      vec3 surface=mix(vec3(.014,.060,.092),vec3(.17,.44,.52),key*key*.6+key*.4);
-      surface+=fill*vec3(.05,.14,.19);
-      surface+=rim*vec3(.13,.47,.58);
-      surface+=spec*vec3(.30,.66,.78);
-      surface*=ao;
-      surface*=mix(.42,1.08,vao);
+      // light scan hologram: pale aqua glass body, deeper teal toward the silhouette edge
+      vec3 surface=mix(vec3(.62,.82,.88),vec3(.94,.985,1.),key*.75+fill*.25);
+      surface=mix(surface,vec3(.22,.64,.78),rim*.62);
+      surface+=spec*vec3(.55,.70,.76)*.55;
+      surface*=mix(.86,1.,smoothstep(.0,.34,p.y));
+      surface*=mix(.80,1.03,vao);
       if(mesh<.5){
         // studio: glossy white porcelain mannequin - soft key light, cool fill,
         // sharp clear-coat highlights and a Fresnel sheen, like a showroom figure
@@ -3440,7 +3442,7 @@
         col*=mix(.78,1.,smoothstep(.0,.30,p.y));
         surface=clamp(col,0.,1.);
         surface=mix(surface,surface*vec3(.50,.98,.56)+vec3(.04,.26,.07),clamp(g*.95,0.,1.));surface+=vec3(.08,.40,.12)*g*(.15+rim*1.5);
-      }else{surface+=vec3(.12,.85,.32)*g*(.45+rim*1.2);}
+      }else{surface=mix(surface,vec3(.48,.90,.56),clamp(g*.8,0.,1.));surface+=vec3(.04,.28,.08)*g*rim;}
       gl_FragColor=vec4(surface,1.);}`));
     gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
     gl.useProgram(program);
@@ -3619,9 +3621,9 @@
     measurementRings=[];const cur=snapshot();if(!cur)return;
     const j=BODY_MESH.joints[state.sex],s=shapeScales(cur);
     const defs=[
-      {key:'chestCm',label:'CHEST',center:[0,.737,.012],axis:[0,1,0],column:1,offset:-32,color:'#87e7f4'},
-      {key:'waistCm',label:'WAIST',center:[0,.615,.012],axis:[0,1,0],column:-1,offset:5,color:'#e5c986'},
-      {key:'hipCm',label:'HIPS',center:[0,.52,.012],axis:[0,1,0],column:1,offset:12,color:'#bba9f5'}
+      {key:'chestCm',label:'CHEST',center:[0,.737,.012],axis:[0,1,0],column:1,offset:-32,color:'#0891b2'},
+      {key:'waistCm',label:'WAIST',center:[0,.615,.012],axis:[0,1,0],column:-1,offset:5,color:'#c98a00'},
+      {key:'hipCm',label:'HIPS',center:[0,.52,.012],axis:[0,1,0],column:1,offset:12,color:'#7c5cff'}
     ];
     for(const side of ['right','left']){
       const sign=side==='right'?-1:1,sidePoint=p=>[p[0]*sign,p[1],p[2]];
@@ -3629,7 +3631,7 @@
         const a=sidePoint(j[start]),b=sidePoint(j[end]),center=vadd(a,vmul(vsub(b,a),t));
         if(suffix==='Biceps')center[0]+=sign*j['l-shoulder'][0]*(s.chest-1)*.7;
         else center[0]+=center[0]*(s.hip-1)*smooth(.28,.49,center[1]);
-        defs.push({key:side+suffix+'Cm',label:side.toUpperCase()+' '+label,center,axis:vsub(b,a),column:sign,offset:suffix==='Biceps'?13:0,paired:true,biceps:suffix==='Biceps',color:'#87e7f4'});
+        defs.push({key:side+suffix+'Cm',label:side.toUpperCase()+' '+label,center,axis:vsub(b,a),column:sign,offset:suffix==='Biceps'?13:0,paired:true,biceps:suffix==='Biceps',color:'#0891b2'});
       }
     }
     for(const def of defs)if(cur[def.key]!=null){
@@ -3752,14 +3754,19 @@
         if(!r.visible[i]){continued=false;continue}
         const a=r.points[i],b=r.points[(i+1)%r.points.length];path+=(continued?'':`M ${fmtPoint(a)} `)+`L ${fmtPoint(b)} `;continued=true;
       }
-      return `<g class="measurement-ring" data-key="${r.key}" data-occluded="${r.hidden}" data-visible-segments="${r.hidden?0:r.visible.filter(Boolean).length}"><title>${r.label}: ${fmt(cur[r.key])} cm</title>${path?`<path class="ring-front" d="${path}" fill="none" stroke="${r.color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`:''}</g>`;
+      return `<g class="measurement-ring" data-key="${r.key}" data-occluded="${r.hidden}" data-visible-segments="${r.hidden?0:r.visible.filter(Boolean).length}"><title>${r.label}: ${fmt(cur[r.key])} cm</title>${path?`<path class="ring-edge" d="${path}" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path class="ring-front" d="${path}" fill="none" stroke="${r.color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>`:''}</g>`;
     }).join('');
     const labels=rings.map(r=>{
       const left=r.column<0,x=left?92:408,anchor=left?'end':'start',ly=r.labelY,start=state.baseline?.[r.key];
       const connector=r.hidden?'':`<path class="measurement-leader" d="M ${fmtPoint(r.anchor)} L ${left?110:390} ${ly} H ${x+(left?7:-7)}" fill="none" stroke="${r.color}" stroke-opacity=".44" stroke-width=".8" stroke-dasharray="2 4"/><circle cx="${r.anchor[0]}" cy="${r.anchor[1]}" r="2.2" fill="${r.color}"/>`;
-      return `<g class="measurement-label" data-key="${r.key}" data-occluded="${r.hidden}" data-label-y="${ly.toFixed(2)}"><title>${r.hidden?'This body part is hidden from this angle. ':''}${metrics[r.key].label}: ${fmt(cur[r.key])} cm</title>${connector}<rect x="${left?3:402}" y="${ly-24}" width="95" height="44" rx="5" fill="#07131f" fill-opacity=".87"/><text x="${x}" y="${ly-14}" text-anchor="${anchor}" font-size="9.2" font-weight="600" letter-spacing=".45" fill="${r.hidden?'#8ba2b2':r.color}">${r.label}</text><text x="${x}" y="${ly+2}" text-anchor="${anchor}" font-size="13" font-weight="600" fill="${r.hidden?'#bed0dc':'#e6f8ff'}">${fmt(cur[r.key])}<tspan dx="3" font-size="10" font-weight="400">cm</tspan></text>${start!=null?`<text x="${x}" y="${ly+16}" text-anchor="${anchor}" font-size="9.5" fill="#90a6b6">Start ${fmt(start)}</text>`:''}</g>`;
+      const now=cur[r.key],delta=start!=null&&now!=null?now-start:null,goal=state.goals?.[r.key];
+      const dir=goal!=null&&start!=null&&goal!==start?Math.sign(goal-start):(/^(chest|waist|hip)|Thigh/.test(r.key)?-1:1);
+      const tone=delta==null||Math.abs(delta)<.05?'#8a8580':delta*dir>0?'#2e9e4f':'#F04438';
+      const dtxt=delta==null?'':Math.abs(delta)<.05?'No change':`${delta>0?'+':'−'}${fmt(Math.abs(delta))} since start`;
+      const rx=left?3:402,tx=left?x-2:x+2;
+      return `<g class="measurement-label" data-key="${r.key}" data-occluded="${r.hidden}" data-label-y="${ly.toFixed(2)}" opacity="${r.hidden?.55:1}"><title>${r.hidden?'This body part is hidden from this angle. ':''}${metrics[r.key].label}: ${fmt(now)} cm${start!=null?` (start ${fmt(start)})`:''}</title>${connector}<rect x="${rx}" y="${ly-25}" width="95" height="${start!=null?47:38}" rx="9" fill="#fff" stroke="rgba(18,18,17,.09)" stroke-width=".8" filter="url(#labelShadow)"/><circle cx="${left?rx+9:rx+86}" cy="${ly-16.5}" r="3" fill="${r.color}"/><text x="${left?tx-8:tx+8}" y="${ly-13.5}" text-anchor="${anchor}" font-size="8.6" font-weight="700" letter-spacing=".5" fill="#6b6866">${r.label}</text><text x="${tx}" y="${ly+3}" text-anchor="${anchor}" font-size="14" font-weight="700" fill="#121211">${fmt(now)}<tspan dx="2.5" font-size="9.5" font-weight="500" fill="#6b6866">cm</tspan></text>${start!=null?`<text x="${tx}" y="${ly+16.5}" text-anchor="${anchor}" font-size="9" font-weight="650" fill="${tone}">${dtxt}</text>`:''}</g>`;
     }).join('');
-    return `<g id="measurementRings">${ringPaths}</g><g id="measurementLabels">${labels}</g>`;
+    return `<defs><filter id="labelShadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#111827" flood-opacity=".10"/></filter></defs><g id="measurementRings">${ringPaths}</g><g id="measurementLabels">${labels}</g>`;
   }
 
   // Rings and labels are CPU work: a software depth buffer over the whole mesh plus
