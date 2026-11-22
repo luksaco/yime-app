@@ -1084,6 +1084,40 @@
   :root[data-theme="dark"] .cal-list li,:root[data-theme="dark"] .cal-form{background:#1f2024}:root[data-theme="dark"] .cal-form input,:root[data-theme="dark"] .cal-form select{background:#17181b;border-color:rgba(255,255,255,.1)}:root[data-theme="dark"] .cal-list small,:root[data-theme="dark"] .cal-legend{color:#b3aca4}
   @media(max-width:980px){.cal-body{grid-template-columns:1fr}.cal-side{position:static}}
   @media(max-width:680px){.cal-head h2{font-size:30px}.cal-cell{min-height:56px;padding:4px;align-items:center}.cal-num{align-self:center;font-size:13px;width:26px;height:26px}.cal-evs{display:none}.cal-dots{display:flex}.cal-dow span{text-align:center;padding:10px 0}.cal-tools{width:100%}.cal-btn.primary{margin-left:auto}}
+
+  /* ===== Mobile fixes (iPhone Safari) ===== */
+  input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box;text-align:left;min-height:44px}
+  input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;margin:0}
+  .field input,.blood-field input,.form-grid input{box-sizing:border-box;max-width:100%}
+  .month-partial:empty{display:none!important}
+  .train-tools .details-body{padding:0}
+  .train-tools .form-foot{flex-direction:row-reverse;justify-content:flex-end}
+  @media(max-width:680px){
+    .month-row{flex-wrap:wrap;gap:6px}
+    .month-row-label{flex:1 1 100%}
+    .month-row .month-nav{flex:1 1 100%;justify-content:space-between;gap:6px}
+    .month-row .month-nav strong{min-width:0;flex:1;font-size:17px}
+    .month-row .month-nav .icon-btn{padding:6px 12px}
+    .train-tools .form-foot{flex-direction:column-reverse;align-items:stretch}
+    .train-tools .form-foot .btn.primary{width:100%;justify-content:center;text-align:center}
+    .train-tools .form-foot .btn.text{align-self:center}
+    .cal-form .cal-row{flex-wrap:wrap}.cal-form .cal-row input[type=date]{flex:1 1 100%}
+  }
+
+  @media(max-width:680px){
+    .vo2-row .rv{white-space:normal;min-width:0}.vo2-row .rv small{white-space:normal}.vo2-row .rk{flex:none}
+    .layout #vo2Card .vo2-side{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .layout #vo2Card .vo2-row{display:block;border-bottom:0;padding:10px 12px;background:var(--soft);border-radius:12px}
+    .layout #vo2Card .vo2-row>*{display:block;text-align:left}
+  }
+  @media(max-width:380px){
+    .top .brand svg{height:30px!important}.brand-app{font-size:18px!important;margin-top:6px!important}
+    .top .actions .btn.primary{padding:0 12px!important;height:38px!important;font-size:11px!important}
+    .theme-btn,.top .actions .menu-btn{width:36px!important;height:36px!important}
+    .top .actions{gap:2px!important}
+  }
+  @media(max-width:680px){.layout #vo2Card .vo2-side{grid-template-columns:repeat(2,minmax(0,1fr))!important;min-width:0}.layout #vo2Card .vo2-wrap{grid-template-columns:minmax(0,1fr)!important}.layout #vo2Card .vo2-row{min-width:0}}
+  @media(max-width:360px){.layout #vo2Card .vo2-side{grid-template-columns:minmax(0,1fr)!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
