@@ -1475,6 +1475,9 @@
   html body .fin-space .fx-hero .fx-tile small,:root[data-theme="dark"] body .fin-space .fx-hero .fx-tile small{color:#5f5c59!important;opacity:1}
   html body .fin-space .fx-hero .fx-tile b,html body .fin-space .fx-hero .fx-tile b.pos,html body .fin-space .fx-hero .fx-tile b.neg,
   :root[data-theme="dark"] body .fin-space .fx-hero .fx-tile b,:root[data-theme="dark"] body .fin-space .fx-hero .fx-tile b.pos,:root[data-theme="dark"] body .fin-space .fx-hero .fx-tile b.neg{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#121211!important}
+  .fx-split{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .fx-split span{display:inline-flex;align-items:baseline;gap:6px;padding:7px 12px;border-radius:999px;background:#fff;color:#5f5c59;font-size:13.5px;font-weight:600;box-shadow:0 6px 16px -10px rgba(10,40,30,.5)}
+  .fx-split b{color:#121211;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4607,7 +4610,7 @@
     const months=[];for(let i=5;i>=0;i--){const ym=addMonths(finMonth,-i),s=monthStats(ym);months.push({ym,income:s.income,spend:s.spend})}
     const up=finUpcoming(30),cancels=fin.recurring.filter(r=>r.cancel);
     const goal=fin.saveGoal||0,saved=cashTotal();
-    return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><small>Investments ${eur(p.total)} · Cash ${eur(cashTotal())}</small></div>
+    return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><div class="fx-split"><span>Investments <b>${eur(p.total)}</b></span><span>Cash <b>${eur(cashTotal())}</b></span></div></div>
       <div class="fx-tiles">
         <div class="fx-tile"><span>Income · ${monthName(finMonth).split(" ")[0]}</span><b class="pos">${eur(m.income)}</b></div>
         <div class="fx-tile"><span>Spending</span><b>${eur(m.spend)}</b></div>
