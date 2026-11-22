@@ -1560,6 +1560,7 @@
   }
   .fx-tile span .fx-ysel{appearance:none;-webkit-appearance:none;cursor:pointer;font:inherit;font-size:12.5px;font-weight:700;color:#1A5140;background:#eef5f0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' fill='none' stroke='%231A5140' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 7px center;border:1px solid rgba(26,81,64,.15);border-radius:999px;padding:2px 20px 2px 9px;margin-left:4px;vertical-align:1px}
   .fx-tile span .fx-ysel:hover{background-color:#e2efe6}.fx-tile span .fx-ysel:focus-visible{outline:2px solid #1A5140;outline-offset:1px}
+  .fx-newsec{margin-top:8px}.fx-newsec>.fx-ch{margin-bottom:12px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3489,7 +3490,8 @@
       float glowW(vec3 p){
         if(fKind<.5)return 0.;
         if(fKind<1.5){float w=(1.-smoothstep(fP.y*.15,fP.y*1.15,abs(p.y-fP.x)))*(1.-smoothstep(fP.z-.03,fP.z+.006,abs(p.x)));
-          if(fP.w>0.){float d=length(vec3(abs(p.x),p.y,p.z)-fA);w=max(w,1.-smoothstep(fP.w*.3,fP.w*1.1,d));}return w;}
+          if(fP.w>0.){float d=length(vec3(abs(p.x),p.y,p.z)-fA);w=max(w,1.-smoothstep(fP.w*.3,fP.w*1.1,d));}
+          if(fSide>1.5)w*=mix(1.,.12+.88*smoothstep(.012,.048,abs(p.x)),step(.0,p.z));return w;}
         vec3 ab=fB-fA;float t=dot(p-fA,ab)/dot(ab,ab);float d=length(p-(fA+ab*clamp(t,0.,1.)));
         return (1.-smoothstep(fP.w*.45,fP.w*1.05,d))*smoothstep(fP.x-.12,fP.x+.1,t)*(1.-smoothstep(fP.y-.1,fP.y+.08,t))*step(0.,p.x*fSide);}
       void main(){vglow=glowW(position);
@@ -3625,7 +3627,7 @@
     const v=currentBodyVertices;if(!v||!key)return null;const j=BODY_MESH.joints[state.sex],sh=j['l-shoulder'];
     if(key==='chestCm')return {kind:1,A:[sh[0],sh[1]-.012,sh[2]],B:[0,0,0],P:[.752,.066,torsoEdge(v,.735),.06],side:0};
     if(key==='waistCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.615,.05,torsoEdge(v,.615)+.004,0],side:0};
-    if(key==='hipCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.522,.055,torsoEdge(v,.53)+.008,0],side:0};
+    if(key==='hipCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.532,.045,torsoEdge(v,.535)+.01,0],side:2};
     const m=key.match(/^(left|right)(Biceps|Thigh|Calf)Cm$/);if(!m)return null;
     const sign=m[1]==='right'?-1:1,sp=q=>[q[0]*sign,q[1],q[2]];
     const seg={Biceps:['l-shoulder','l-elbow',.052,.08,.95],Thigh:['l-upper-leg','l-knee',.085,.02,.9],Calf:['l-knee','l-ankle',.066,.1,.74]}[m[2]];
@@ -4719,7 +4721,7 @@
   }
   const catBars=(cats,total)=>Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>{const [n,col]=FIN_CATS[c]||FIN_CATS.other;return `<div class="fx-cat"><span class="fx-cdot" style="background:${col}"></span><span class="fx-cn">${n}</span><span class="fx-cbar"><i style="width:${(v/(total||1)*100).toFixed(1)}%;background:${col}"></i></span><b>${eur(v)}</b><small>${(v/(total||1)*100).toFixed(0)}%</small></div>`}).join("");
   // ---- tabs ----
-  const FIN_TABS=[["overview","Overview","Overview",1],["goals","Goals","Goals",1],["spending","Spending","Spending",1],["income","Income","Income",0],["bills","Bills & subs","Bills",0],["invest","Investments","Invest",1],["insights","Investor lens","Lens",0],["news","News","News",0]];
+  const FIN_TABS=[["overview","Overview","Overview",1],["goals","Goals","Goals",1],["spending","Spending","Spending",1],["income","Income","Income",0],["bills","Bills & subs","Bills",0],["invest","Investments","Invest",1],["insights","Investor lens","Lens",0]];
   const FIN_IC=(p)=>`<svg class="fx-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const FIN_ICONS={overview:FIN_IC('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>'),
     goals:FIN_IC('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>'),
@@ -4738,7 +4740,7 @@
   function renderFinance(){
     const host=$("finSpace");if(!host)return;rollRecurring();
     if(!finMonth)finMonth=ymOf(todayISOf());try{recordPortfolio()}catch(e){}
-    const body={overview:finOverview,goals:finGoals,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInsights,news:finNews}[finTab]();
+    const body={overview:finOverview,goals:finGoals,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInsights,news:finInvest}[finTab]();
     const secSel=FIN_TABS.find(t=>t[0]===finTab&&!t[3]);
     host.innerHTML=`<nav class="fx-tabs" aria-label="Finance sections">${FIN_TABS.map(([id,l,s,pri])=>`<button type="button" data-ftab="${id}" class="${pri?"pri":"sec"}" ${id==="goals"?'id="fin-tab-goals"':""} aria-selected="${finTab===id}" aria-label="${esc(l)}">${FIN_ICONS[id]}<span class="t-long">${esc(l)}</span><span class="t-short" aria-hidden="true">${esc(s)}</span></button>`).join("")}<button type="button" class="fx-more" data-fmore aria-expanded="${finMoreOpen}" aria-selected="${!!secSel}" aria-label="More sections">${secSel?FIN_ICONS[secSel[0]]:FIN_ICONS.more}<span class="t-short">${secSel?esc(secSel[2]):"More"}</span></button>
       ${finMoreOpen?`<div class="fx-moresheet" role="menu">${FIN_TABS.filter(t=>!t[3]).map(([id,l])=>`<button type="button" role="menuitem" data-ftab="${id}" aria-current="${finTab===id}">${FIN_ICONS[id]}<span>${esc(l)}</span></button>`).join("")}</div>`:""}</nav>
@@ -4913,7 +4915,7 @@
       ${card("Goal planner",`<div class="fx-grid2 fx-plans">${planRow("stocks & ETFs",stocksNow,pl.stockGoal,pl.stockM,pl.stockR,"linear-gradient(90deg,#0099FF,#5CA87C)")}${planRow("crypto",cryptoNow,pl.cryptoGoal,pl.cryptoM,pl.cryptoR,"linear-gradient(90deg,#F04438,#f6b93b)")}</div>
         <form class="fx-form fx-planform" data-fform="plan"><label class="fx-lab">Stocks goal € <input name="stockGoal" type="number" step="1000" value="${pl.stockGoal}"></label><label class="fx-lab">Stocks €/month <input name="stockM" type="number" step="50" value="${pl.stockM}"></label><label class="fx-lab">Stocks return % <input name="stockR" type="number" step="0.5" value="${pl.stockR}"></label>
         <label class="fx-lab">Crypto goal € <input name="cryptoGoal" type="number" step="1000" value="${pl.cryptoGoal}"></label><label class="fx-lab">Crypto €/month <input name="cryptoM" type="number" step="50" value="${pl.cryptoM}"></label><label class="fx-lab">Crypto return % <input name="cryptoR" type="number" step="0.5" value="${pl.cryptoR}"></label><button class="fx-save">Update plan</button></form>
-        <p class="fx-note">Returns are your assumptions, not a forecast.</p>`)}`;
+        <p class="fx-note">Returns are your assumptions, not a forecast.</p>`)}${fin.holdings.length?`<section class="fx-newsec" id="fxNews"><div class="fx-ch"><h3>News on what you own</h3></div>${finNews()}</section>`:""}`;
   }
   // ---- investor lens: rule-based reads of the portfolio through well-known investors' published principles ----
   function finInsights(){
