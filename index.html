@@ -1511,6 +1511,30 @@
   .fg-now{font-size:13.5px;color:var(--fx-muted)}
   .fg-check{position:relative}
   @media(max-width:680px){.fg-row{grid-template-columns:minmax(0,1fr) 44px 34px 30px}.fg-row .fg-main{grid-column:1/5}.fg-row .fg-bar{grid-column:1/2}}
+  /* clearer overview cards */
+  .fin-space .fx-card .fx-ch h3{font-size:20px}
+  .fx-cfsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:-4px 0 12px}
+  .fx-cfsum>div{padding:10px 12px;border-radius:12px;background:#f7f8f7}
+  .fx-cfsum span{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:650;color:var(--fx-muted)}.fx-cfsum span i{width:9px;height:9px;border-radius:3px}.fx-cfsum i.in{background:#2e9e4f}.fx-cfsum i.out{background:#F04438}
+  .fx-cfsum b{display:block;margin-top:2px;font-size:19px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .fx-chart .gl{stroke:rgba(18,18,17,.07);stroke-width:1}.fx-chart .gl.base{stroke:rgba(18,18,17,.18)}
+  .fx-chart .yl{fill:#8a8580;font-size:15px;font-weight:600}.fx-chart .xl{fill:#6b6866;font-size:16px;font-weight:600}.fx-chart .xl.sel{fill:#121211;font-weight:800}
+  .fx-chart rect.in{fill:#2e9e4f}.fx-chart rect.out{fill:#F04438}.fx-chart .off rect{opacity:.32}
+  .fx-chart .vl{font-size:15px;font-weight:800}.fx-chart .vl.in{fill:#2e9e4f}.fx-chart .vl.out{fill:#d92d20}
+  .fx-up li{padding:10px 0;gap:14px}
+  .fx-dchip{flex:none;width:46px;height:46px;border-radius:12px;background:#f3f5f3;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .fx-dchip b{font-size:17px;color:#121211}.fx-dchip small{font-size:11px;font-weight:650;color:var(--fx-muted);text-transform:uppercase;margin-top:3px}
+  .fx-up li.cancel .fx-dchip{background:rgba(0,153,255,.1)}
+  .fx-up .fx-t b{display:block;font-size:15px}.fx-up .fx-t small{display:block;font-size:12.5px;color:var(--fx-muted);margin-top:2px}
+  .fx-up li>b{font-size:16px}
+  .fx-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:12px;border-top:2px solid rgba(18,18,17,.1);font-size:14px;color:var(--fx-muted);font-weight:600}
+  .fx-total b{font-size:18px;color:var(--fx-ink);font-variant-numeric:tabular-nums}
+  .fx-total.fx-ttop{margin:-4px 0 6px;padding:0 0 10px;border-top:0;border-bottom:1px solid var(--fx-line)}
+  .fin-space .fx-cat{padding:9px 0;font-size:15px}.fin-space .fx-cbar{height:10px}
+  :root[data-theme="dark"] .fx-cfsum>div,:root[data-theme="dark"] .fx-dchip{background:#1f2024}:root[data-theme="dark"] .fx-dchip b{color:#f2f1ef}
+  :root[data-theme="dark"] .fx-chart .gl{stroke:rgba(255,255,255,.07)}:root[data-theme="dark"] .fx-chart .gl.base{stroke:rgba(255,255,255,.18)}:root[data-theme="dark"] .fx-chart .xl.sel{fill:#f2f1ef}
+  :root[data-theme="dark"] .fx-chart rect.out{fill:#ff6a5c}:root[data-theme="dark"] .fx-chart rect.in{fill:#5cc27a}
+  @media(max-width:680px){.fx-cfsum b{font-size:16px}.fx-chart .yl{font-size:24px}.fx-chart .xl{font-size:25px}.fx-chart .vl{font-size:24px}.fx-avgrow{flex-direction:column;align-items:flex-start;gap:4px}.fx-spark{width:70px;height:22px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4650,11 +4674,19 @@
     return out.sort((a,b)=>a.date<b.date?-1:1);
   }
   // ---- charts ----
-  function barsSvg(months){
-    const W=760,H=170,pad=26,mx=Math.max(1,...months.flatMap(m=>[m.income,m.spend])),bw=(W-pad*2)/months.length;
-    return `<svg class="fx-chart" viewBox="0 0 ${W} ${H+26}" role="img" aria-label="Income and spending by month">${months.map((m,i)=>{const x=pad+i*bw,hi=H*m.income/mx*.92,hs=H*m.spend/mx*.92,w=bw*.3;
-      return `<rect x="${(x+bw*.17).toFixed(1)}" y="${(H-hi).toFixed(1)}" width="${w.toFixed(1)}" height="${hi.toFixed(1)}" rx="4" class="in"><title>${monthName(m.ym)} income ${eur(m.income)}</title></rect><rect x="${(x+bw*.17+w+4).toFixed(1)}" y="${(H-hs).toFixed(1)}" width="${w.toFixed(1)}" height="${hs.toFixed(1)}" rx="4" class="out"><title>${monthName(m.ym)} spending ${eur(m.spend)}</title></rect><text x="${(x+bw/2).toFixed(1)}" y="${H+18}" text-anchor="middle">${new Date(m.ym+"-15").toLocaleDateString("en-GB",{month:"short"})}</text>`}).join("")}</svg>`;
+  function barsSvg(months,sel){
+    // clear bar chart: gridlines with euro labels, selected month solid, others faded, value on the selected bars
+    const W=760,H=230,L=64,R=12,T=30,B=34,ih=H-T-B,mx0=Math.max(1,...months.flatMap(m=>[m.income,m.spend]));
+    const step=[50,100,200,250,500,1000,2000,2500,5000,10000,20000,25000,50000,100000].find(s=>mx0/s<=4)||Math.ceil(mx0/4),mx=Math.ceil(mx0/step)*step;
+    const y=v=>T+ih-(v/mx)*ih,bw=(W-L-R)/months.length,w=Math.min(26,bw*.3),k=v=>v>=1000?`€${(v/1000).toFixed(v%1000?1:0)}k`:`€${Math.round(v)}`;
+    let g="";for(let v=0;v<=mx;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" class="gl${v?"":" base"}"/><text x="${L-10}" y="${(y(v)+4).toFixed(1)}" text-anchor="end" class="yl">${k(v)}</text>`;
+    const bars=months.map((m,i)=>{const cx=L+i*bw+bw/2,on=!sel||m.ym===sel,hi=ih*m.income/mx,hs=ih*m.spend/mx,x1=cx-w-2,x2=cx+2;
+      return `<g class="${on?"on":"off"}"><rect x="${x1.toFixed(1)}" y="${(T+ih-hi).toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(hi,m.income?2:0).toFixed(1)}" rx="5" class="in"><title>${monthName(m.ym)} income ${eur(m.income)}</title></rect><rect x="${x2.toFixed(1)}" y="${(T+ih-hs).toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(hs,m.spend?2:0).toFixed(1)}" rx="5" class="out"><title>${monthName(m.ym)} spending ${eur(m.spend)}</title></rect>
+        ${on&&sel&&m.income?`<text x="${(x1+w/2).toFixed(1)}" y="${(T+ih-hi-7).toFixed(1)}" text-anchor="middle" class="vl in">${k(m.income)}</text>`:""}${on&&sel&&m.spend?`<text x="${(x2+w/2).toFixed(1)}" y="${(T+ih-hs-7).toFixed(1)}" text-anchor="middle" class="vl out">${k(m.spend)}</text>`:""}
+        <text x="${cx.toFixed(1)}" y="${H-8}" text-anchor="middle" class="xl${on&&sel?" sel":""}">${new Date(m.ym+"-15").toLocaleDateString("en-GB",{month:"short"})}</text></g>`}).join("");
+    return `<svg class="fx-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Income and spending by month">${g}${bars}</svg>`;
   }
+
   function donutSvg(parts,label,sub){
     const tot=parts.reduce((a,p)=>a+p.v,0)||1,R=60,C=2*Math.PI*R;let off=0;
     return `<svg class="fx-donut" viewBox="0 0 160 160" role="img" aria-label="${esc(label)}"><circle cx="80" cy="80" r="${R}" fill="none" stroke="var(--fx-track)" stroke-width="20"/>${parts.filter(p=>p.v>0).map(p=>{const l=p.v/tot*C,s=`<circle cx="80" cy="80" r="${R}" fill="none" stroke="${p.c}" stroke-width="20" stroke-dasharray="${l.toFixed(2)} ${(C-l).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 80 80)"><title>${esc(p.n)} ${(p.v/tot*100).toFixed(1)}%</title></circle>`;off+=l;return s}).join("")}<text x="80" y="78" text-anchor="middle" class="fx-dv">${esc(label)}</text><text x="80" y="96" text-anchor="middle" class="fx-ds">${esc(sub)}</text></svg>`;
@@ -4689,11 +4721,11 @@
       </div></div>
       ${cancels.length?`<div class="fx-alert"><b>Cancel reminders:</b> ${cancels.map(r=>`${esc(r.name)}${r.cancelBy?` by ${r.cancelBy.split("-").reverse().join(".")}`:""}`).join(" · ")}</div>`:""}
       <div class="fx-grid2">
-        ${card("Cash flow",`${barsSvg(months)}<div class="fx-key"><span><i class="in"></i>Income</span><span><i class="out"></i>Spending</span></div>`,monthNav())}
-        ${card("Next 30 days",up.length?`<ul class="fx-list">${up.map(u=>`<li><span class="fx-date">${new Date(u.date+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span><span class="fx-t">${esc(u.title)}</span><b class="${u.kind==="cancel"?"warn":""}">${u.kind==="cancel"?"Cancel":eur2(u.amount)}</b></li>`).join("")}</ul>`:`<p class="fx-empty">No bills or reminders in the next 30 days. Add them in Bills & subscriptions.</p>`)}
+        ${card("Cash flow",`<div class="fx-cfsum"><div><span><i class="in"></i>In</span><b>${eur(m.income)}</b></div><div><span><i class="out"></i>Out</span><b>${eur(m.spend)}</b></div><div><span>Net</span><b class="${m.net>=0?"pos":"neg"}">${m.net>=0?"+":""}${eur(m.net)}</b></div></div>${barsSvg(months,finMonth)}`,monthNav())}
+        ${card("Next 30 days",up.length?`<ul class="fx-list fx-up">${up.map(u=>{const dd=new Date(u.date+"T12:00:00");return `<li class="${u.kind}"><span class="fx-dchip"><b>${dd.getDate()}</b><small>${dd.toLocaleDateString("en-GB",{month:"short"})}</small></span><span class="fx-t"><b>${esc(u.title)}</b><small>${u.kind==="cancel"?"Cancel before this date":({subscription:"Subscription",insurance:"Insurance",mortgage:"Mortgage / rent",loan:"Loan / leasing",utilities:"Utilities"}[u.r?.cat]||"Bill")}</small></span><b class="${u.kind==="cancel"?"warn":""}">${u.kind==="cancel"?"Cancel":eur2(Math.abs(u.amount))}</b></li>`}).join("")}</ul><div class="fx-total"><span>Due in the next 30 days</span><b>${eur2(up.filter(u=>u.kind==="bill").reduce((a,u)=>a+Math.abs(u.amount),0))}</b></div>`:`<p class="fx-empty">No bills or reminders in the next 30 days. Add them in Bills & subscriptions.</p>`)}
       </div>
       <div class="fx-grid2">
-        ${card("Where the money went",Object.keys(m.cats).length?catBars(m.cats,m.spend):`<p class="fx-empty">No spending logged for ${monthName(finMonth)}. Import your bank CSV in Spending.</p>`)}
+        ${card("Where the money went",Object.keys(m.cats).length?`<div class="fx-total fx-ttop"><span>${monthName(finMonth)}</span><b>${eur(m.spend)}</b></div>`+catBars(m.cats,m.spend):`<p class="fx-empty">No spending logged for ${monthName(finMonth)}. Import your bank CSV in Spending.</p>`)}
         ${card("Savings goal",`<div class="fx-goal"><div class="fx-gtop"><b>${eur(saved)}</b><span>of ${eur(goal)}</span></div><div class="fx-gbar"><i style="width:${goal?Math.min(100,saved/goal*100).toFixed(1):0}%"></i></div>
           <ul class="fx-list fx-acc">${fin.accounts.map(a=>`<li><span class="fx-t">${esc(a.name)}</span><input class="fx-cell" type="number" step="0.01" data-facc="${a.id}" value="${a.amount??""}" aria-label="${esc(a.name)} balance"><button type="button" class="fx-del" data-faccdel="${a.id}" aria-label="Remove ${esc(a.name)}">×</button></li>`).join("")}</ul>
           <form class="fx-inline" data-fform="acc"><input name="n" type="text" maxlength="40" placeholder="Account e.g. Revolut" required><input name="a" type="number" step="0.01" placeholder="Balance €"><button class="fx-btn">Add account</button></form>
