@@ -1421,6 +1421,46 @@
   :root[data-theme="dark"] body #appTabs button[aria-selected="true"]{background:linear-gradient(180deg,#ffffff,#e6e5e2)!important;color:#111!important}
   :root[data-theme="dark"] body .fin-space .fx-tabs button[aria-selected="true"]{background:linear-gradient(180deg,#cdeecf,#a9dcad)!important;color:#0b1f17!important}
   :root[data-theme="dark"] body #appTabs button:not([aria-selected="true"]):hover{background:rgba(255,255,255,.06)!important}
+
+  /* finance hero v4: smooth clear silver glass, no grid or squares - one soft green glow behind the figures */
+  .fin-space .fx-hero{background:radial-gradient(120% 140% at 0% 0%,#ffffff 0%,rgba(255,255,255,0) 55%),linear-gradient(155deg,#f7f8f7 0%,#eceeec 50%,#e1e4e1 100%)!important}
+  .fx-mosaic{inset:0;right:auto;top:0;transform:none;display:block;width:100%;height:100%}
+  .fx-mosaic span{display:none}
+  .fx-mosaic i{inset:-20% -8% -30% 46%;border-radius:50%;background:radial-gradient(closest-side,rgba(214,240,80,.85) 0%,rgba(137,210,91,.70) 35%,rgba(92,168,124,.38) 65%,rgba(92,168,124,0) 100%);filter:blur(30px);opacity:1}
+  .fin-space .fx-hero::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 38%);z-index:0}
+  @media(max-width:900px){.fx-mosaic i{inset:30% -20% -20% -10%}}
+  :root[data-theme="dark"] .fin-space .fx-hero{background:linear-gradient(155deg,#26282b 0%,#1c1d20 55%,#141517 100%)!important}
+  :root[data-theme="dark"] .fin-space .fx-hero::after{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 40%)}
+  :root[data-theme="dark"] .fx-mosaic i{opacity:.45}
+
+  /* finance hero v5: Jade Horizon - jade gradient with a deep band, light glow and fine grid; silver glossy figures */
+  html body .fin-space .fx-hero{color:#fff;border:1px solid rgba(255,255,255,.18);
+    background:linear-gradient(rgba(255,255,255,.085) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(255,255,255,.085) 1px,transparent 1px) 0 0/46px 46px,
+      radial-gradient(60% 75% at 34% -8%,rgba(183,229,186,.95) 0%,rgba(183,229,186,0) 70%),
+      radial-gradient(100% 58% at 22% 64%,rgba(26,81,64,.78) 0%,rgba(26,81,64,0) 78%),
+      radial-gradient(55% 70% at 100% 100%,rgba(108,170,128,.9) 0%,rgba(108,170,128,0) 72%),
+      linear-gradient(180deg,#8cc39a 0%,#4f9a6c 45%,#2f7656 70%,#5d9f76 100%)!important;
+    box-shadow:0 28px 56px -30px rgba(26,81,64,.65),inset 0 1px 0 rgba(255,255,255,.25)!important}
+  html body .fin-space .fx-hero::after{display:none}
+  html body .fin-space .fx-mosaic{display:none}
+  html body .fin-space .fx-eyebrow{color:rgba(255,255,255,.92)}
+  html body .fin-space .fx-big{background:linear-gradient(180deg,#ffffff 0%,#f1f5f2 40%,#c4d2cb 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 10px rgba(12,48,36,.35));text-shadow:none}
+  html body .fin-space .fx-hero>div>small{color:rgba(255,255,255,.9)}
+  html body .fin-space .fx-hero .fx-tile{background:linear-gradient(160deg,rgba(255,255,255,.20),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.30);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 24px -14px rgba(10,40,30,.45);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%)}
+  html body .fin-space .fx-hero .fx-tile span{color:rgba(255,255,255,.9)!important}
+  html body .fin-space .fx-hero .fx-tile small{color:rgba(255,255,255,.78)!important}
+  html body .fin-space .fx-hero .fx-tile b{background:linear-gradient(180deg,#fff 0%,#dfe8e3 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+  html body .fin-space .fx-hero .fx-tile b.pos{background:linear-gradient(180deg,#e8ffd8 0%,#b6ef8f 100%);-webkit-background-clip:text;background-clip:text}
+  html body .fin-space .fx-hero .fx-tile b.neg{background:linear-gradient(180deg,#ffe1dd 0%,#ffb0a6 100%);-webkit-background-clip:text;background-clip:text}
+  html body .fin-space .fx-hero .fx-tile b.pos,html body .fin-space .fx-hero .fx-tile b.neg{color:transparent!important}
+  :root[data-theme="dark"] body .fin-space .fx-hero{background:linear-gradient(rgba(255,255,255,.085) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(255,255,255,.085) 1px,transparent 1px) 0 0/46px 46px,
+      radial-gradient(60% 75% at 34% -8%,rgba(183,229,186,.95) 0%,rgba(183,229,186,0) 70%),
+      radial-gradient(100% 58% at 22% 64%,rgba(26,81,64,.78) 0%,rgba(26,81,64,0) 78%),
+      radial-gradient(55% 70% at 100% 100%,rgba(108,170,128,.9) 0%,rgba(108,170,128,0) 72%),
+      linear-gradient(180deg,#8cc39a 0%,#4f9a6c 45%,#2f7656 70%,#5d9f76 100%)!important;border-color:rgba(255,255,255,.14);filter:none}
+  :root[data-theme="dark"] body .fin-space .fx-hero .fx-tile{background:linear-gradient(160deg,rgba(255,255,255,.20),rgba(255,255,255,.07));border-color:rgba(255,255,255,.30)}
+  :root[data-theme="dark"] body .fin-space .fx-hero .fx-tile span{color:rgba(255,255,255,.9)!important}:root[data-theme="dark"] body .fin-space .fx-hero .fx-tile small,:root[data-theme="dark"] body .fin-space .fx-hero>div>small,:root[data-theme="dark"] body .fin-space .fx-eyebrow{color:rgba(255,255,255,.85)!important}
+  :root[data-theme="dark"] body .fin-space .fx-big{color:transparent}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
