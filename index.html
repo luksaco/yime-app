@@ -1395,6 +1395,19 @@
   :root[data-theme="dark"] .fin-space .fx-hero .fx-tile{background:rgba(23,24,27,.62);border-color:rgba(255,255,255,.1);box-shadow:none}
   :root[data-theme="dark"] .fin-space .fx-hero .fx-tile span,:root[data-theme="dark"] .fin-space .fx-hero .fx-tile small{color:#b8c6bf!important}
   :root[data-theme="dark"] .fin-space .fx-hero .fx-tile b{color:#f2f5f3}:root[data-theme="dark"] .fin-space .fx-hero .fx-tile b.pos{color:#9be07a!important}:root[data-theme="dark"] .fin-space .fx-hero .fx-tile b.neg{color:#ff8a80!important}
+
+  /* phones: the section tab bar floats at the bottom of the screen, always in reach (Health and Finance) */
+  @media(max-width:680px){
+    #appTabs,.fin-space .fx-tabs{position:fixed!important;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:600;margin:0!important;border-radius:22px!important;
+      background:rgba(255,255,255,.88)!important;border:1px solid rgba(18,18,17,.08)!important;box-shadow:0 12px 34px rgba(17,24,39,.20),inset 0 1px 0 rgba(255,255,255,.9)!important;
+      -webkit-backdrop-filter:blur(22px) saturate(180%)!important;backdrop-filter:blur(22px) saturate(180%)!important}
+    #appTabs{padding:5px!important}
+    .fin-space .fx-tabs{padding:5px;gap:2px}.fin-space .fx-tabs button{padding:12px 13px;border-radius:16px}
+    body.space-health,body.space-fin{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+    body.space-health .toast,body.space-fin .toast{bottom:calc(98px + env(safe-area-inset-bottom))}
+    :root[data-theme="dark"] #appTabs,:root[data-theme="dark"] .fin-space .fx-tabs{background:rgba(23,24,27,.88)!important;border-color:rgba(255,255,255,.08)!important;box-shadow:0 12px 34px rgba(0,0,0,.5)!important}
+  }
+  @media(hover:none){.fin-space .fx-tabs button:not([aria-selected="true"]):hover{background:transparent!important;color:#6b6866!important}:root[data-theme="dark"] .fin-space .fx-tabs button:not([aria-selected="true"]):hover{color:#a9bfb4!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4513,6 +4526,7 @@
       ${finMsg?`<div class="fx-msg" role="status">${esc(finMsg)}</div>`:""}<div class="fx-body">${body}</div>
       <p class="fx-foot">Finance data stays in this browser, separate from your health data. <button type="button" class="fx-link" data-fexport>Back up finance data</button> · <button type="button" class="fx-link" data-fimportjson>Restore</button><input type="file" id="fxJson" accept="application/json,.json" hidden> · Not financial advice.</p>`;
     finMsg="";
+    {const nav=host.querySelector(".fx-tabs"),sel=nav?.querySelector("[aria-selected=true]");if(nav&&sel&&nav.scrollWidth>nav.clientWidth)nav.scrollLeft=Math.max(0,sel.offsetLeft-(nav.clientWidth-sel.offsetWidth)/2)}
   }
   const monthNav=()=>`<div class="fx-mnav"><button type="button" data-fmonth="-1" aria-label="Previous month">‹</button><strong>${monthName(finMonth)}</strong><button type="button" data-fmonth="1" aria-label="Next month" ${finMonth>=ymOf(todayISOf())?"disabled":""}>›</button></div>`;
   const card=(title,inner,extra="")=>`<section class="fx-card"><div class="fx-ch"><h3>${title}</h3>${extra}</div>${inner}</section>`;
