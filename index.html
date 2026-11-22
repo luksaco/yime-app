@@ -1369,6 +1369,32 @@
   :root[data-theme="dark"] .fx-tabs{background:#17181b;border-color:rgba(255,255,255,.07)}
   :root[data-theme="dark"] .fx-card .fx-tile,:root[data-theme="dark"] .fx-form,:root[data-theme="dark"] .fx-mnav,:root[data-theme="dark"] .fx-msg,:root[data-theme="dark"] .fx-scroll,:root[data-theme="dark"] .fx-alert{background:#1f2024}
   :root[data-theme="dark"] .fx-table th{background:#232428}
+
+  /* finance hero v3: clear silver panel with a green glass-tile mosaic glowing behind the figures */
+  .fin-space .fx-hero{isolation:isolate;color:#0f2a20;border:1px solid rgba(255,255,255,.95);
+    background:linear-gradient(rgba(18,18,17,.045) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(18,18,17,.045) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(160deg,#fbfcfb 0%,#f0f2f0 52%,#e4e7e4 100%);
+    box-shadow:0 1px 0 #fff inset,0 -1px 0 rgba(18,18,17,.04) inset,0 26px 54px -30px rgba(18,40,30,.38),0 2px 6px rgba(18,18,17,.05)}
+  .fin-space .fx-hero>div:not(.fx-mosaic){position:relative;z-index:1}
+  .fx-mosaic{position:absolute;z-index:0;right:-36px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(7,84px);grid-auto-rows:84px;pointer-events:none}
+  .fx-mosaic i{position:absolute;inset:4% 2% 0 6%;border-radius:40%;background:radial-gradient(closest-side at 58% 58%,#e2f04a 0%,#a6dc4a 22%,#5fbf4e 45%,#3f9a52 66%,rgba(63,154,82,.4) 84%,rgba(63,154,82,0) 100%);filter:blur(14px)}
+  .fx-mosaic span{position:relative;border-radius:18px;background:linear-gradient(150deg,rgba(255,255,255,.62),rgba(255,255,255,.10) 55%,rgba(255,255,255,.28));border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 18px rgba(255,255,255,.12);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .fin-space .fx-eyebrow{color:#3d5249;opacity:1}
+  .fin-space .fx-big{color:#0f2a20;text-shadow:none}
+  .fin-space .fx-hero>div>small{color:#4e6158;opacity:1}
+  .fin-space .fx-hero .fx-tile{background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 24px -12px rgba(18,40,30,.25),inset 0 1px 0 #fff;-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%)}
+  .fin-space .fx-hero .fx-tile span{color:#3d5249!important;opacity:1}
+  .fin-space .fx-hero .fx-tile small{color:#5a6f65!important;opacity:1}
+  .fin-space .fx-hero .fx-tile b{color:#0f2a20}.fin-space .fx-hero .fx-tile b.pos{color:#2e8540!important}.fin-space .fx-hero .fx-tile b.neg{color:#d92d20!important}
+  @media(max-width:900px){.fx-mosaic{top:auto;bottom:-60px;right:-70px;transform:none}}
+  @media(max-width:680px){.fx-mosaic{grid-template-columns:repeat(7,64px);grid-auto-rows:64px}.fx-mosaic span{border-radius:14px}}
+  :root[data-theme="dark"] .fin-space .fx-hero{color:#eaf3ee;border-color:rgba(255,255,255,.08);background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(160deg,#26282b 0%,#1c1d20 55%,#141517 100%);box-shadow:none}
+  :root[data-theme="dark"] .fx-mosaic i{opacity:.55}
+  :root[data-theme="dark"] .fx-mosaic span{background:linear-gradient(150deg,rgba(255,255,255,.10),rgba(255,255,255,.02));border-color:rgba(255,255,255,.12);box-shadow:none}
+  :root[data-theme="dark"] .fin-space .fx-eyebrow,:root[data-theme="dark"] .fin-space .fx-hero>div>small{color:#b8c6bf}
+  :root[data-theme="dark"] .fin-space .fx-big{color:#f2f5f3}
+  :root[data-theme="dark"] .fin-space .fx-hero .fx-tile{background:rgba(23,24,27,.62);border-color:rgba(255,255,255,.1);box-shadow:none}
+  :root[data-theme="dark"] .fin-space .fx-hero .fx-tile span,:root[data-theme="dark"] .fin-space .fx-hero .fx-tile small{color:#b8c6bf!important}
+  :root[data-theme="dark"] .fin-space .fx-hero .fx-tile b{color:#f2f5f3}:root[data-theme="dark"] .fin-space .fx-hero .fx-tile b.pos{color:#9be07a!important}:root[data-theme="dark"] .fin-space .fx-hero .fx-tile b.neg{color:#ff8a80!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4495,7 +4521,7 @@
     const months=[];for(let i=5;i>=0;i--){const ym=addMonths(finMonth,-i),s=monthStats(ym);months.push({ym,income:s.income,spend:s.spend})}
     const up=finUpcoming(30),cancels=fin.recurring.filter(r=>r.cancel);
     const goal=fin.saveGoal||0,saved=cashTotal();
-    return `<div class="fx-hero"><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><small>Investments ${eur(p.total)} · Cash ${eur(cashTotal())}</small></div>
+    return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><small>Investments ${eur(p.total)} · Cash ${eur(cashTotal())}</small></div>
       <div class="fx-tiles">
         <div class="fx-tile"><span>Income · ${monthName(finMonth).split(" ")[0]}</span><b class="pos">${eur(m.income)}</b></div>
         <div class="fx-tile"><span>Spending</span><b>${eur(m.spend)}</b></div>
