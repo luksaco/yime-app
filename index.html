@@ -1461,6 +1461,11 @@
   :root[data-theme="dark"] body .fin-space .fx-hero .fx-tile{background:linear-gradient(160deg,rgba(255,255,255,.20),rgba(255,255,255,.07));border-color:rgba(255,255,255,.30)}
   :root[data-theme="dark"] body .fin-space .fx-hero .fx-tile span{color:rgba(255,255,255,.9)!important}:root[data-theme="dark"] body .fin-space .fx-hero .fx-tile small,:root[data-theme="dark"] body .fin-space .fx-hero>div>small,:root[data-theme="dark"] body .fin-space .fx-eyebrow{color:rgba(255,255,255,.85)!important}
   :root[data-theme="dark"] body .fin-space .fx-big{color:transparent}
+
+  /* tab bars: solid enough that nothing shows through - glossy white edge kept, no see-through */
+  html body #appTabs,html body .fin-space .fx-tabs{background:linear-gradient(180deg,#ffffff 0%,#f7f7f6 100%)!important;-webkit-backdrop-filter:blur(30px) saturate(180%)!important;backdrop-filter:blur(30px) saturate(180%)!important}
+  @media(max-width:680px){html body #appTabs,html body .fin-space .fx-tabs{background:linear-gradient(180deg,rgba(255,255,255,.985),rgba(248,248,247,.985))!important}}
+  :root[data-theme="dark"] body #appTabs,:root[data-theme="dark"] body .fin-space .fx-tabs{background:linear-gradient(180deg,#232427,#1a1b1e)!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
