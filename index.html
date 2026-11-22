@@ -4590,6 +4590,7 @@
     const cats={};for(const t of out)cats[t.cat]=(cats[t.cat]||0)-t.amount;
     return {tx,income,spend,net:income-spend,cats,rate:income>0?(income-spend)/income*100:null};
   }
+  const yearIncome=y=>fin.tx.filter(t=>t.amount>0&&t.cat!=="invest"&&t.date.startsWith(y)).reduce((a,t)=>a+t.amount,0);
   function finUpcoming(days=30){
     const t=todayISOf(),end=new Date(Date.now()+days*864e5).toISOString().slice(0,10),out=[];
     for(const r of fin.recurring){if(r.next&&r.next>=t&&r.next<=end)out.push({date:r.next,title:r.name,amount:-Math.abs(r.amount),kind:"bill",r});
@@ -4628,9 +4629,9 @@
     const goal=fin.saveGoal||0,saved=cashTotal();
     return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><div class="fx-split"><span>Investments <b>${eur(p.total)}</b></span><span>Cash <b>${eur(cashTotal())}</b></span></div></div>
       <div class="fx-tiles">
-        <div class="fx-tile"><span>Income · ${monthName(finMonth).split(" ")[0]}</span><b class="pos">${eur(m.income)}</b></div>
-        <div class="fx-tile"><span>Spending</span><b>${eur(m.spend)}</b></div>
-        <div class="fx-tile"><span>Saved</span><b class="${m.net>=0?"pos":"neg"}">${eur(m.net)}</b><small>${m.rate==null?"—":Math.round(m.rate)+"% of income"}</small></div>
+        <div class="fx-tile"><span>Income · ${finMonth.slice(0,4)}</span><b class="pos">${eur(yearIncome(finMonth.slice(0,4)))}</b><small>${eur(m.income)} in ${monthName(finMonth).split(" ")[0]}</small></div>
+        <div class="fx-tile"><span>Spending · ${monthName(finMonth).split(" ")[0]}</span><b>${eur(m.spend)}</b></div>
+        <div class="fx-tile"><span>Saved · ${monthName(finMonth).split(" ")[0]}</span><b class="${m.net>=0?"pos":"neg"}">${eur(m.net)}</b><small>${m.rate==null?"—":Math.round(m.rate)+"% of income"}</small></div>
         <div class="fx-tile"><span>Bills & subs / month</span><b>${eur(mon)}</b><small>${eur(mon*12)} a year</small></div>
       </div></div>
       ${cancels.length?`<div class="fx-alert"><b>Cancel reminders:</b> ${cancels.map(r=>`${esc(r.name)}${r.cancelBy?` by ${r.cancelBy.split("-").reverse().join(".")}`:""}`).join(" · ")}</div>`:""}
