@@ -1120,6 +1120,11 @@
   @media(max-width:360px){.layout #vo2Card .vo2-side{grid-template-columns:minmax(0,1fr)!important}}
   .top .brand svg{height:52px}@media(max-width:680px){.top .brand svg{height:44px!important}}@media(max-width:380px){.top .brand svg{height:36px!important}}
   .top .brand svg{height:48px!important}@media(max-width:680px){.top .brand svg{height:40px!important}}@media(max-width:380px){.top .brand svg{height:32px!important}}
+
+  /* Dashboard space: empty for now */
+  body.space-dash .space-soon{background:transparent;border:0;box-shadow:none;max-width:none;text-align:left;padding:8px 0 0;margin:8px 0 60vh}
+  .dash-title{margin:0;font-size:38px;letter-spacing:-.035em;color:var(--ink)}
+  @media(max-width:680px){.dash-title{font-size:30px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1312,6 +1317,7 @@
 <path d="M2371 361 L2414 361 L2414 389 C2432 366 2458 352 2487 352 C2547 352 2592 399 2592 461 C2592 523 2547 569 2487 569 C2458 569 2432 556 2414 533 L2414 662 L2371 662 Z M2413 461 C2413 501 2442 529 2481 529 C2519 529 2548 501 2548 461 C2548 421 2519 393 2481 393 C2442 393 2413 421 2413 461 Z"/>
 </g></svg></h1></div>
     <nav class="spaces" id="spaces" aria-label="Spaces">
+      <button type="button" data-space="dashboard">Dashboard</button>
       <button type="button" data-space="health" aria-current="page">Health</button>
       <button type="button" data-space="finance">Finance</button>
       <button type="button" data-space="calendar">Calendar</button>
@@ -1325,6 +1331,7 @@
           <div class="mega">
             <div class="mega-col mega-spaces">
               <p class="mega-h">Spaces</p>
+              <button type="button" data-space="dashboard">Dashboard</button>
               <button type="button" data-space="health">Health</button>
               <button type="button" data-space="finance">Finance</button>
               <button type="button" data-space="calendar">Calendar</button>
@@ -4324,13 +4331,13 @@
     $("setupBtn").addEventListener("click",openSetupFresh);
     (()=>{const b=$("themeBtn"),root=document.documentElement;const sync=()=>{const d=root.getAttribute("data-theme")==="dark";b.setAttribute("aria-label",d?"Switch to white mode":"Switch to dark mode");b.setAttribute("aria-pressed",String(d))};sync();
       b.addEventListener("click",()=>{const d=root.getAttribute("data-theme")!=="dark";root.setAttribute("data-theme",d?"dark":"light");try{localStorage.setItem("yime_theme",d?"dark":"light")}catch(e){}sync();try{renderAll()}catch(e){}})})();
-    (()=>{const INFO={finance:["Finance","Budgets, spending, savings goals and your investment portfolio, in the same clean style as your health tracker."],calendar:["Calendar","Training sessions, races, measurement days and appointments together in one plan, so health and life line up."]};
+    (()=>{const INFO={dashboard:["Dashboard",""],finance:["Finance","Budgets, spending, savings goals and your investment portfolio, in the same clean style as your health tracker."],calendar:["Calendar","Training sessions, races, measurement days and appointments together in one plan, so health and life line up."]};
       let box=document.getElementById("spaceSoon");
       if(!box){box=document.createElement("section");box.id="spaceSoon";box.className="space-soon";const tabs=$("appTabs");(tabs?.parentNode||document.querySelector("main")).insertBefore(box,tabs||null)}
       let cal=document.getElementById("calSpace");if(!cal){cal=document.createElement("section");cal.id="calSpace";cal.className="cal-space";box.parentNode.insertBefore(cal,box.nextSibling)}
-      const show=sp=>{const other=sp!=="health";document.body.classList.toggle("space-other",other);document.body.classList.toggle("space-cal",sp==="calendar");if(sp==="calendar")try{renderCalendar()}catch(e){console.error(e)}
+      const show=sp=>{const other=sp!=="health";document.body.classList.toggle("space-other",other);document.body.classList.toggle("space-cal",sp==="calendar");document.body.classList.toggle("space-dash",sp==="dashboard");if(sp==="calendar")try{renderCalendar()}catch(e){console.error(e)}
         document.querySelectorAll("[data-space]").forEach(b=>{if(b.dataset.space===sp)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-        if(other&&sp!=="calendar"){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Health</button>`}
+        if(sp==="dashboard"){box.innerHTML=`<h2 class="dash-title">Dashboard</h2>`}else if(other&&sp!=="calendar"){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Health</button>`}
         try{history.replaceState(null,"",other?"#"+sp:"#"+(activeTab||"progress"))}catch(e){}
         window.scrollTo({top:0})};
       document.addEventListener("click",e=>{const b=e.target.closest("[data-space]");if(b)show(b.dataset.space);else if(e.target.closest(".mega [data-go]")&&document.body.classList.contains("space-other"))show("health")});
