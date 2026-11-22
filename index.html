@@ -1478,6 +1478,12 @@
   .fx-split{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .fx-split span{display:inline-flex;align-items:baseline;gap:6px;padding:7px 12px;border-radius:999px;background:#fff;color:#5f5c59;font-size:13.5px;font-weight:600;box-shadow:0 6px 16px -10px rgba(10,40,30,.5)}
   .fx-split b{color:#121211;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .wg-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .wg-top .eyebrow{margin:0!important}
+  .wg-pick select{appearance:none;-webkit-appearance:none;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;color:#121211;background:#f3f2ef url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23121211' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid rgba(18,18,17,.08);border-radius:999px;padding:8px 32px 8px 14px;max-width:190px}
+  .wg-pick select:hover{background-color:#ebeae6}.wg-pick select:focus-visible{outline:2px solid #121211;outline-offset:2px}
+  :root[data-theme="dark"] .wg-pick select{color:#f2f1ef;background-color:#26272b;border-color:rgba(255,255,255,.1);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f2f1ef' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3094,18 +3100,28 @@
       <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
   }
+  // Progress goal card: any measurement with a goal can be shown here; the choice is remembered.
+  function progressGoalKeys(){return metricKeys.filter(k=>{const s=series(k),g=state.goals?.[k];return g!=null&&s.length&&snapshot()?.[k]!=null&&s[0].value!==g})}
   function renderProgress(){
-    const b=state.baseline?.weightKg,cur=snapshot()?.weightKg,goal=state.goals.weightKg;
-    if(b==null||cur==null||goal==null||b===goal){
-      $("progress").innerHTML=`<p class="eyebrow">Weight goal</p><div class="wg-empty"><h3>Set your weight goal</h3><p>Add a starting weight and a target in Log a measurement, and your progress shows up here.</p><button type="button" class="wg-cta" data-go-log>Set goal</button></div>`;
-      const c=$("progress").querySelector("[data-go-log]");if(c)c.addEventListener("click",()=>{setTab("log");scrollTo({top:0,behavior:"smooth"})});return}
+    const keys=progressGoalKeys();let pick="weightKg";try{pick=localStorage.getItem("yime_progress_goal")||"weightKg"}catch(e){}
+    if(!keys.includes(pick))pick=keys.includes("weightKg")?"weightKg":keys[0];
+    if(!pick){
+      $("progress").innerHTML=`<p class="eyebrow">Goal</p><div class="wg-empty"><h3>Set your first goal</h3><p>Add a starting value and a target for weight or any body measurement, and your progress shows up here.</p><button type="button" class="wg-cta" data-go-goals>Set goal</button></div>`;
+      return}
+    const m=metrics[pick],u=m.unit,s=series(pick),b=s[0].value,cur=snapshot()[pick],goal=state.goals[pick];
     const raw=((cur-b)/(goal-b))*100,p=clamp(raw,0,100),change=cur-b,remaining=Math.abs(goal-cur),lose=goal<b,done=raw>=100;
-    const moved=lose?-change:change;
-    $("progress").innerHTML=`<p class="eyebrow">Weight goal</p>
-      <div class="wg-head"><div><div class="wg-big">${done?"Goal reached":`${fmt(remaining)} kg <span>to go</span>`}</div><div class="wg-sub">${lose?"Lose":"Gain"} ${fmt(Math.abs(goal-b))} kg to reach ${fmt(goal)} kg</div></div><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
-      <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="Weight goal progress"><i style="width:${p}%"></i></div>
-      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)} kg</b></div><div><span>Now</span><b>${fmt(cur)} kg</b></div><div><span>${moved>=0?(lose?"Lost so far":"Gained so far"):"Off track by"}</span><b class="${moved>=0?"good":"bad"}">${fmt(Math.abs(change))} kg</b></div></div>`;
+    const moved=lose?-change:change,isW=pick==="weightKg";
+    const verb=lose?(isW?"Lose":"Reduce"):(isW?"Gain":"Increase"),soFar=moved>=0?(lose?(isW?"Lost so far":"Down so far"):(isW?"Gained so far":"Up so far")):"Off track by";
+    const picker=`<label class="wg-pick"><span class="sr-only">Goal to show</span><select id="progressGoalPick" aria-label="Goal to show">${keys.map(k=>`<option value="${k}" ${k===pick?"selected":""}>${metrics[k].label} goal</option>`).join("")}<option value="__add">+ Add another goal…</option></select></label>`;
+    $("progress").innerHTML=`<div class="wg-top"><p class="eyebrow">${m.label} goal</p>${picker}</div>
+      <div class="wg-head"><div><div class="wg-big">${done?"Goal reached":`${fmt(remaining)} ${u} <span>to go</span>`}</div><div class="wg-sub">${verb} ${fmt(Math.abs(goal-b))} ${u} to reach ${fmt(goal)} ${u}</div></div><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
+      <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="${m.label} goal progress"><i style="width:${p}%"></i></div>
+      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)} ${u}</b></div><div><span>Now</span><b>${fmt(cur)} ${u}</b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${fmt(Math.abs(change))} ${u}</b></div></div>`;
   }
+  document.addEventListener("change",e=>{if(e.target.id!=="progressGoalPick")return;const v=e.target.value;
+    if(v==="__add"){try{setTab("goals")}catch(err){}scrollTo({top:0,behavior:"smooth"});renderProgress();return}
+    try{localStorage.setItem("yime_progress_goal",v)}catch(err){}renderProgress()});
+  document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#progress [data-go-goals]")){try{setTab("goals")}catch(err){}scrollTo({top:0,behavior:"smooth"})}});
 
 
   // Human mesh and shape targets: MakeHuman Community core assets, CC0.
