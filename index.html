@@ -4590,6 +4590,7 @@
     const cats={};for(const t of out)cats[t.cat]=(cats[t.cat]||0)-t.amount;
     return {tx,income,spend,net:income-spend,cats,rate:income>0?(income-spend)/income*100:null};
   }
+  const yearSpend=y=>-fin.tx.filter(t=>t.amount<0&&t.date.startsWith(y)).reduce((a,t)=>a+t.amount,0);
   const yearIncome=y=>fin.tx.filter(t=>t.amount>0&&t.cat!=="invest"&&t.date.startsWith(y)).reduce((a,t)=>a+t.amount,0);
   function finUpcoming(days=30){
     const t=todayISOf(),end=new Date(Date.now()+days*864e5).toISOString().slice(0,10),out=[];
@@ -4627,11 +4628,12 @@
     const months=[];for(let i=5;i>=0;i--){const ym=addMonths(finMonth,-i),s=monthStats(ym);months.push({ym,income:s.income,spend:s.spend})}
     const up=finUpcoming(30),cancels=fin.recurring.filter(r=>r.cancel);
     const goal=fin.saveGoal||0,saved=cashTotal();
+    const yr=finMonth.slice(0,4),mn=monthName(finMonth).split(" ")[0],yi=yearIncome(yr),ys=yearSpend(yr);
     return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><div class="fx-split"><span>Investments <b>${eur(p.total)}</b></span><span>Cash <b>${eur(cashTotal())}</b></span></div></div>
       <div class="fx-tiles">
-        <div class="fx-tile"><span>Income · ${finMonth.slice(0,4)}</span><b class="pos">${eur(yearIncome(finMonth.slice(0,4)))}</b><small>${eur(m.income)} in ${monthName(finMonth).split(" ")[0]}</small></div>
-        <div class="fx-tile"><span>Spending · ${monthName(finMonth).split(" ")[0]}</span><b>${eur(m.spend)}</b></div>
-        <div class="fx-tile"><span>Saved · ${monthName(finMonth).split(" ")[0]}</span><b class="${m.net>=0?"pos":"neg"}">${eur(m.net)}</b><small>${m.rate==null?"—":Math.round(m.rate)+"% of income"}</small></div>
+        <div class="fx-tile"><span>Income · ${yr}</span><b class="pos">${eur(yi)}</b><small>${eur(m.income)} in ${mn}</small></div>
+        <div class="fx-tile"><span>Spending · ${yr}</span><b>${eur(ys)}</b><small>${eur(m.spend)} in ${mn}</small></div>
+        <div class="fx-tile"><span>Saved · ${yr}</span><b class="${yi-ys>=0?"pos":"neg"}">${eur(yi-ys)}</b><small>${yi>0?Math.round((yi-ys)/yi*100)+"% of income · ":""}${eur(m.net)} in ${mn}</small></div>
         <div class="fx-tile"><span>Bills & subs / month</span><b>${eur(mon)}</b><small>${eur(mon*12)} a year</small></div>
       </div></div>
       ${cancels.length?`<div class="fx-alert"><b>Cancel reminders:</b> ${cancels.map(r=>`${esc(r.name)}${r.cancelBy?` by ${r.cancelBy.split("-").reverse().join(".")}`:""}`).join(" · ")}</div>`:""}
