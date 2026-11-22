@@ -1484,6 +1484,11 @@
   .wg-pick select:hover{background-color:#ebeae6}.wg-pick select:focus-visible{outline:2px solid #121211;outline-offset:2px}
   :root[data-theme="dark"] .wg-pick select{color:#f2f1ef;background-color:#26272b;border-color:rgba(255,255,255,.1);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f2f1ef' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .fx-ytd{margin-top:16px;padding:16px;border-radius:16px;background:#f7f8f7;border:1px solid var(--fx-line)}
+  .fx-ytd-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.fx-ytd-h span{font-size:13px;font-weight:650;color:var(--fx-muted)}.fx-ytd-h b{font-size:26px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.fx-ytd-h small{color:var(--fx-muted);font-weight:600}
+  .fx-ytd ul{list-style:none;margin:10px 0 0;padding:0}.fx-ytd li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--fx-line);font-size:14px}.fx-ytd li b{font-variant-numeric:tabular-nums}
+  .fx-ytd .fx-form{background:transparent;border:0;padding:0;margin-top:10px}.fx-ytd .fx-lab input{width:120px!important}
+  :root[data-theme="dark"] .fx-ytd{background:#1f2024}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4562,11 +4567,12 @@
     const pl=r.plan&&typeof r.plan==="object"?r.plan:{};
     return {tx:arr(r.tx),recurring:arr(r.recurring),holdings:arr(r.holdings),divs:arr(r.divs),accounts,saveGoal:num(r.saveGoal,50000),pricesAt:r.pricesAt||null,cg:r.cg&&typeof r.cg==="object"?r.cg:{},
       fx:r.fx&&Number(r.fx.usdEur)>0?r.fx:{usdEur:0.92,date:null},finnhubKey:typeof r.finnhubKey==="string"?r.finnhubKey:"",
-      plan:{stockGoal:num(pl.stockGoal,100000),cryptoGoal:num(pl.cryptoGoal,100000),stockM:num(pl.stockM,0),cryptoM:num(pl.cryptoM,0),stockR:num(pl.stockR,7),cryptoR:num(pl.cryptoR,7)}};
+      plan:{stockGoal:num(pl.stockGoal,100000),cryptoGoal:num(pl.cryptoGoal,100000),stockM:num(pl.stockM,0),cryptoM:num(pl.cryptoM,0),stockR:num(pl.stockR,7),cryptoR:num(pl.cryptoR,7)},
+      hist:arr(r.hist).slice(-800),realized:r.realized&&typeof r.realized==="object"?r.realized:{},ytdBase:r.ytdBase&&typeof r.ytdBase==="object"?r.ytdBase:{}};
   }
   const cashTotal=()=>fin.accounts.reduce((a,x)=>a+(Number(x.amount)||0),0);
   function saveFin(){try{localStorage.setItem(FIN_KEY,JSON.stringify(fin))}catch(e){alert("Couldn't save finance data in this browser.")}}
-  const eur=(v,d=0)=>Number.isFinite(v)?`${v<0?"−":""}€${Math.abs(v).toLocaleString("en-GB",{minimumFractionDigits:d,maximumFractionDigits:d})}`:"—";
+  const eur=(v,d=0)=>Number.isFinite(v)?`${Number(v.toFixed(d))<0?"−":""}€${Math.abs(v).toLocaleString("en-GB",{minimumFractionDigits:d,maximumFractionDigits:d})}`:"—";
   const eur2=v=>eur(v,2);
   const pct=(v,d=1)=>Number.isFinite(v)?`${v>0?"+":v<0?"−":""}${Math.abs(v).toFixed(d)}%`:"—";
   const ymOf=d=>d.slice(0,7),todayISOf=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
@@ -4589,6 +4595,17 @@
     const income=inc.reduce((a,t)=>a+t.amount,0),spend=-out.reduce((a,t)=>a+t.amount,0);
     const cats={};for(const t of out)cats[t.cat]=(cats[t.cat]||0)-t.amount;
     return {tx,income,spend,net:income-spend,cats,rate:income>0?(income-spend)/income*100:null};
+  }
+  // This year's investment result = change in open profit/loss since 1 Jan (or since tracking began) + realised gains + dividends/staking.
+  function recordPortfolio(){const p=portfolio();if(!p.total)return;const d=todayISOf(),last=fin.hist[fin.hist.length-1],row={d,v:Math.round(p.total*100)/100,c:Math.round(p.cost*100)/100};
+    if(last&&last.d===d){if(last.v!==row.v||last.c!==row.c){Object.assign(last,row);saveFin()}}else{fin.hist.push(row);if(fin.hist.length>800)fin.hist.shift();saveFin()}}
+  function investYear(y){
+    const p=portfolio(),open=p.total-p.cost,manual=fin.ytdBase?.[y],first=fin.hist.find(r=>r.d.startsWith(y));
+    const base=manual!=null&&manual!==""&&Number.isFinite(Number(manual))?Number(manual):first?first.v-first.c:open;
+    const since=manual!=null&&manual!==""?null:first&&first.d>y+"-01-07"?first.d:null;
+    const realised=Number(fin.realized?.[y])||0,divs=fin.divs.filter(x=>x.date.startsWith(y)).reduce((a,x)=>a+x.amount,0);
+    const total=(open-base)+realised+divs;
+    return {total,openChange:open-base,realised,divs,since,pct:p.cost?total/p.cost*100:null,open};
   }
   const yearSpend=y=>-fin.tx.filter(t=>t.amount<0&&t.date.startsWith(y)).reduce((a,t)=>a+t.amount,0);
   const yearIncome=y=>fin.tx.filter(t=>t.amount>0&&t.cat!=="invest"&&t.date.startsWith(y)).reduce((a,t)=>a+t.amount,0);
@@ -4613,7 +4630,7 @@
   const FIN_TABS=[["overview","Overview"],["spending","Spending"],["income","Income"],["bills","Bills & subscriptions"],["invest","Investments"],["insights","Investor lens"],["news","News"]];
   function renderFinance(){
     const host=$("finSpace");if(!host)return;rollRecurring();
-    if(!finMonth)finMonth=ymOf(todayISOf());
+    if(!finMonth)finMonth=ymOf(todayISOf());try{recordPortfolio()}catch(e){}
     const body={overview:finOverview,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInsights,news:finNews}[finTab]();
     host.innerHTML=`<nav class="fx-tabs" aria-label="Finance sections">${FIN_TABS.map(([id,l])=>`<button type="button" data-ftab="${id}" aria-selected="${finTab===id}">${l}</button>`).join("")}</nav>
       ${finMsg?`<div class="fx-msg" role="status">${esc(finMsg)}</div>`:""}<div class="fx-body">${body}</div>
@@ -4628,12 +4645,12 @@
     const months=[];for(let i=5;i>=0;i--){const ym=addMonths(finMonth,-i),s=monthStats(ym);months.push({ym,income:s.income,spend:s.spend})}
     const up=finUpcoming(30),cancels=fin.recurring.filter(r=>r.cancel);
     const goal=fin.saveGoal||0,saved=cashTotal();
-    const yr=finMonth.slice(0,4),mn=monthName(finMonth).split(" ")[0],yi=yearIncome(yr),ys=yearSpend(yr);
+    const yr=finMonth.slice(0,4),mn=monthName(finMonth).split(" ")[0],yi=yearIncome(yr),ys=yearSpend(yr),iy=investYear(yr);
     return `<div class="fx-hero"><div class="fx-mosaic" aria-hidden="true"><i></i>${"<span></span>".repeat(35)}</div><div><p class="fx-eyebrow">Net worth</p><b class="fx-big">${eur(netWorth)}</b><div class="fx-split"><span>Investments <b>${eur(p.total)}</b></span><span>Cash <b>${eur(cashTotal())}</b></span></div></div>
       <div class="fx-tiles">
         <div class="fx-tile"><span>Income · ${yr}</span><b class="pos">${eur(yi)}</b><small>${eur(m.income)} in ${mn}</small></div>
         <div class="fx-tile"><span>Spending · ${yr}</span><b>${eur(ys)}</b><small>${eur(m.spend)} in ${mn}</small></div>
-        <div class="fx-tile"><span>Saved · ${yr}</span><b class="${yi-ys>=0?"pos":"neg"}">${eur(yi-ys)}</b><small>${yi>0?Math.round((yi-ys)/yi*100)+"% of income · ":""}${eur(m.net)} in ${mn}</small></div>
+        <div class="fx-tile"><span>Investments · ${yr}</span><b class="${iy.total>=0?"pos":"neg"}">${iy.total>=0?"+":""}${eur(iy.total)}</b><small>${iy.pct==null?"all investments":pct(iy.pct)+" · all investments"}${iy.since?` · since ${new Date(iy.since+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}`:""}</small></div>
         <div class="fx-tile"><span>Bills & subs / month</span><b>${eur(mon)}</b><small>${eur(mon*12)} a year</small></div>
       </div></div>
       ${cancels.length?`<div class="fx-alert"><b>Cancel reminders:</b> ${cancels.map(r=>`${esc(r.name)}${r.cancelBy?` by ${r.cancelBy.split("-").reverse().join(".")}`:""}`).join(" · ")}</div>`:""}
@@ -4705,6 +4722,9 @@
     const upd=fin.pricesAt?`Prices updated ${new Date(fin.pricesAt).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}${fin.fx.date?` · USD→EUR ${Number(fin.fx.usdEur).toFixed(4)} (ECB ${fin.fx.date.split("-").reverse().join(".")})`:""}.`:"Prices not refreshed yet.";
     return `<div class="fx-grid2 fx-inv-top">${card("Portfolio",`<div class="fx-port">${donutSvg(parts,eur(p.total),p.plPct==null?"":pct(p.plPct)+" total")}<div class="fx-legend">${parts.sort((a,b)=>b.v-a.v).map(x=>`<div><i style="background:${x.c}"></i><span>${x.n}</span><b>${p.total?(x.v/p.total*100).toFixed(0):0}%</b><small>${eur(x.v)}</small></div>`).join("")||`<p class="fx-empty">Add holdings to see your allocation.</p>`}</div></div>`)}
       ${card("Returns & income",`<div class="fx-tiles sm one"><div class="fx-tile"><span>Invested</span><b>${eur(p.cost)}</b></div><div class="fx-tile"><span>Unrealised gain / loss</span><b class="${p.pl>=0?"pos":"neg"}">${eur(p.pl)}</b><small>${pct(p.plPct)}</small></div><div class="fx-tile"><span>Today</span><b class="${!hasDay?"":day>=0?"pos":"neg"}">${hasDay?eur(day):"—"}</b><small>24h for crypto</small></div><div class="fx-tile"><span>Expected income / year</span><b>${eur(p.income)}</b><small>dividends & staking</small></div></div>
+        ${(()=>{const y=String(new Date().getFullYear()),r=investYear(y);return `<div class="fx-ytd"><div class="fx-ytd-h"><span>Result in ${y}</span><b class="${r.total>=0?"pos":"neg"}">${r.total>=0?"+":""}${eur(r.total)}</b><small>${pct(r.pct)}</small></div>
+          <ul><li><span>Change in open positions${r.since?` since ${new Date(r.since+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}`:""}</span><b class="${r.openChange>=0?"pos":"neg"}">${eur(r.openChange)}</b></li><li><span>Realised gains (sold)</span><b class="${r.realised>=0?"pos":"neg"}">${eur(r.realised)}</b></li><li><span>Dividends, staking & interest</span><b class="pos">${eur(r.divs)}</b></li></ul>
+          <form class="fx-form" data-fform="ytd"><label class="fx-lab">Realised in ${y} € <input name="real" type="number" step="0.01" value="${fin.realized?.[y]??""}" placeholder="0"></label><label class="fx-lab">Open profit/loss on 1 Jan € <input name="base" type="number" step="0.01" value="${fin.ytdBase?.[y]??""}" placeholder="optional"></label><button class="fx-save">Save</button></form></div>`})()}
         <p class="fx-note">${upd} Crypto: CoinGecko. Stocks: Finnhub (US listings, needs your free key). Others: type the price.</p>`)}</div>
       ${card("Holdings",`<div class="fx-tools"><button type="button" class="fx-btn primary" data-fnew="hold">+ Add holding</button><button type="button" class="fx-btn" data-fprices>↻ Refresh prices</button><button type="button" class="fx-btn" data-fimportport>Import portfolio file</button><input type="file" id="fxPort" accept=".html,.htm,.json" hidden><button type="button" class="fx-btn" data-fnew="fkey">${fin.finnhubKey?"Finnhub key ✓":"Add Finnhub key"}</button></div>
         ${finForm==="fkey"?`<form class="fx-form" data-fform="fkey"><input name="key" type="password" autocomplete="off" maxlength="80" value="${esc(fin.finnhubKey)}" placeholder="Finnhub API key (free at finnhub.io)"><button class="fx-save">Save</button><button type="button" class="fx-ghost" data-fcancel>Cancel</button><small class="fx-sub" style="flex-basis:100%">Stored only in this browser. It isn't part of the app's code.</small></form>`:""}
@@ -4794,11 +4814,11 @@
   function parsePortfolioFile(text){
     const objLit=src=>{try{return JSON.parse(src.replace(/([{,]\s*)([A-Za-z_]\w*)\s*:/g,'$1"$2":').replace(/'([^'\\]*)'/g,(m,x)=>JSON.stringify(x)))}catch(e){return null}};
     const grab=name=>{const i=text.indexOf(name);if(i<0)return null;const st=text.indexOf(text[text.indexOf("=",i)+1]==="["?"[":"{",i);let dep=0,q=null;for(let k=st;k<text.length;k++){const ch=text[k];if(q){if(ch==="\\")k++;else if(ch===q)q=null;continue}if(ch==="'"||ch==='"'){q=ch;continue}if(ch==="["||ch==="{")dep++;else if(ch==="]"||ch==="}"){dep--;if(!dep)return text.slice(st,k+1)}}return null};
-    const hsSrc=grab("DEFAULT_HOLDINGS"),setSrc=grab("DEFAULT_SETTINGS");
+    const hsSrc=grab("DEFAULT_HOLDINGS"),setSrc=grab("DEFAULT_SETTINGS"),realSrc=grab("REALIZED");
     const hs=hsSrc?objLit(hsSrc):null,set=setSrc?objLit(setSrc):null;
     if(!Array.isArray(hs))return null;
     return {holdings:hs.map(h=>({id:uid(),sym:String(h.name||h.key||"").toUpperCase().slice(0,12),name:String(h.full||"").slice(0,60),cls:h.kind==="crypto"?"crypto":/vwce|iwda|spyl|etf/i.test(h.name+" "+(h.full||""))?"etf":"stock",qty:Number(h.qty)||null,cost:Number(h.avg)||null,ccy:h.cur==="USD"?"USD":"EUR",
-      price:h.seedEur!=null?Number(h.seedEur):h.seed!=null?(h.kind==="crypto"?Number(h.seed)*fin.fx.usdEur:Number(h.seed)*fin.fx.usdEur):(h.src==="manual"&&Number(h.key)?Number(h.key):null),feed:h.src||"manual",feedKey:h.src==="manual"?null:String(h.key||""),staked:Number(h.staked)||null,yield:null})),set};
+      price:h.seedEur!=null?Number(h.seedEur):h.seed!=null?(h.kind==="crypto"?Number(h.seed)*fin.fx.usdEur:Number(h.seed)*fin.fx.usdEur):(h.src==="manual"&&Number(h.key)?Number(h.key):null),feed:h.src||"manual",feedKey:h.src==="manual"?null:String(h.key||""),staked:Number(h.staked)||null,yield:null})),set,real:realSrc?objLit(realSrc):null};
   }
   // ---- bank CSV import ----
   function parseBankCsv(text){
@@ -4846,6 +4866,7 @@
     if(t.id==="fxPort"&&t.files[0]){const txt=await t.files[0].text();t.value="";let res=null;try{const j=JSON.parse(txt);if(Array.isArray(j.holdings))res={holdings:j.holdings.map(h=>({...h,id:uid()})),set:null}}catch(e){res=parsePortfolioFile(txt)}
       if(!res||!res.holdings.length){finMsg="Couldn't find holdings in that file.";renderFinance();return}
       const bySym=new Map(fin.holdings.map(h=>[h.sym,h]));let add=0,upd=0;for(const h of res.holdings){const o=bySym.get(h.sym);if(o){Object.assign(o,{...h,id:o.id,yield:o.yield??h.yield,thesis:o.thesis,research:o.research,earnings:o.earnings});upd++}else{fin.holdings.push(h);add++}}
+      if(res.real&&typeof res.real==="object"){const eurR=(Number(res.real.EUR)||0)+(Number(res.real.USD)||0)*fin.fx.usdEur;fin.realized[String(new Date().getFullYear())]=Math.round(eurR*100)/100}
       const st=res.set;if(st){if(st.finnhubKey&&!fin.finnhubKey)fin.finnhubKey=String(st.finnhubKey);
         const acc=(name,amt)=>{if(!Number.isFinite(Number(amt))||!Number(amt))return;const o=fin.accounts.find(a=>a.name.toLowerCase()===name.toLowerCase());if(o)o.amount=Number(amt);else fin.accounts.push({id:uid(),name,amount:Number(amt)})};
         for(const b of st.banks||[])acc(String(b.name||"Bank"),b.amount);acc("Broker cash (IBKR)",st.cash);acc("Exchange cash",st.cryptoCash);
@@ -4864,6 +4885,7 @@
     if(k==="rec"){const a=Math.abs(Number(d.get("a")));if(!a)return;fin.recurring.push({id:uid(),name:String(d.get("n")).trim().slice(0,60),amount:a,freq:d.get("f"),cat:d.get("c"),next:d.get("d"),cancel:false})}
     if(k==="hold"){const s=String(d.get("s")).trim().toUpperCase().slice(0,12);if(!s)return;const n=v=>{const x=d.get(v);return x===""||x==null?null:Number(x)};fin.holdings.push({id:uid(),sym:s,name:String(d.get("n")||"").trim().slice(0,60),cls:d.get("c"),qty:n("q"),cost:n("cost"),ccy:d.get("ccy")==="USD"?"USD":"EUR",price:n("p"),yield:n("y"),feed:d.get("c")==="crypto"?"coingecko":"finnhub"})}
     if(k==="div"){const a=Number(d.get("a"));if(!a)return;fin.divs.push({id:uid(),date:d.get("d"),sym:String(d.get("s")).trim().toUpperCase().slice(0,12),kind:d.get("k"),amount:Math.abs(a)})}
+    if(k==="ytd"){const y=String(new Date().getFullYear()),r=d.get("real"),b=d.get("base");fin.realized[y]=r===""?0:Number(r)||0;if(b===""||b==null)delete fin.ytdBase[y];else fin.ytdBase[y]=Number(b)||0;finMsg="This year's result updated."}
     if(k==="goal"){const g=Number(d.get("goal"));if(Number.isFinite(g))fin.saveGoal=g;finMsg="Goal saved."}
     if(k==="acc"){const n=String(d.get("n")).trim().slice(0,40);if(!n)return;fin.accounts.push({id:uid(),name:n,amount:Number(d.get("a"))||0})}
     if(k==="fkey"){fin.finnhubKey=String(d.get("key")||"").trim().slice(0,80);finMsg=fin.finnhubKey?"Finnhub key saved in this browser.":"Finnhub key removed."}
