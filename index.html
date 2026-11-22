@@ -3457,7 +3457,7 @@
       void main(){vec3 N=normalize(n);float rim=pow(1.-abs(N.z),2.6);float g=vglow*fAmt*(.84+.16*sin(fT*3.4));
       if(pass>2.5){if(g<.003)discard;float e=pow(1.-abs(N.z),1.35);gl_FragColor=vec4(mix(vec3(.918,.20,.153),vec3(1.,.48,.40),e),g*e*(mesh>.5?.6:.7));return;}
       if(pass>1.5){if(N.z<0.)discard;gl_FragColor=vec4(.94,.65,.36,.2);return;}
-      if(pass>.5){gl_FragColor=vec4(mix(vec3(.04,.45,.58),vec3(.86,.16,.12),g),(.22+rim*.30+g*.30)*smoothstep(.055,.115,p.y));return;}
+      if(pass>.5){gl_FragColor=vec4(mix(vec3(.02,.28,.38),vec3(.86,.16,.12),g),(.30+rim*.30+g*.30)*smoothstep(.055,.115,p.y));return;}
       vec3 V=vec3(0.,0.,1.);
       vec3 K=normalize(vec3(-.55,.72,.80));
       vec3 F=normalize(vec3(.85,.05,.40));
@@ -3466,8 +3466,8 @@
       float spec=pow(max(0.,dot(reflect(-K,N),V)),24.)*step(.01,key);
       float ao=mix(.80,1.,smoothstep(.0,.34,p.y));
       // light scan hologram: pale aqua glass body, deeper teal toward the silhouette edge
-      vec3 surface=mix(vec3(.62,.82,.88),vec3(.94,.985,1.),key*.75+fill*.25);
-      surface=mix(surface,vec3(.22,.64,.78),rim*.62);
+      vec3 surface=mix(vec3(.24,.50,.60),vec3(.66,.86,.92),key*.8+fill*.2);
+      surface=mix(surface,vec3(.06,.33,.45),rim*.7);
       surface+=spec*vec3(.55,.70,.76)*.55;
       surface*=mix(.86,1.,smoothstep(.0,.34,p.y));
       surface*=mix(.80,1.03,vao);
