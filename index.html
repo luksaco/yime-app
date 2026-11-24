@@ -1645,6 +1645,40 @@
   html body .goal-card .wg-stats>div{background:rgba(255,255,255,.94)!important;border:0!important;box-shadow:0 8px 20px -12px rgba(0,0,0,.45)!important}
   html body .goal-card .wg-stats span{color:#66707a!important;-webkit-text-fill-color:#66707a!important}
   html body .goal-card .wg-stats b{color:#1b2127!important;-webkit-text-fill-color:#1b2127!important}html body .goal-card .wg-stats b.good{color:#13858b!important;-webkit-text-fill-color:#13858b!important}html body .goal-card .wg-stats b.bad{color:#d92d20!important;-webkit-text-fill-color:#d92d20!important}
+
+  /* ===================== YIME brand v3: rose glass · magenta glow · charcoal ===================== */
+  :root{--ink:#2a1722;--muted:#8a6577;--muted2:#b0909f;--rose:#e46fa3;--magenta:#b8336f;--plum:#7a1e4d;--char:#1f1d1e}
+  html body{background:
+      radial-gradient(900px 640px at 50% 38%,rgba(214,92,150,.38),transparent 62%),
+      radial-gradient(1100px 800px at 50% 40%,rgba(236,150,190,.35),transparent 70%),
+      radial-gradient(900px 700px at 0% 0%,rgba(250,222,232,.9),transparent 60%),
+      linear-gradient(180deg,#f3d3de 0%,#e3b3c9 50%,#d3a3c3 100%)!important;background-attachment:fixed!important}
+  html body .card,html body .stat{background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,240,246,.40))!important;border:1px solid rgba(255,255,255,.85)!important;
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 16px 36px -16px rgba(122,30,77,.28)!important}
+  /* goal card: pink glass with a magenta glow behind the numbers (Variability card) */
+  html body .goal-card{border:1px solid rgba(255,255,255,.55)!important;
+    background:radial-gradient(48% 70% at 62% 52%,rgba(122,30,77,.85) 0%,rgba(184,51,111,.6) 35%,rgba(228,111,163,.15) 70%,transparent 85%),
+      linear-gradient(160deg,rgba(236,160,196,.92),rgba(214,120,170,.92))!important;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 26px 50px -24px rgba(122,30,77,.55)!important}
+  html body .goal-card .wg-track{background:rgba(255,255,255,.28)!important}
+  html body .goal-card .wg-track i{background:#fff!important;box-shadow:0 0 14px rgba(255,255,255,.8)!important}
+  html body .goal-card .wg-stats b.good{color:#b8336f!important;-webkit-text-fill-color:#b8336f!important}
+  /* weight tile: charcoal card (References card) */
+  html body #statWeight>.stat,html body #statWeight>div{background:linear-gradient(165deg,#2a2729,#1f1d1e)!important;border-color:rgba(255,255,255,.06)!important}
+  html body .bm-link{background:#1f1d1e!important}html body .bm-link span:last-child{color:#f3a6c8}
+  /* tab bar + buttons: rose glass bar, charcoal selected pill */
+  html body #appTabs{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,236,244,.72))!important;border-color:rgba(255,255,255,.9)!important}
+  html body #appTabs button[aria-selected="true"]:not([data-tab="goals"]){background:#1f1d1e!important;color:#fff!important}
+  html body #appTabs button{color:#6d4a5b}
+  html body .scan-stage.studio{background:radial-gradient(70% 60% at 50% 38%,rgba(255,255,255,.95),transparent 70%),linear-gradient(180deg,#fbeef3 0%,#f0d6e2 100%)!important}
+  body.space-health .scan-stage.studio .scan-heading i{background:#e46fa3!important;box-shadow:0 0 10px rgba(228,111,163,.7)!important}
+  html body .top::before{background:rgba(255,244,249,.78)!important;border-bottom-color:rgba(255,255,255,.7)!important}
+  :root[data-theme="dark"] body .top::before{background:#1c1218!important}
+  :root[data-theme="dark"] body{background:radial-gradient(900px 640px at 50% 38%,rgba(184,51,111,.30),transparent 62%),linear-gradient(180deg,#1c1218,#120b10)!important}
+  :root[data-theme="dark"] body .card,:root[data-theme="dark"] body .stat{background:linear-gradient(160deg,rgba(58,36,48,.72),rgba(34,22,30,.62))!important;border-color:rgba(255,255,255,.08)!important}
+  :root[data-theme="dark"] body #appTabs{background:linear-gradient(180deg,#2a1c24,#1e141a)!important}
+  :root[data-theme="dark"] body #appTabs button[aria-selected="true"]:not([data-tab="goals"]){background:#f6dbe7!important;color:#1f1d1e!important}
+  :root[data-theme="dark"] body .scan-stage.studio{background:linear-gradient(180deg,#2a1c24,#1a1116)!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
