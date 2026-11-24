@@ -1583,6 +1583,25 @@
   :root[data-theme="dark"] .wt-bar i{background:#f2f1ef}
   @media(max-width:680px){.wt-sum{gap:6px!important}.wt-sum>div{padding:10px}.wt-sum b{font-size:15px}.wt-sum small{display:block;font-size:11.5px}.wt-sum b{font-size:20px}.wt-sum .u{font-size:12px;font-weight:600;color:var(--muted)}.wt-table td:nth-child(5),.wt-table th:nth-child(5),.wt-table td:nth-child(6),.wt-table th:nth-child(6){display:none}.wt-table td,.wt-table th{padding:12px 10px!important}.card-title-row:has(.wt-ctrl){flex-wrap:wrap;gap:8px}}
   .wt-sum small.wt-cmp{display:block;font-size:11px;opacity:.8;margin-top:2px}
+  .wt-sum{grid-template-columns:repeat(4,minmax(0,1fr))!important}.wt-sum>.wt-run{background:#121211;color:#fff}.wt-run span,.wt-run small,.wt-run .u{color:rgba(255,255,255,.65)!important}.wt-run small{display:block}
+  .wt-sum em.flat,.wt-table em.flat{color:var(--muted);font-weight:600}.wt-run em.up{color:#5ee08a!important}.wt-run em.down{color:#ff7a70!important}.wt-d em{font-size:12px}
+  :root[data-theme="dark"] .wt-sum>.wt-run{background:#f2f1ef;color:#121211}:root[data-theme="dark"] .wt-run span,:root[data-theme="dark"] .wt-run small,:root[data-theme="dark"] .wt-run .u{color:rgba(18,18,17,.6)!important}
+  @media(max-width:680px){.wt-sum{grid-template-columns:repeat(2,minmax(0,1fr))!important}.wt-table td:nth-child(6),.wt-table th:nth-child(6){display:table-cell!important}.wt-table td:nth-child(7),.wt-table th:nth-child(7),.wt-table td:nth-child(4),.wt-table th:nth-child(4){display:none}.wt-d{display:block}}
+  @media(max-width:680px){.wt-time i{max-width:64px}.wt-table td:nth-child(3),.wt-table th:nth-child(3){width:auto}.wt-table td:nth-child(6),.wt-table th:nth-child(6){display:table-cell!important}.wt-d{display:block;margin-top:2px}.wt-table td,.wt-table th{padding:12px 8px!important}.wt-table td:first-child{white-space:normal}}
+  .wt-sm{display:none}@media(max-width:680px){.wt-sm{display:inline}.wt-lg{display:none}.wt-table{font-size:13px!important}.wt-table td:first-child{min-width:84px}}
+  .stats-top .fit-mini{grid-column:1/-1}
+  .fm-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .fm-legend{display:flex;gap:12px;font-size:11.5px;color:#6b6259}.fm-legend span{display:flex;align-items:center;gap:5px}.fm-legend b{display:inline-block;width:10px;height:10px;border-radius:3px}
+  .k-bar{background:#d4d1cb}.k-hr{background:#ea3327;height:3px!important;border-radius:2px!important;width:14px!important}
+  .fm-row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;align-items:end;margin-top:10px}
+  .fm-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .fm-nums span{display:block;font-size:11.5px;color:#6b6259}.fm-nums b{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#111;white-space:nowrap}.fm-nums b em{font-style:normal;font-size:12px;font-weight:600;color:#6b6259;letter-spacing:0}
+  .fm-nums small{display:block;font-size:11px;white-space:nowrap;color:#6b6259;margin-top:2px}.fm-nums i{font-style:normal;font-weight:700}
+  .fm-good{color:#2e9e4f}.fm-bad{color:#F04438}.fm-flat{color:#6b6259}
+  .fm-chart{width:100%;height:auto;display:block}.fm-bar{fill:#d4d1cb}.fm-bar.on{fill:#121211}.fm-lab{font-size:9px;fill:#9a9189}
+  .fm-hr{fill:none;stroke:#ea3327;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}.fm-dot{fill:#fff;stroke:#ea3327;stroke-width:1.6}
+  :root[data-theme="dark"] .fm-nums b{color:var(--ink)}:root[data-theme="dark"] .fm-bar.on{fill:#f2f1ef}:root[data-theme="dark"] .fm-bar{fill:#3a3b40}:root[data-theme="dark"] .fm-dot{fill:#17181b}
+  @media(max-width:680px){.fm-row{grid-template-columns:1fr}.fm-nums b{font-size:20px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1888,6 +1907,7 @@
       <div class="stats-top" id="statsTop">
         <button type="button" class="bm-health" id="bmHealth" aria-label="Health score. Open Body health"></button>
         <div class="stat-slot" id="statWeight"></div>
+        <button type="button" class="bm-health fit-mini" id="fitMini" aria-label="Fitness trend. Open Training"></button>
       </div>
       <div class="card goal-card"><div id="progress"></div></div>
       <div class="stats" id="stats" aria-live="polite"></div>
@@ -2085,6 +2105,7 @@
               <div class="field"><label for="w-sport">Type</label><input type="text" id="w-sport" list="sportList" placeholder="Run" maxlength="40"></div>
               <div class="field"><label for="w-minutes">Minutes</label><input type="number" id="w-minutes" min="1" max="1440" step="1" inputmode="numeric" placeholder="52"></div>
               <div class="field"><label for="w-km">Distance (km, optional)</label><input type="number" id="w-km" min="0" max="999" step="0.01" inputmode="decimal" placeholder="11.2"></div>
+              <div class="field"><label for="w-hr">Avg heart rate (bpm, optional)</label><input type="number" id="w-hr" min="40" max="230" step="1" inputmode="numeric" placeholder="148"></div>
             </div>
             <datalist id="sportList"><option value="Run"></option><option value="Ride"></option><option value="Swim"></option><option value="Walk"></option><option value="Hike"></option><option value="Weight Training"></option><option value="Workout"></option><option value="Yoga"></option></datalist>
             <div class="error" id="workoutError" role="alert"></div>
@@ -2380,6 +2401,7 @@
     renderBodyHealthScore();
     renderHealthTrend();
     try{renderWorkoutTrend()}catch(e){console.error(e)}
+    try{renderFitnessMini()}catch(e){console.error(e)}
     $("hsValue").textContent=score==null?"—":Math.round(score);
     $("hsCaption").textContent=score==null?"not enough inputs yet":
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
@@ -2934,7 +2956,7 @@
 
   function cleanWorkout(raw){
     if(!raw||typeof raw!=="object"||!validDate(raw.date))return null;
-    const minutes=Number(raw.minutes), km=Number(raw.km);
+    const minutes=Number(raw.minutes), km=Number(raw.km), hr=Number(raw.hr);
     if(!Number.isFinite(minutes)||minutes<=0||minutes>1440)return null;
     const sport=String(raw.sport||"Workout").slice(0,40);
     return {
@@ -2942,6 +2964,7 @@
       date:raw.date, sport, group:sportGroup(raw.group||sport),
       minutes:Math.round(minutes*10)/10,
       km:Number.isFinite(km)&&km>0&&km<1000?Math.round(km*100)/100:null,
+      hr:Number.isFinite(hr)&&hr>=40&&hr<=230?Math.round(hr):null,
       source:raw.source==="strava"?"strava":"manual",
       key:raw.key?String(raw.key).slice(0,120):null
     };
@@ -4214,6 +4237,8 @@
                      ||pickColumn(body,columnsMatching(header,/elapsed\s*time/i))
                      ||pickColumn(body,columnsMatching(header,/^(duration|time|minutes|total time)/i));
         const distPick=pickDistance(body,columnsMatching(header,/^distance/i));
+        // Average heart rate: Strava "Average Heart Rate", Garmin "Avg HR".
+        const hrPick=pickColumn(body,columnsMatching(header,/^(average heart ?rate|avg\.? ?hr|average hr|avg heart ?rate)$/i));
         // Magnitude decides the unit. A median session over 300 of anything cannot be
         // minutes, and a single activity over 1000 cannot be kilometres.
         const timeInSeconds=timePick?median(timePick.values)>300:true;
@@ -4230,7 +4255,8 @@
           let km=rawDist==null||rawDist<=0?null:(distInMetres?rawDist/1000:rawDist);
           const sport=prettySport(r[typeCol]);
           const key=idCol!=null&&r[idCol]?`strava:${String(r[idCol]).trim()}`:`strava:${date}|${sport}|${Math.round(minutes*60)}`;
-          const w=cleanWorkout({id:key.replace(/[^a-zA-Z0-9_:.-]/g,""),date,sport,group:r[typeCol],minutes,km,source:"strava",key});
+          const hr=hrPick?num(r[hrPick.index]):null;
+          const w=cleanWorkout({id:key.replace(/[^a-zA-Z0-9_:.-]/g,""),date,sport,group:r[typeCol],minutes,km,hr,source:"strava",key});
           if(w)parsed.push(w); else skipped.push("invalid");
         }
         if(!parsed.length)throw new Error("none");
@@ -4413,11 +4439,12 @@
     const date=$("w-date").value, sport=$("w-sport").value.trim()||"Workout";
     const minutes=Number($("w-minutes").value), kmRaw=$("w-km").value.trim();
     if(!validDate(date)||!Number.isFinite(minutes)||minutes<=0){$("workoutError").textContent="A date and a duration in minutes are required.";return}
-    const w=cleanWorkout({date,sport,minutes,km:kmRaw===""?null:Number(kmRaw),source:"manual"});
+    const hrRaw=$("w-hr").value.trim();
+    const w=cleanWorkout({date,sport,minutes,km:kmRaw===""?null:Number(kmRaw),hr:hrRaw===""?null:Number(hrRaw),source:"manual"});
     if(!w){$("workoutError").textContent="Check the values — duration must be between 1 and 1440 minutes.";return}
     $("workoutError").textContent="";
     state.workouts.push(w);state.workouts=dedupeWorkouts(state.workouts);save();
-    $("w-minutes").value="";$("w-km").value="";
+    $("w-minutes").value="";$("w-km").value="";$("w-hr").value="";
     trainingMonth=monthKey(w.date);
     renderTraining();showToast("Session added.",false);
   }
@@ -5232,7 +5259,7 @@
   // ===== Workout activity trend: sessions, time and distance per week or month, by activity =====
   let wtPeriod="week",wtGroup="All";
   function renderWorkoutTrend(){
-    const el=$("workoutTrend");if(!el)return;const tc=$("spark")&&$("spark").closest(".card");if(tc&&tc.nextElementSibling!==el)tc.after(el);const ws=state.workouts||[];
+    const el=$("workoutTrend");if(!el)return;const tc=$("trainingCard");if(tc&&tc.nextElementSibling!==el)tc.after(el);const ws=state.workouts||[];
     if(!ws.length){el.innerHTML=`<p class="eyebrow">Fitness activity trend</p><p class="wt-empty">Import your Garmin or Strava workouts in Training and your weekly and monthly activity trend appears here.</p>`;return}
     const groups=["All",...[...new Set(ws.map(w=>w.group))].sort((a,b)=>ws.filter(w=>w.group===b).length-ws.filter(w=>w.group===a).length)];
     if(!groups.includes(wtGroup))wtGroup="All";
@@ -5244,25 +5271,61 @@
         if(i===0){e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);label=`1–${now.getDate()} ${s.toLocaleDateString("en-GB",{month:"short"})} ${s.getFullYear()}`}}
       const r=rows.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});
       const runs=r.filter(w=>w.group==="Run"&&w.km>0&&w.minutes>0),rk=runs.reduce((a,w)=>a+w.km,0),rm=runs.reduce((a,w)=>a+w.minutes,0);
+      const hrs=r.filter(w=>w.group==="Run"&&w.hr),hm2=hrs.reduce((a,w)=>a+w.minutes,0),rhr=hm2?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hm2:null;
       let pmin=null;if(i===0){const t1=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);let ps,pe;
         if(wtPeriod==="week"){ps=new Date(s);ps.setDate(ps.getDate()-7);pe=new Date(t1);pe.setDate(pe.getDate()-7)}
         else{ps=new Date(s.getFullYear(),s.getMonth()-1,1);const dim=new Date(s.getFullYear(),s.getMonth(),0).getDate();pe=new Date(s.getFullYear(),s.getMonth()-1,Math.min(now.getDate(),dim)+1)}
         pmin=rows.filter(w=>{const t=dateValue(w.date);return t>=ps.getTime()&&t<pe.getTime()}).reduce((a,w)=>a+(w.minutes||0),0)}
-      buckets.push({label,n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,cur:i===0,pmin})}
+      buckets.push({label,n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:rhr,cur:i===0,pmin})}
     const mx=Math.max(1,...buckets.map(b=>b.min)),hm=m=>{m=Math.round(m);return m>=60?`${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}`:`${m}m`},pc=p=>p?`${Math.floor(p)}:${String(Math.round(p%1*60)).padStart(2,"0")}/km`:"—";
     const avg=k=>{const b=buckets.slice(0,-1).filter(x=>x.n);return b.length?b.reduce((a,x)=>a+x[k],0)/b.length:0};
     const last=buckets.at(-1),prev=buckets.at(-2),dlt=(a,b)=>!b?"":`<em class="${a>=b?"up":"down"}">${a>=b?"↑":"↓"} ${Math.abs(Math.round((a-b)/b*100))}%</em>`;
+    const dPace=(a,b)=>{if(!a||!b)return"";const s=Math.round((a-b)*60);if(!s)return`<em class="flat">same</em>`;return`<em class="${s<0?"up":"down"}">${s<0?"↓":"↑"} ${Math.abs(s)}s</em>`};
+    const dHr=(a,b)=>{if(!a||!b)return"";const s=Math.round(a-b);if(!s)return`<em class="flat">same</em>`;return`<em class="${s<0?"up":"down"}">${s<0?"↓":"↑"} ${Math.abs(s)}</em>`};
+    const lastRun=[...buckets].slice(0,-1).reverse().find(b=>b.hr||b.pace)||{},hasHr=buckets.some(b=>b.hr);
+    const runTile=`<div class="wt-run"><span>Running vs last ${wtPeriod}</span><b>${last.hr?Math.round(last.hr):"—"}<i class="u"> bpm avg</i></b><small>${last.hr&&lastRun.hr?`${dHr(last.hr,lastRun.hr)} vs ${Math.round(lastRun.hr)} bpm`:hasHr?"No HR this "+wtPeriod+" yet":"Import Strava with heart rate"}</small><small>${pc(last.pace)} ${dPace(last.pace,lastRun.pace)}${lastRun.pace?` vs ${pc(lastRun.pace)}`:""}</small></div>`;
     el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Fitness activity trend</p><div class="wt-ctrl"><div class="seg wt-seg">${["week","month"].map(p=>`<button type="button" data-wtp="${p}" aria-pressed="${wtPeriod===p}">${p==="week"?"Weekly":"Monthly"}</button>`).join("")}</div>
       <select class="wt-sel" data-wtg aria-label="Activity">${groups.map(g=>`<option ${g===wtGroup?"selected":""}>${g}</option>`).join("")}</select></div></div>
       <div class="wt-sum"><div><span>This ${wtPeriod}</span><b>${last.n}<i class="u"> session${last.n===1?"":"s"}</i></b><small>${hm(last.min)} · ${last.km.toFixed(1)} km ${dlt(last.min,last.pmin)}</small><small class="wt-cmp">vs same days last ${wtPeriod}</small></div>
         <div><span>Average ${wtPeriod}</span><b>${avg("n").toFixed(1)}<i class="u"> sessions</i></b><small>${hm(avg("min"))} · ${avg("km").toFixed(1)} km</small></div>
-        <div><span>${wtPeriod==="week"?"12 weeks":"12 months"} total</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div></div>
-      <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num">Sessions</th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num">vs previous</th></tr></thead><tbody>
-      ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>`<tr class="${b.cur?"cur":""}"><td>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*240).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td></tr>`).join("")}
+        <div><span>${wtPeriod==="week"?"12 weeks":"12 months"} total</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div>${runTile}</div>
+      <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num"><span class="wt-lg">Sessions</span><span class="wt-sm">#</span></th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num"><span class="wt-lg">Run avg HR</span><span class="wt-sm">Run HR</span></th><th class="num">Time vs prev</th></tr></thead><tbody>
+      ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>`<tr class="${b.cur?"cur":""}"><td>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*240).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}${p?` <span class="wt-d">${dPace(b.pace,p.pace)}</span>`:""}</td><td class="num">${b.hr?Math.round(b.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(b.hr,p.hr)}</span>`:""}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td></tr>`).join("")}
       </tbody></table></div>`;
   }
   document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-wtp]");if(b){wtPeriod=b.dataset.wtp;renderWorkoutTrend()}});
   document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}});
+  // ===== Progress: compact fitness trend card (like Health score) — 12 months of training time with run HR line =====
+  function renderFitnessMini(){
+    const el=$("fitMini");if(!el)return;const ws=state.workouts||[],now=new Date();
+    if(!ws.length){el.innerHTML=`<div class="bm-row"><div class="bm-mid"><div class="bm-label">Fitness trend</div><div class="bm-trend muted">Import your Strava or Garmin workouts to see your monthly training and running heart-rate trend.</div></div></div><span class="bm-link"><span>Open training</span><span>→</span></span>`;return}
+    const inRange=(s,e)=>ws.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});
+    const stat=r=>{const runs=r.filter(w=>w.group==="Run"),hrs=runs.filter(w=>w.hr),hm=hrs.reduce((a,w)=>a+w.minutes,0),pr=runs.filter(w=>w.km>0),pk=pr.reduce((a,w)=>a+w.km,0);
+      return {n:r.length,min:r.reduce((a,w)=>a+w.minutes,0),km:r.reduce((a,w)=>a+(w.km||0),0),hr:hm?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hm:null,pace:pk?pr.reduce((a,w)=>a+w.minutes,0)/pk:null}};
+    const months=[];for(let i=11;i>=0;i--){const s=new Date(now.getFullYear(),now.getMonth()-i,1),e=i?new Date(now.getFullYear(),now.getMonth()-i+1,1):new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);months.push({s,lab:s.toLocaleDateString("en-GB",{month:"short"})[0],...stat(inRange(s,e))})}
+    const cur=months.at(-1),prevFull=months.at(-2);
+    // like-for-like: same days of last month
+    const ps=new Date(now.getFullYear(),now.getMonth()-1,1),dim=new Date(now.getFullYear(),now.getMonth(),0).getDate(),same=stat(inRange(ps,new Date(now.getFullYear(),now.getMonth()-1,Math.min(now.getDate(),dim)+1)));
+    const chg=same.min?(cur.min-same.min)/same.min:null;
+    const word=chg==null?(cur.min?"Building":"Quiet"):chg>.1?"Building":chg<-.15?"Dropping":"Steady";
+    const wcol=word==="Building"?"#2e9e4f":word==="Dropping"?"#F04438":"#0099FF";
+    const hrD=cur.hr&&prevFull.hr?Math.round(cur.hr-prevFull.hr):null,pcD=cur.pace&&prevFull.pace?Math.round((cur.pace-prevFull.pace)*60):null;
+    const pc=p=>p?`${Math.floor(p)}:${String(Math.round(p%1*60)).padStart(2,"0")}`:"—",hh=m=>m>=60?`${Math.floor(m/60)}h ${String(Math.round(m%60)).padStart(2,"0")}`:`${Math.round(m)}m`;
+    const arrow=(d,unit)=>d==null?"":!d?`<i class="fm-flat">same</i>`:`<i class="${d<0?"fm-good":"fm-bad"}">${d<0?"↓":"↑"}${Math.abs(d)}${unit}</i>`;
+    // diagram: bars = training time per month, line = run avg HR
+    const W=300,H=86,pb=14,pt=6,bw=W/12,mx=Math.max(1,...months.map(m=>m.min)),hv=months.filter(m=>m.hr).map(m=>m.hr),hlo=hv.length?Math.min(...hv)-4:0,hhi=hv.length?Math.max(...hv)+4:1;
+    const bars=months.map((m,i)=>{const bh=m.min/mx*(H-pb-pt-10);return `<rect x="${(i*bw+bw*.2).toFixed(1)}" y="${(H-pb-bh).toFixed(1)}" width="${(bw*.6).toFixed(1)}" height="${Math.max(bh,m.min?2:0).toFixed(1)}" rx="3" class="${i===11?"fm-bar on":"fm-bar"}"><title>${m.s.toLocaleDateString("en-GB",{month:"long"})}: ${hh(m.min)}${m.hr?` · ${Math.round(m.hr)} bpm`:""}</title></rect><text x="${(i*bw+bw/2).toFixed(1)}" y="${H-2}" text-anchor="middle" class="fm-lab">${m.lab}</text>`}).join("");
+    const hp=months.map((m,i)=>m.hr?[i*bw+bw/2,pt+(1-(m.hr-hlo)/(hhi-hlo))*(H-pb-pt-14)]:null);
+    const segs=hp.filter(Boolean),line=segs.length>1?`<path d="${segs.map((p,i)=>`${i?"L":"M"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ")}" class="fm-hr"/>${segs.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.4" class="fm-dot"/>`).join("")}`:"";
+    el.setAttribute("aria-label",`Fitness trend: ${word}. ${hh(cur.min)} this month${cur.hr?`, run heart rate ${Math.round(cur.hr)} bpm`:""}. Open Training`);
+    el.innerHTML=`<div class="fm-top"><div class="bm-label">Fitness trend <span class="bm-word" style="background:${wcol}">${word}</span></div><div class="fm-legend"><span><b class="k-bar"></b>Training time</span>${segs.length?`<span><b class="k-hr"></b>Run avg HR</span>`:""}</div></div>
+      <div class="fm-row"><div class="fm-nums">
+        <div><span>This month</span><b>${hh(cur.min)}</b><small>${cur.n} session${cur.n===1?"":"s"}${chg!=null?` · <i class="${chg>=0?"fm-good":"fm-bad"}">${chg>=0?"↑":"↓"}${Math.abs(Math.round(chg*100))}%</i>`:""}</small></div>
+        <div><span>Run avg HR</span><b>${cur.hr?Math.round(cur.hr):"—"}<em> bpm</em></b><small>${prevFull.hr?`${arrow(hrD," bpm")} vs ${Math.round(prevFull.hr)} in ${prevFull.s.toLocaleDateString("en-GB",{month:"short"})}`:"no HR last month"}</small></div>
+        <div><span>Run pace</span><b>${pc(cur.pace)}<em> /km</em></b><small>${prevFull.pace?`${arrow(pcD,"s")} vs ${pc(prevFull.pace)} in ${prevFull.s.toLocaleDateString("en-GB",{month:"short"})}`:"—"}</small></div>
+      </div><svg class="fm-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Training time and run heart rate per month, last 12 months">${bars}${line}</svg></div>
+      <span class="bm-link"><span>Open fitness activity trend</span><span>→</span></span>`;
+  }
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
@@ -5564,6 +5627,7 @@
       if(key==='motion')setMotion(figureOptions.motion)});
     $("sexToggle").addEventListener("click",e=>{const b=e.target.closest("button[data-sex]");if(!b)return;state.sex=b.dataset.sex;save();syncSex();renderFigure()});
     $("bmHealth").addEventListener("click",()=>setTab("health"));
+    $("fitMini").addEventListener("click",()=>{setTab("training");setTimeout(()=>{const t=$("workoutTrend");if(t)t.scrollIntoView({behavior:"smooth",block:"start"})},80)});
     $("metricTabs").addEventListener("click",e=>{const b=e.target.closest("button[data-metric]");if(!b)return;viewMetric=b.dataset.metric;renderTabs();renderChart()});
     $("history").addEventListener("click",e=>{const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]"),base=e.target.closest("[data-baseline-edit]");if(edit)startEdit(edit.dataset.edit);else if(del)deleteEntry(del.dataset.delete);else if(base)openBaselineEdit()});
     $("exportJson").addEventListener("click",exportJson);$("exportCsv").addEventListener("click",exportCsv);$("importBtn").addEventListener("click",()=>$("importFile").click());$("importFile").addEventListener("change",e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=""});$("toastAction").addEventListener("click",undoDelete);
@@ -5589,7 +5653,7 @@
     $("analyzeTraining").addEventListener("click",analyzeTraining);
     $("clearMonth").addEventListener("click",()=>{if(trainingMonth)deleteWorkoutsIn(trainingMonth)});
     $("w-date").value=today();$("w-date").max=today();
-    ["w-sport","w-minutes","w-km"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")addWorkout()}));
+    ["w-sport","w-minutes","w-km","w-hr"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")addWorkout()}));
     ["m-weight","m-chest","m-waist","m-hip","m-left-biceps","m-right-biceps","m-left-thigh","m-right-thigh","m-left-calf","m-right-calf","m-vo2max"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")saveMeasurement()}));
   }
   // A black mark disappears on a dark tab strip; follow the browser's scheme.
