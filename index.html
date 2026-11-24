@@ -1129,7 +1129,7 @@
   /* logo per space: yime Health in Health, main yime app everywhere else */
   .brand .logo-main,.brand .logo-health{display:none}
   body:not(.space-health) .brand .logo-main{display:block}
-  body.space-health .brand .logo-health{display:block}
+  body.space-health .brand .logo-main{display:block}
   :root[data-theme="dark"] .brand .logo-word{fill:#f2f1ef}
 
   /* ===== Finance space: Jade glass ===== */
@@ -1596,6 +1596,55 @@
   /* body model: arctic accent dot */
   body.space-health .scan-stage.studio .scan-heading i{background:#45a0c4!important;box-shadow:0 0 10px rgba(69,160,196,.6)!important}
   html body #statWeight>.stat,html body #statWeight>div{background:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/40px 40px,radial-gradient(90% 70% at 80% 110%,rgba(69,160,196,.55),transparent 70%),linear-gradient(170deg,#1c2d40 0%,#22405a 70%,#2b5a7c 100%)!important;border-color:rgba(255,255,255,.12)!important}
+
+  /* ===================== YIME brand v2: liquid silver glass · slate · cyan ===================== */
+  :root{--bg:#e9ebed;--card:rgba(255,255,255,.58);--soft:rgba(255,255,255,.45);--ink:#1b2127;--muted:#66707a;--muted2:#959da5;
+    --stroke:rgba(27,33,39,.08);--stroke2:rgba(27,33,39,.14);--glass-brd:rgba(255,255,255,.85);
+    --shadow:0 1px 1px rgba(27,33,39,.03),0 14px 34px -12px rgba(27,33,39,.16);--cyan:#4fd8de;--slate:#2b333b}
+  html body{background:
+      radial-gradient(1100px 700px at 12% -8%,rgba(255,255,255,.95),transparent 60%),
+      radial-gradient(900px 640px at 100% 30%,rgba(196,204,212,.55),transparent 65%),
+      radial-gradient(800px 600px at 30% 105%,rgba(214,220,226,.7),transparent 70%),
+      linear-gradient(180deg,#f3f4f5 0%,#e6e9ec 55%,#dde1e5 100%)!important;background-attachment:fixed!important}
+  /* frosted glass surfaces */
+  html body .card,html body .stat{background:linear-gradient(160deg,rgba(255,255,255,.72),rgba(255,255,255,.46))!important;border:1px solid rgba(255,255,255,.9)!important;
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -1px 0 rgba(27,33,39,.03) inset,0 14px 34px -14px rgba(27,33,39,.18)!important;
+    -webkit-backdrop-filter:blur(28px) saturate(160%)!important;backdrop-filter:blur(28px) saturate(160%)!important}
+  /* hero goal card: grey liquid-glass panel with white type and a cyan progress line (Night Run style) */
+  html body .goal-card{color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;
+    background:radial-gradient(70% 90% at 85% 10%,rgba(255,255,255,.28),transparent 60%),radial-gradient(60% 80% at 10% 110%,rgba(79,216,222,.22),transparent 70%),
+      linear-gradient(160deg,rgba(132,140,148,.92) 0%,rgba(96,104,112,.94) 55%,rgba(70,78,86,.96) 100%)!important;
+    box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 26px 50px -26px rgba(27,33,39,.55)!important}
+  html body .goal-card .eyebrow{color:rgba(255,255,255,.82)!important}
+  html body .goal-card .wg-big,html body .goal-card .wg-pct{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;filter:none!important}
+  html body .goal-card .wg-big span{-webkit-text-fill-color:rgba(255,255,255,.7)!important;color:rgba(255,255,255,.7)!important}
+  html body .goal-card .wg-track{background:rgba(255,255,255,.16)!important;height:6px}
+  html body .goal-card .wg-track i{background:linear-gradient(90deg,#9ff3f5,#4fd8de)!important;box-shadow:0 0 14px rgba(79,216,222,.75)!important}
+  html body .goal-card .wg-stats>div{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.22);box-shadow:none!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  html body .goal-card .wg-stats span{color:rgba(255,255,255,.72)!important}
+  html body .goal-card .wg-stats b{color:#fff!important}html body .goal-card .wg-stats b.good{color:#9ff3f5!important}html body .goal-card .wg-stats b.bad{color:#ffb4ac!important}
+  html body .goal-card .wg-pick select{background-color:rgba(255,255,255,.92)!important;color:#1b2127!important;border-color:transparent!important}
+  /* weight tile: deep slate glass with a cyan glow */
+  html body #statWeight>.stat,html body #statWeight>div{background:radial-gradient(90% 80% at 90% 110%,rgba(79,216,222,.28),transparent 65%),linear-gradient(165deg,#3b444d 0%,#2b333b 60%,#222930 100%)!important;border-color:rgba(255,255,255,.1)!important}
+  /* health score link + primary buttons: slate */
+  html body .bm-link{background:linear-gradient(90deg,#2b333b,#3b444d)!important}
+  html body .bm-link span:last-child{color:#4fd8de}
+  /* tab bar: silver glass, slate selected pill */
+  html body #appTabs{background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(246,247,248,.86))!important}
+  html body #appTabs button[aria-selected="true"]:not([data-tab="goals"]){background:linear-gradient(180deg,#3b444d,#232a30)!important;color:#fff!important}
+  /* body model stage: silver studio */
+  html body .scan-stage.studio{background:radial-gradient(70% 60% at 50% 35%,rgba(255,255,255,.95),transparent 70%),linear-gradient(180deg,#f2f3f4 0%,#e3e6e9 100%)!important}
+  body.space-health .scan-stage.studio .scan-heading i{background:#4fd8de!important;box-shadow:0 0 10px rgba(79,216,222,.7)!important}
+  /* dark mode: graphite glass with the same cyan */
+  :root[data-theme="dark"]{--bg:#0f1214;--card:rgba(30,35,40,.62);--ink:#eef1f3;--muted:#9aa3ab;--muted2:#78818a;--glass-brd:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] body{background:radial-gradient(900px 620px at 15% -10%,rgba(79,216,222,.10),transparent 60%),radial-gradient(900px 640px at 100% 40%,rgba(120,130,140,.14),transparent 65%),linear-gradient(180deg,#14181b,#0c0f11)!important;background-attachment:fixed!important}
+  :root[data-theme="dark"] body .card,:root[data-theme="dark"] body .stat{background:linear-gradient(160deg,rgba(44,50,56,.72),rgba(28,32,36,.6))!important;border-color:rgba(255,255,255,.08)!important;box-shadow:0 14px 34px -14px rgba(0,0,0,.6)!important}
+  :root[data-theme="dark"] body #appTabs{background:linear-gradient(180deg,#22272b,#1a1e21)!important}
+  :root[data-theme="dark"] body #appTabs button[aria-selected="true"]:not([data-tab="goals"]){background:linear-gradient(180deg,#eef1f3,#cfd5da)!important;color:#111!important}
+  :root[data-theme="dark"] body .scan-stage.studio{background:linear-gradient(180deg,#1e2327,#15191c)!important}
+  html body .goal-card .wg-stats>div{background:rgba(255,255,255,.94)!important;border:0!important;box-shadow:0 8px 20px -12px rgba(0,0,0,.45)!important}
+  html body .goal-card .wg-stats span{color:#66707a!important;-webkit-text-fill-color:#66707a!important}
+  html body .goal-card .wg-stats b{color:#1b2127!important;-webkit-text-fill-color:#1b2127!important}html body .goal-card .wg-stats b.good{color:#13858b!important;-webkit-text-fill-color:#13858b!important}html body .goal-card .wg-stats b.bad{color:#d92d20!important;-webkit-text-fill-color:#d92d20!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1817,9 +1866,7 @@
 <path d="M300,120C289.51,128.35,283.38,132.65,269.49,132.26C265.19,132.14,260.89,131.66,256.72,130.57C250.5,128.96,245,126,240,122C217.86,104.31,216.67,69.24,237.09,49.7C242.48,44.54,249.51,40.69,256.64,38.59C265.98,35.82,276.16,35.98,285.19,39.82C290.9,42.25,295.08,46.37,300,50C300,47.03,300,44.06,300,41C300.33,40.67,300.66,40.34,301,40C307.67,40,314.33,40,321,40C321,70,321,100,321,130C314.33,130,307.67,130,301,130C300.67,129.67,300.34,129.34,300,129C300,126.03,300,123.06,300,120ZM300.62,92.55C302.9,83.29,300.42,72.55,294.21,65.28C288.23,58.27,282.62,55.61,273.46,55.56C267.46,55.53,261.4,56.67,256.31,60.01C247.05,66.08,243.23,77.54,243.71,88.18C243.82,90.66,243.97,93.22,244.78,95.58C247.1,102.4,253.19,108.78,259.74,111.68C271.38,116.85,286.37,114.62,294.57,104.35C297.31,100.92,298.91,96.55,300.62,92.55Z"/>
 </g></svg></h1></div>
     <nav class="spaces" id="spaces" aria-label="Spaces">
-      <button type="button" data-space="dashboard">Dashboard</button>
-      <button type="button" data-space="health" aria-current="page">Health</button>
-      <button type="button" data-space="finance">Finance</button>
+      <button type="button" data-space="health" aria-current="page">Dashboard</button>
       <button type="button" data-space="calendar">Calendar</button>
     </nav>
     <div class="actions">
@@ -1831,13 +1878,11 @@
           <div class="mega">
             <div class="mega-col mega-spaces">
               <p class="mega-h">Spaces</p>
-              <button type="button" data-space="dashboard">Dashboard</button>
-              <button type="button" data-space="health">Health</button>
-              <button type="button" data-space="finance">Finance</button>
+              <button type="button" data-space="health">Dashboard</button>
               <button type="button" data-space="calendar">Calendar</button>
             </div>
             <div class="mega-col mega-main">
-              <p class="mega-h">Health</p>
+              <p class="mega-h">Dashboard</p>
               <button type="button" data-go="progress">Progress</button>
               <button type="button" data-go="health">Body health</button>
               <button type="button" data-go="training">Training</button>
@@ -5517,11 +5562,11 @@
       let finEl=document.getElementById("finSpace");if(!finEl){finEl=document.createElement("section");finEl.id="finSpace";finEl.className="fin-space";cal.parentNode.insertBefore(finEl,cal.nextSibling)}
       const show=sp=>{const other=sp!=="health";document.body.classList.toggle("space-other",other);document.body.classList.toggle("space-cal",sp==="calendar");document.body.classList.toggle("space-dash",sp==="dashboard");document.body.classList.toggle("space-health",sp==="health");document.body.classList.toggle("space-fin",sp==="finance");if(sp==="finance")try{renderFinance()}catch(e){console.error(e)}if(sp==="calendar")try{renderCalendar()}catch(e){console.error(e)}
         document.querySelectorAll("[data-space]").forEach(b=>{if(b.dataset.space===sp)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-        if(sp==="dashboard"){box.innerHTML=`<h2 class="dash-title">Dashboard</h2>`}else if(other&&sp!=="calendar"&&sp!=="finance"){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Health</button>`}
+        if(sp==="dashboard"){box.innerHTML=`<h2 class="dash-title">Dashboard</h2>`}else if(other&&sp!=="calendar"&&sp!=="finance"){const [t,d]=INFO[sp];box.innerHTML=`<span class="pill">Coming soon</span><h2>${t}</h2><p>${d}</p><button type="button" class="btn" data-space="health">Back to Dashboard</button>`}
         try{history.replaceState(null,"",other?"#"+sp:"#"+(activeTab||"progress"))}catch(e){}
         window.scrollTo({top:0})};
-      document.addEventListener("click",e=>{const b=e.target.closest("[data-space]");if(b)show(b.dataset.space);else if(e.target.closest(".mega [data-go]")&&document.body.classList.contains("space-other"))show("health")});
-      let h0="";try{h0=window.__yimeHash||location.hash.slice(1)}catch(e){}if(INFO[h0])show(h0);})();
+      document.addEventListener("click",e=>{const b=e.target.closest("[data-space]");if(b)show(b.dataset.space==="calendar"?"calendar":"health");else if(e.target.closest(".mega [data-go]")&&document.body.classList.contains("space-other"))show("health")});
+      let h0="";try{h0=window.__yimeHash||location.hash.slice(1)}catch(e){}if(h0==="calendar")show(h0);})();
     (()=>{const fig=$("figure");const ringKeys=k=>k&&k!=="weightKg"&&k!=="vo2max";
       const setFocus=k=>{k=ringKeys(k)?k:null;if(k===figureFocus)return;figureFocus=k;
         if(k)fig.setAttribute("data-focus",k);else fig.removeAttribute("data-focus");
