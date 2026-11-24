@@ -1573,6 +1573,15 @@
   /* floor: a soft pool of light the feet dissolve into */
   html body .scan-stage .scan-floor{border-color:rgba(76,170,200,.28)!important;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.95) 0%,rgba(196,232,242,.55) 40%,rgba(196,232,242,0) 72%)!important;box-shadow:0 0 34px 6px rgba(150,215,235,.28),0 14px 26px rgba(17,24,39,.06)!important}
   :root[data-theme="dark"] body .scan-stage .scan-floor{background:radial-gradient(ellipse at 50% 50%,rgba(120,200,225,.35) 0%,rgba(120,200,225,.12) 45%,transparent 72%)!important;border-color:rgba(120,200,225,.25)!important;box-shadow:0 0 34px 6px rgba(120,200,225,.18)!important}
+  .wt-ctrl{display:flex;gap:8px;align-items:center}.wt-sel{height:32px;border-radius:999px;border:1px solid var(--stroke2);background:var(--card);color:var(--ink);font:inherit;font-size:13px;font-weight:600;padding:0 12px}
+  .wt-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 14px}.wt-sum>div{padding:12px 14px;border-radius:14px;background:var(--soft)}
+  .wt-sum span{display:block;font-size:12px;color:var(--muted)}.wt-sum b{display:block;font-size:18px;letter-spacing:-.02em}.wt-sum small{font-size:12.5px;color:var(--muted)}
+  table.history.wt-table{min-width:0!important;table-layout:auto}.wt-table td,.wt-table th{white-space:nowrap}.wt-table td:nth-child(3){width:34%}.wt-time b{display:block;font-weight:600;font-variant-numeric:tabular-nums;margin-bottom:5px}.wt-time i{display:block;height:5px;border-radius:99px;background:#121211;min-width:3px}:root[data-theme="dark"] .wt-time i{background:#f2f1ef}.wt-table tr.cur td{font-weight:650}.wt-now{font-size:10.5px;font-weight:700;color:#ea3327;text-transform:uppercase;letter-spacing:.06em;margin-left:4px}
+  .wt-bar{display:flex;align-items:center;gap:10px;min-width:120px;line-height:1.3}.wt-bar i{display:block;height:8px;border-radius:99px;background:#121211;min-width:2px}.wt-bar span{font-size:13px;font-variant-numeric:tabular-nums}
+  .wt-table em{font-style:normal;font-weight:700}.wt-table em.up,.wt-sum em.up{color:#2e9e4f}.wt-table em.down,.wt-sum em.down{color:#F04438}.wt-sum em,.wt-sum i{font-style:normal;font-weight:700}
+  .wt-empty{color:var(--muted);margin:6px 0 0}
+  :root[data-theme="dark"] .wt-bar i{background:#f2f1ef}
+  @media(max-width:680px){.wt-sum{gap:6px!important}.wt-sum>div{padding:10px}.wt-sum b{font-size:15px}.wt-sum small{display:block;font-size:11.5px}.wt-sum b{font-size:20px}.wt-sum .u{font-size:12px;font-weight:600;color:var(--muted)}.wt-table td:nth-child(5),.wt-table th:nth-child(5),.wt-table td:nth-child(6),.wt-table th:nth-child(6){display:none}.wt-table td,.wt-table th{padding:12px 10px!important}.card-title-row:has(.wt-ctrl){flex-wrap:wrap;gap:8px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1958,6 +1967,8 @@
         <div class="card-title-row"><p class="eyebrow">Trend</p><div class="metric-tabs" id="metricTabs" role="group" aria-label="Chart metric"></div></div>
         <svg id="spark" viewBox="0 0 1000 190" role="img" aria-label="Measurement trend chart"></svg>
       </div>
+
+      <div class="card wt-card" id="workoutTrend"></div>
 
       <div class="card" id="healthCard">
         <div class="card-title-row"><p class="eyebrow">Body health</p><span class="hs-note" id="healthSource"></span></div>
@@ -2367,6 +2378,7 @@
     recordHealthScore(score);
     renderBodyHealthScore();
     renderHealthTrend();
+    try{renderWorkoutTrend()}catch(e){console.error(e)}
     $("hsValue").textContent=score==null?"—":Math.round(score);
     $("hsCaption").textContent=score==null?"not enough inputs yet":
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
@@ -5216,6 +5228,35 @@
   (function(){const el=document.getElementById("scanName");if(!el)return;try{el.textContent=localStorage.getItem("yime_name")||""}catch(e){}
     const save=()=>{const v=el.textContent.replace(/\s+/g," ").trim().slice(0,40);el.textContent=v;try{localStorage.setItem("yime_name",v)}catch(e){}};
     el.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();el.blur()}});el.addEventListener("blur",save);})();
+  // ===== Workout activity trend: sessions, time and distance per week or month, by activity =====
+  let wtPeriod="week",wtGroup="All";
+  function renderWorkoutTrend(){
+    const el=$("workoutTrend");if(!el)return;const ws=state.workouts||[];
+    if(!ws.length){el.innerHTML=`<p class="eyebrow">Workout trend</p><p class="wt-empty">Import your Garmin or Strava workouts in Training and your weekly and monthly activity trend appears here.</p>`;return}
+    const groups=["All",...[...new Set(ws.map(w=>w.group))].sort((a,b)=>ws.filter(w=>w.group===b).length-ws.filter(w=>w.group===a).length)];
+    if(!groups.includes(wtGroup))wtGroup="All";
+    const rows=ws.filter(w=>wtGroup==="All"||w.group===wtGroup),now=new Date(),N=wtPeriod==="week"?12:12,buckets=[];
+    const monday=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+    for(let i=N-1;i>=0;i--){let s,e,label;
+      if(wtPeriod==="week"){s=monday(now);s.setDate(s.getDate()-7*i);e=new Date(s);e.setDate(e.getDate()+7);label=s.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+      else{s=new Date(now.getFullYear(),now.getMonth()-i,1);e=new Date(now.getFullYear(),now.getMonth()-i+1,1);label=s.toLocaleDateString("en-GB",{month:"short",year:"2-digit"})}
+      const r=rows.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});
+      const runs=r.filter(w=>w.group==="Run"&&w.km>0&&w.minutes>0),rk=runs.reduce((a,w)=>a+w.km,0),rm=runs.reduce((a,w)=>a+w.minutes,0);
+      buckets.push({label,n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,cur:i===0})}
+    const mx=Math.max(1,...buckets.map(b=>b.min)),hm=m=>{m=Math.round(m);return m>=60?`${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}`:`${m}m`},pc=p=>p?`${Math.floor(p)}:${String(Math.round(p%1*60)).padStart(2,"0")}/km`:"—";
+    const avg=k=>{const b=buckets.slice(0,-1).filter(x=>x.n);return b.length?b.reduce((a,x)=>a+x[k],0)/b.length:0};
+    const last=buckets.at(-1),prev=buckets.at(-2),dlt=(a,b)=>!b?"":`<em class="${a>=b?"up":"down"}">${a>=b?"↑":"↓"} ${Math.abs(Math.round((a-b)/b*100))}%</em>`;
+    el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Workout trend</p><div class="wt-ctrl"><div class="seg wt-seg">${["week","month"].map(p=>`<button type="button" data-wtp="${p}" aria-pressed="${wtPeriod===p}">${p==="week"?"Weekly":"Monthly"}</button>`).join("")}</div>
+      <select class="wt-sel" data-wtg aria-label="Activity">${groups.map(g=>`<option ${g===wtGroup?"selected":""}>${g}</option>`).join("")}</select></div></div>
+      <div class="wt-sum"><div><span>This ${wtPeriod}</span><b>${last.n}<i class="u"> session${last.n===1?"":"s"}</i></b><small>${hm(last.min)} · ${last.km.toFixed(1)} km ${dlt(last.min,prev.min)}</small></div>
+        <div><span>Average ${wtPeriod}</span><b>${avg("n").toFixed(1)}<i class="u"> sessions</i></b><small>${hm(avg("min"))} · ${avg("km").toFixed(1)} km</small></div>
+        <div><span>${wtPeriod==="week"?"12 weeks":"12 months"} total</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div></div>
+      <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num">Sessions</th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num">vs previous</th></tr></thead><tbody>
+      ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>`<tr class="${b.cur?"cur":""}"><td>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b><i style="width:${(b.min/mx*100).toFixed(1)}%"></i></td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}</td><td class="num">${p&&p.min?dlt(b.min,p.min):"—"}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+  document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-wtp]");if(b){wtPeriod=b.dataset.wtp;renderWorkoutTrend()}});
+  document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}});
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
