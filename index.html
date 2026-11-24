@@ -1565,6 +1565,10 @@
   #stats .st-d .sub.since.good{color:#2e9e4f;font-weight:650}#stats .st-d .sub.since.bad{color:#F04438;font-weight:650}
   :root[data-theme="dark"] #stats .st-d .sub.since.good{color:#5cc27a}:root[data-theme="dark"] #stats .st-d .sub.since.bad{color:#ff6a5c}
   #stats .st-d .delta.good{color:#2e9e4f!important}#stats .st-d .delta.bad{color:#F04438!important}
+  .scan-heading .scan-name{cursor:text;outline:none;min-width:90px;text-align:right;color:#121211!important;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px dashed transparent}
+  .scan-heading .scan-name:hover,.scan-heading .scan-name:focus{border-bottom-color:rgba(18,18,17,.3)}
+  .scan-heading .scan-name:empty::before{content:attr(data-ph);color:#a8a39d;font-weight:600}
+  :root[data-theme="dark"] .scan-heading .scan-name{color:#f2f1ef!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -1845,7 +1849,7 @@
           </div>
           <div class="legend"><span id="baselineLegend"><i class="dash"></i>Start</span><span><i class="now"></i>Current</span></div>
         </div>
-        <div class="scan-heading"><span><i></i>BODY MODEL</span><span>3D / MEASUREMENTS</span></div>
+        <div class="scan-heading"><span><i></i>BODY MODEL</span><span id="scanName" class="scan-name" contenteditable="plaintext-only" spellcheck="false" role="textbox" aria-label="Your name" data-ph="Add your name"></span></div>
         <div id="bodyViewport" tabindex="0" role="group" aria-label="Interactive body model. Drag to rotate, use Left and Right arrow keys, or Home for front view.">
           <div class="scan-grid" aria-hidden="true"></div>
           <div class="scan-floor" aria-hidden="true"></div>
@@ -3496,7 +3500,7 @@
         if(fKind<.5)return 0.;
         if(fKind<1.5){float w=(1.-smoothstep(fP.y*.15,fP.y*1.15,abs(p.y-fP.x)))*(1.-smoothstep(fP.z-.03,fP.z+.006,abs(p.x)));
           if(fP.w>0.){float d=length(vec3(abs(p.x),p.y,p.z)-fA);w=max(w,1.-smoothstep(fP.w*.3,fP.w*1.1,d));}
-          if(fSide>1.5)w*=mix(1.,.12+.88*smoothstep(.012,.048,abs(p.x)),step(.0,p.z));return w;}
+          if(fSide>1.5){w=(1.-smoothstep(fP.y*.35,fP.y,abs(p.y-fP.x)))*(1.-smoothstep(fP.z-.02,fP.z+.006,abs(p.x)));w*=mix(1.,.55+.45*smoothstep(.0,.04,abs(p.x)),step(.0,p.z)*step(p.y,fP.x));}return w;}
         vec3 ab=fB-fA;float t=dot(p-fA,ab)/dot(ab,ab);float d=length(p-(fA+ab*clamp(t,0.,1.)));
         return (1.-smoothstep(fP.w*.45,fP.w*1.05,d))*smoothstep(fP.x-.12,fP.x+.1,t)*(1.-smoothstep(fP.y-.1,fP.y+.08,t))*step(0.,p.x*fSide);}
       void main(){vglow=glowW(position);
@@ -3632,7 +3636,7 @@
     const v=currentBodyVertices;if(!v||!key)return null;const j=BODY_MESH.joints[state.sex],sh=j['l-shoulder'];
     if(key==='chestCm')return {kind:1,A:[sh[0],sh[1]-.012,sh[2]],B:[0,0,0],P:[.752,.066,torsoEdge(v,.735),.06],side:0};
     if(key==='waistCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.615,.05,torsoEdge(v,.615)+.004,0],side:0};
-    if(key==='hipCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.532,.045,torsoEdge(v,.535)+.01,0],side:2};
+    if(key==='hipCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.523,.032,torsoEdge(v,.522)+.014,0],side:2};
     const m=key.match(/^(left|right)(Biceps|Thigh|Calf)Cm$/);if(!m)return null;
     const sign=m[1]==='right'?-1:1,sp=q=>[q[0]*sign,q[1],q[2]];
     const seg={Biceps:['l-shoulder','l-elbow',.052,.08,.95],Thigh:['l-upper-leg','l-knee',.085,.02,.9],Calf:['l-knee','l-ankle',.066,.1,.74]}[m[2]];
@@ -4726,7 +4730,7 @@
   }
   const catBars=(cats,total)=>Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>{const [n,col]=FIN_CATS[c]||FIN_CATS.other;return `<div class="fx-cat"><span class="fx-cdot" style="background:${col}"></span><span class="fx-cn">${n}</span><span class="fx-cbar"><i style="width:${(v/(total||1)*100).toFixed(1)}%;background:${col}"></i></span><b>${eur(v)}</b><small>${(v/(total||1)*100).toFixed(0)}%</small></div>`}).join("");
   // ---- tabs ----
-  const FIN_TABS=[["overview","Overview","Overview",1],["spending","Spending","Spending",1],["income","Income","Income",0],["bills","Bills & subs","Bills",0],["invest","Investments","Invest",1],["insights","Investor lens","Lens",0],["goals","Goals","Goals",1]];
+  const FIN_TABS=[["overview","Overview","Overview",1],["spending","Spending","Spending",1],["income","Income","Income",0],["bills","Bills & subs","Bills",0],["invest","Investments","Invest",1],["goals","Goals","Goals",1]];
   const FIN_IC=(p)=>`<svg class="fx-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const FIN_ICONS={overview:FIN_IC('<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>'),
     goals:FIN_IC('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>'),
@@ -4745,7 +4749,7 @@
   function renderFinance(){
     const host=$("finSpace");if(!host)return;rollRecurring();
     if(!finMonth)finMonth=ymOf(todayISOf());try{recordPortfolio()}catch(e){}
-    const body={overview:finOverview,goals:finGoals,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInsights,news:finInvest}[finTab]();
+    const body={overview:finOverview,goals:finGoals,spending:finSpending,income:finIncome,bills:finBills,invest:finInvest,insights:finInvest,news:finInvest}[finTab]();
     const secSel=FIN_TABS.find(t=>t[0]===finTab&&!t[3]);
     host.innerHTML=`<nav class="fx-tabs" aria-label="Finance sections">${FIN_TABS.map(([id,l,s,pri])=>`<button type="button" data-ftab="${id}" class="${pri?"pri":"sec"}" ${id==="goals"?'id="fin-tab-goals"':""} aria-selected="${finTab===id}" aria-label="${esc(l)}">${FIN_ICONS[id]}<span class="t-long">${esc(l)}</span><span class="t-short" aria-hidden="true">${esc(s)}</span></button>`).join("")}<button type="button" class="fx-more" data-fmore aria-expanded="${finMoreOpen}" aria-selected="${!!secSel}" aria-label="More sections">${secSel?FIN_ICONS[secSel[0]]:FIN_ICONS.more}<span class="t-short">${secSel?esc(secSel[2]):"More"}</span></button>
       ${finMoreOpen?`<div class="fx-moresheet" role="menu">${FIN_TABS.filter(t=>!t[3]).map(([id,l])=>`<button type="button" role="menuitem" data-ftab="${id}" aria-current="${finTab===id}">${FIN_ICONS[id]}<span>${esc(l)}</span></button>`).join("")}</div>`:""}</nav>
@@ -4920,7 +4924,7 @@
       ${card("Goal planner",`<div class="fx-grid2 fx-plans">${planRow("stocks & ETFs",stocksNow,pl.stockGoal,pl.stockM,pl.stockR,"linear-gradient(90deg,#0099FF,#5CA87C)")}${planRow("crypto",cryptoNow,pl.cryptoGoal,pl.cryptoM,pl.cryptoR,"linear-gradient(90deg,#F04438,#f6b93b)")}</div>
         <form class="fx-form fx-planform" data-fform="plan"><label class="fx-lab">Stocks goal € <input name="stockGoal" type="number" step="1000" value="${pl.stockGoal}"></label><label class="fx-lab">Stocks €/month <input name="stockM" type="number" step="50" value="${pl.stockM}"></label><label class="fx-lab">Stocks return % <input name="stockR" type="number" step="0.5" value="${pl.stockR}"></label>
         <label class="fx-lab">Crypto goal € <input name="cryptoGoal" type="number" step="1000" value="${pl.cryptoGoal}"></label><label class="fx-lab">Crypto €/month <input name="cryptoM" type="number" step="50" value="${pl.cryptoM}"></label><label class="fx-lab">Crypto return % <input name="cryptoR" type="number" step="0.5" value="${pl.cryptoR}"></label><button class="fx-save">Update plan</button></form>
-        <p class="fx-note">Returns are your assumptions, not a forecast.</p>`)}${fin.holdings.length?`<section class="fx-newsec" id="fxNews"><div class="fx-ch"><h3>News on what you own</h3></div>${finNews()}</section>`:""}`;
+        <p class="fx-note">Returns are your assumptions, not a forecast.</p>`)}${fin.holdings.length?`<section class="fx-newsec" id="fxLens"><div class="fx-ch"><h3>Investor lens</h3></div>${finInsights()}</section>`:""}${fin.holdings.length?`<section class="fx-newsec" id="fxNews"><div class="fx-ch"><h3>News on what you own</h3></div>${finNews()}</section>`:""}`;
   }
   // ---- investor lens: rule-based reads of the portfolio through well-known investors' published principles ----
   function finInsights(){
@@ -5073,6 +5077,10 @@
     finForm=null;saveFin();renderFinance();
   });
 
+  // Name shown on the body model; click to type, saved in this browser.
+  (function(){const el=document.getElementById("scanName");if(!el)return;try{el.textContent=localStorage.getItem("yime_name")||""}catch(e){}
+    const save=()=>{const v=el.textContent.replace(/\s+/g," ").trim().slice(0,40);el.textContent=v;try{localStorage.setItem("yime_name",v)}catch(e){}};
+    el.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();el.blur()}});el.addEventListener("blur",save);})();
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
