@@ -3446,11 +3446,27 @@
         if(bb>0&&z>0)tz+=bb*(chestS-1)*.058*smooth(.115,.018,Math.abs(x));
         // male pecs: two flat muscle plates from the sternum to the armpit with a clean lower border
         if(!female&&z>0){const ax=Math.abs(x),lo=.718+.022*smooth(.05,.115,ax),hi=.800-.022*smooth(.03,.115,ax);
-          const plate=smooth(lo-.012,lo+.004,y)*(1-smooth(hi-.03,hi,y))*smooth(.006,.022,ax)*(1-smooth(.098,.125,ax));
+          const plate=smooth(lo-.012,lo+.004,y)*(1-smooth(hi-.03,hi,y))*smooth(.006,.022,ax)*(1-smooth(.072,.108,ax))*(1-.6*smooth(.76,.80,y)*smooth(.05,.09,ax));
           tz+=.0075*plate;                                  // muscle mass, fullest along the lower half
           tz-=.0028*smooth(.70,.73,y)*(1-smooth(.79,.81,y))*(1-smooth(.003,.012,ax)); // sternum groove
           tz+=.0035*smooth(.672,.70,y)*(1-smooth(lo-.022,lo-.006,y))*(1-smooth(.08,.11,ax));} // fill the fold under the border
-        nx=tx*(1-arm)+ax*arm;nz=tz*(1-arm)+az*arm;
+        // arm anatomy: round deltoid cap, biceps belly in front, triceps behind, forearm swell below the elbow
+        let axs=ax,azs=az;
+        if(arm>0){const ey=j['l-elbow'][1],t=(acro-y)/(acro-ey),cx=sign*center[0]+sign*j['l-shoulder'][0]*(chestS-1)*.42;
+          const dx=ax-cx,dz=az-center[2],rr=Math.hypot(dx,dz)||1e-6,fr=dz/rr,out=dx*sign/rr,bump=(a,m,b,v)=>smooth(a,m,v)*(1-smooth(m,b,v));
+          const def=female?.55:1;
+          let g=0;
+          g+=.075*def*Math.pow(Math.max(0,fr),1.4)*bump(.22,.55,.92,t);          // biceps
+          g+=.060*def*Math.pow(Math.max(0,-fr),1.3)*bump(.12,.38,.78,t);         // triceps (long + lateral head)
+          g+=.070*def*Math.max(0,.35+.65*out)*bump(-.08,.10,.34,t);              // deltoid cap
+          g-=.030*def*bump(.86,.98,1.08,t);                                      // narrow at the elbow
+          g+=.055*def*Math.max(0,.25+.75*Math.max(fr,out))*bump(1.02,1.18,1.55,t);// forearm (brachioradialis) swell
+          axs=cx+dx*(1+g);azs=center[2]+dz*(1+g);}
+        // back: lats widen the upper back into a V, a soft groove runs down the spine, shoulder blades read under the skin
+        if(z<0&&arm<.5){const ax2=Math.abs(x);
+          if(!female)tz+=-.0045*smooth(.60,.70,y)*(1-smooth(.80,.84,y))*smooth(.03,.075,ax2)*(1-smooth(.10,.13,ax2)); // lats / scapulae fullness
+          tz+=.0035*smooth(.50,.56,y)*(1-smooth(.83,.86,y))*(1-smooth(.004,.016,ax2));}                          // spine groove
+        nx=tx*(1-arm)+axs*arm;nz=tz*(1-arm)+azs*arm;
       }else{
         const center=y>j['l-knee'][1]?segmentAtY(j['l-upper-leg'],j['l-knee'],y):segmentAtY(j['l-knee'],j['l-ankle'],y);
         // extra knot at .455 eases thigh -> hip instead of stepping straight to it
