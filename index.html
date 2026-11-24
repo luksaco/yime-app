@@ -3302,7 +3302,10 @@
   }
   function shapedSource(p){
     const src=bodyProfiles[state.sex],t=bodyTargets[state.sex],o=new Float32Array(src.length);
-    for(let i=0;i<src.length;i++)o[i]=src[i]+p.muscle*t.muscle[i]+p.fat*t.fat[i]+p.lean*t.lean[i];
+    // male: keep fat/muscle targets off the front of the chest so the pecs don't read as breasts
+    const male=state.sex!=='female',sm=(a,b,x)=>{x=Math.min(1,Math.max(0,(x-a)/(b-a)));return x*x*(3-2*x)};
+    for(let v=0;v<src.length;v+=3){const y=src[v+1],z=src[v+2],x=Math.abs(src[v]);const keep=male?1-.85*sm(.64,.69,y)*(1-sm(.79,.83,y))*sm(-.005,.03,z)*(1-sm(.12,.16,x)):1;
+      for(let c=0;c<3;c++){const i=v+c;o[i]=src[i]+(p.muscle*t.muscle[i]*(male?.35+.65*keep:1))+p.fat*t.fat[i]*keep+p.lean*t.lean[i]}}
     return o;
   }
   // Muscle/fat targets change girth as well as shape. Measure that change at each tape
@@ -3410,8 +3413,13 @@
         // reads as part of the chest wall rather than two applied bulges
         const bb=female?smooth(.655,.715,y)*(1-smooth(.775,.850,y)):0;
         const tx=x*trunk*tone(SH.torsoX,y,k)*yoke;
-        let tz=z*(trunk-bb*(chestS-1)*.50)*tone(SH.torsoZ,y,k);
+        // male chest: grow the ribcage mostly in width and back, keep the front of the pecs flatter
+        const pb=female?0:smooth(.655,.71,y)*(1-smooth(.785,.84,y))*(z>0?1:0);
+        let tz=z*(trunk-bb*(chestS-1)*.50-pb*(trunk-1)*.6)*tone(SH.torsoZ,y,k);
         if(bb>0&&z>0)tz+=bb*(chestS-1)*.058*smooth(.115,.018,Math.abs(x));
+        // male: fill the fold under the pecs and soften the nipple bumps so the chest reads as one flat muscle plate
+        if(!female&&z>0){const ax=Math.abs(x);tz+=.0065*smooth(.655,.69,y)*(1-smooth(.712,.735,y))*(1-smooth(.085,.115,ax));
+          tz-=.0035*smooth(.71,.725,y)*(1-smooth(.745,.76,y))*smooth(.03,.045,ax)*(1-smooth(.075,.09,ax));}
         nx=tx*(1-arm)+ax*arm;nz=tz*(1-arm)+az*arm;
       }else{
         const center=y>j['l-knee'][1]?segmentAtY(j['l-upper-leg'],j['l-knee'],y):segmentAtY(j['l-knee'],j['l-ankle'],y);
@@ -3634,7 +3642,7 @@
     for(let i=1;i<xs.length;i++)if(xs[i-1]>.04&&xs[i]-xs[i-1]>.01)return xs[i-1]+.004;return .1}
   function focusRegion(key){
     const v=currentBodyVertices;if(!v||!key)return null;const j=BODY_MESH.joints[state.sex],sh=j['l-shoulder'];
-    if(key==='chestCm')return {kind:1,A:[sh[0],sh[1]-.012,sh[2]],B:[0,0,0],P:[.752,.066,torsoEdge(v,.735),.06],side:0};
+    if(key==='chestCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.742,.045,torsoEdge(v,.737)+.004,0],side:0};
     if(key==='waistCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.615,.05,torsoEdge(v,.615)+.004,0],side:0};
     if(key==='hipCm')return {kind:1,A:[0,0,0],B:[0,0,0],P:[.523,.032,torsoEdge(v,.522)+.014,0],side:2};
     const m=key.match(/^(left|right)(Biceps|Thigh|Calf)Cm$/);if(!m)return null;
