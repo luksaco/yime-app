@@ -3564,12 +3564,6 @@
           tz+=.0075*plate;                                  // muscle mass, fullest along the lower half
           tz-=.0028*smooth(.70,.73,y)*(1-smooth(.79,.81,y))*(1-smooth(.003,.012,ax)); // sternum groove
           tz+=.0035*smooth(.672,.70,y)*(1-smooth(lo-.022,lo-.006,y))*(1-smooth(.08,.11,ax));} // fill the fold under the border
-        // female breasts: replace the small conical scan shape with a round, teardrop volume
-        // (fuller lower pole, gentle upper slope) sized from the chest measurement
-        if(female&&z>0){const cx=.058,cy=.738,rx=.046,ry=.044,u=(Math.abs(x)-cx)/rx,v0=(y-cy)/ry,v=v0>0?v0*1.18:v0*.92,r2=u*u+v*v;
-          if(r2<1){const A=.026*clamp(1+(chestS-1)*2.2,.6,1.7),edge=1-smooth(.55,1,r2);
-            const dTip=Math.hypot(Math.abs(x)-.063,y-.729),cone=.011*Math.pow(Math.max(0,1-dTip/.024),.8)+.007*Math.pow(Math.max(0,1-Math.hypot(Math.abs(x)-.062,y-.722)/.013),1.5);
-            tz+=(A*Math.pow(1-r2,.62)*(v0<0?1.06:1)-cone*1.0)*(.35+.65*edge)*smooth(-.02,.02,z-.03)}}
         // arm anatomy: round deltoid cap, biceps belly in front, triceps behind, forearm swell below the elbow
         let axs=ax,azs=az;
         if(arm>0){const ey=j['l-elbow'][1],t=(acro-y)/(acro-ey),cx=sign*center[0]+sign*j['l-shoulder'][0]*(chestS-1)*.42;
@@ -3592,10 +3586,6 @@
           tz+=-.0050*def*blob(.022,.765,.030,.075);   // middle trapezius ridges either side of the spine
           tz+=.0060*smooth(.50,.56,y)*(1-smooth(.83,.86,y))*(1-smooth(.003,.014,ax2));}                          // spine groove
         nx=tx*(1-arm)+axs*arm;nz=tz*(1-arm)+azs*arm;
-        if(female){const ax3=Math.abs(x);
-          nx-=sign*.011*Math.max(arm,smooth(.06,.105,ax3)*smooth(.735,.785,y));            // narrower shoulder line
-          ny-=.0085*smooth(.04,.105,ax3)*smooth(.77,.80,y)*(1-arm*.5);                    // sloped trapezius instead of square shoulders
-          const nk=smooth(.815,.84,y)*(1-smooth(.89,.92,y));if(nk>0&&arm<.1){nx=nx*(1-.10*nk);nz=nz+(.008-nz)*.10*nk}} // slimmer neck
       }else{
         const center=y>j['l-knee'][1]?segmentAtY(j['l-upper-leg'],j['l-knee'],y):segmentAtY(j['l-knee'],j['l-ankle'],y);
         // extra knot at .455 eases thigh -> hip instead of stepping straight to it
