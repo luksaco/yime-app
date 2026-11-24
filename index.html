@@ -3423,7 +3423,7 @@
                  [.79,1+(chestS-1)*.5],[.845,1+(chestS-1)*.15],[.88,1],[1,1]];
     for(let i=0;i<source.length;i+=3){
       const x=source[i],y=source[i+1],z=source[i+2],sign=x<0?-1:1,side=x<0?'right':'left';
-      let nx=x,nz=z;
+      let nx=x,nz=z,ny=y;
       const trunk=profileAt(TRUNK,y);
       if(y>=.49||(Math.abs(x)>.145&&y>.34)){
         const center=y>=j['l-elbow'][1]?segmentAtY(j['l-shoulder'],j['l-elbow'],y):segmentAtY(j['l-elbow'],j['l-hand'],y);
@@ -3479,20 +3479,49 @@
                                 [.455,1+(scales[side+'Thigh']-1)*.5+(hipS-1)*.5],[.49,hipS]],y)*tone(SH.leg,y,k);
         const hipShift=sign*center[0]*(hipS-1)*smooth(.24,.50,y);
         nx=sign*center[0]+(x-sign*center[0])*radius+hipShift;nz=center[2]+(z-center[2])*radius;
-        // shape the foot: taper the toes, round the heel, pull in the instep
-        const foot=1-smooth(.035,.09,y);
-        if(foot>0){
-          const t=(z-ankle[2])/.15,cx=sign*ankle[0];
-          const toeT=smooth(.40,1,t),heelT=smooth(-.10,-.42,t);   // 0 across the ball, 1 at tip / heel-back
-          nx=cx+(nx-cx)*(1-(.30*toeT+.18*heelT)*foot);
+        // anatomical foot: the leg's radial scaling must not drag the toes, so the foot keeps its own
+        // proportions - wide ball and spread toes (not a pinched point), domed instep, medial arch,
+        // rounded heel, ankle bones and a slimmer Achilles above the heel
+        const fz=1-smooth(.045,.075,y);
+        if(fz>0){
+          const zH=-.024,L=.147,t=(z-zH)/L,cx=sign*.070,dx=x-cx;
+          nx=nx*(1-fz)+x*fz;nz=nz*(1-fz)+z*fz;                         // undo leg scaling inside the foot
+          const w=profileAt([[-.1,1.04],[.08,1.10],[.25,1.04],[.45,1.10],[.62,1.24],[.78,1.22],[.90,1.12],[1.1,1.04]],t);
+          const med=sign*dx<0?1:0;                                     // inner (big toe) side spreads a bit more
+          nx+=dx*(w-1+med*.06*smooth(.5,.75,t)*(1-smooth(.85,1,t)))*fz;
+          const b=(a,m,e,v)=>smooth(a,m,v)*(1-smooth(m,e,v));
+          ny+=.0060*b(.15,.42,.78,t)*smooth(.010,.030,y)*fz;          // instep dome
+          ny+=.0050*b(.25,.45,.68,t)*med*(1-smooth(.002,.012,y))*smooth(.004,.02,-sign*dx);   // medial arch under the sole
+          nz-=.0040*(1-smooth(-.02,.10,t))*smooth(.004,.03,y)*fz;     // round the back of the heel
         }
+        // ankle bones: outer one sits a little lower than the inner one
+        const g2=(px,py,r)=>{const d=Math.hypot(Math.abs(x)-px,y-py);return d<r?(1-d/r)*(1-d/r):0};
+        nx+=sign*(.0032*g2(.091,.040,.014)-.0026*g2(.059,.047,.013));
+        // Achilles: slimmer column between heel and calf
+        if(z<center[2]-.004&&y>.025&&y<.11){const a=smooth(.025,.045,y)*(1-smooth(.085,.11,y));nz+=.0035*a;nx=sign*center[0]+(nx-sign*center[0])*(1-.06*a)}
         // keep each inner thigh on its own side of the midline when the hips widen
         const gap=.0016+.0062*smooth(.53,.36,y);
         if(y>.33&&Math.abs(x)>.0015&&sign*nx<gap)nx=sign*gap;
       }
-      out[i]=nx;out[i+1]=y;out[i+2]=nz;
+      out[i]=nx;out[i+1]=ny;out[i+2]=nz;
     }
+    smoothFeet(out,source);
     return out;
+  }
+  // The scanned toes are low-poly and read as crumpled; relax the forefoot surface a few passes
+  // (Laplacian smoothing on the toe and ball vertices only) so the toes read as smooth, separate shapes.
+  let footNbrs=null;
+  function smoothFeet(out,src){
+    if(!footNbrs||footNbrs.src!==src){const sel=new Map();
+      for(let v=0;v<src.length/3;v++){const y=src[v*3+1],z=src[v*3+2];if(y<.035&&z>.055)sel.set(v,new Set())}
+      for(let t=0;t<bodyTriangles.length;t+=3){const a=bodyTriangles[t],b=bodyTriangles[t+1],c=bodyTriangles[t+2];
+        for(const [p,q] of [[a,b],[b,c],[c,a]]){if(sel.has(p))sel.get(p).add(q);if(sel.has(q))sel.get(q).add(p)}}
+      footNbrs={src,list:[...sel].map(([v,s])=>[v,[...s],Math.min(1,(src[v*3+2]-.055)/.03)])}}
+    const tmp=new Float32Array(3);
+    for(let it=0;it<4;it++)for(const [v,nb,wt] of footNbrs.list){if(!nb.length)continue;tmp[0]=tmp[1]=tmp[2]=0;
+      for(const q of nb){tmp[0]+=out[q*3];tmp[1]+=out[q*3+1];tmp[2]+=out[q*3+2]}
+      const k=.5*wt;for(let c=0;c<3;c++)out[v*3+c]+= (tmp[c]/nb.length-out[v*3+c])*k;
+      if(out[v*3+1]<0)out[v*3+1]=Math.max(out[v*3+1],src[v*3+1])}
   }
   function bodyNormals(p){
     const n=new Float32Array(p.length);
