@@ -1573,6 +1573,7 @@
   /* floor: a soft pool of light the feet dissolve into */
   html body .scan-stage .scan-floor{border-color:rgba(76,170,200,.28)!important;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.95) 0%,rgba(196,232,242,.55) 40%,rgba(196,232,242,0) 72%)!important;box-shadow:0 0 34px 6px rgba(150,215,235,.28),0 14px 26px rgba(17,24,39,.06)!important}
   :root[data-theme="dark"] body .scan-stage .scan-floor{background:radial-gradient(ellipse at 50% 50%,rgba(120,200,225,.35) 0%,rgba(120,200,225,.12) 45%,transparent 72%)!important;border-color:rgba(120,200,225,.25)!important;box-shadow:0 0 34px 6px rgba(120,200,225,.18)!important}
+  #sexToggle{display:none!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5515,7 +5516,7 @@
     $("figureOptions").addEventListener("click",e=>{const b=e.target.closest('button[data-option]');if(!b)return;
       const key=b.dataset.option;figureOptions[key]=!figureOptions[key];renderFigure();
       if(key==='motion')setMotion(figureOptions.motion)});
-    $("sexToggle").addEventListener("click",e=>{const b=e.target.closest("button[data-sex]");if(!b)return;state.sex=b.dataset.sex;save();syncSex();renderFigure()});
+    // the body model follows the sex chosen in Set up; there is no switch on the model itself
     $("bmHealth").addEventListener("click",()=>setTab("health"));
     $("metricTabs").addEventListener("click",e=>{const b=e.target.closest("button[data-metric]");if(!b)return;viewMetric=b.dataset.metric;renderTabs();renderChart()});
     $("history").addEventListener("click",e=>{const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]"),base=e.target.closest("[data-baseline-edit]");if(edit)startEdit(edit.dataset.edit);else if(del)deleteEntry(del.dataset.delete);else if(base)openBaselineEdit()});
