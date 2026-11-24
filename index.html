@@ -3411,6 +3411,7 @@
   }
   const tone=(profile,y,k)=>1+(profileAt(profile,y)-1)*k;
   function deformBody(scales,source=bodyProfiles[state.sex]){
+    if(!toeNorm||toeNorm.length!==source.length){toeNorm=new Float32Array(source.length);toeW=new Float32Array(source.length/3)}else toeW.fill(0);
     const out=new Float32Array(source.length),j=BODY_MESH.joints[state.sex],k=muscleTone(),ankle=j['l-ankle'];
     const SH=SHAPE[state.sex],acro=j['l-shoulder'][1],female=state.sex==='female';
     const hipS=scales.hip,waistS=scales.waist,chestS=scales.chest;
@@ -3493,6 +3494,21 @@
           ny+=.0060*b(.15,.42,.78,t)*smooth(.010,.030,y)*fz;          // instep dome
           ny+=.0050*b(.25,.45,.68,t)*med*(1-smooth(.002,.012,y))*smooth(.004,.02,-sign*dx);   // medial arch under the sole
           nz-=.0040*(1-smooth(-.02,.10,t))*smooth(.004,.03,y)*fz;     // round the back of the heel
+          // toes: the scanned toe geometry is crumpled, so rebuild the toe box as one smooth rounded
+          // shape (rounded-rectangle cross-sections, round tip) with soft grooves hinting five toes
+          const tb=smooth(.050,.074,z)*fz;
+          if(tb>0){
+            const hx0=.0195,cx0=sign*.0715,ht0=profileAt([[.05,.040],[.06,.040],[.07,.034],[.08,.026],[.09,.024],[.10,.021],[.11,.019],[.12,.015],[.13,.012]],z);
+            const th=Math.atan2((y-ht0/2)/(ht0/2),(x-cx0)/hx0),c=Math.cos(th),s=Math.sin(th),e=2/2.8;
+            const px=Math.sign(c)*Math.pow(Math.abs(c),e),py=Math.sign(s)*Math.pow(Math.abs(s),e);
+            const zt=Math.min(z,.126),tip=zt>.108?Math.sqrt(Math.max(.04,1-Math.pow((zt-.108)/.019,2))):1;
+            const hw=profileAt([[.05,.0215],[.06,.0225],[.07,.0235],[.085,.0245],[.10,.0240],[.112,.0225]],zt)*tip,hh=profileAt([[.05,.038],[.06,.035],[.07,.031],[.085,.025],[.10,.020],[.112,.017],[.122,.014]],zt)*(.55+.45*tip);
+            const groove=(.5+.5*Math.cos(Math.PI*5*(px*.5+.5)))*Math.max(0,py)*smooth(.094,.108,zt);
+            const tx=sign*.0715-sign*.0015+hw*px,ty=Math.max(0,hh*.5*(1+py)-hh*.04*groove);
+            nx=nx*(1-tb)+tx*tb;ny=ny*(1-tb)+ty*tb;nz=nz*(1-tb)+zt*tb;
+            // remember this vertex's toe-box section (centre, half width, height) for the relax/reproject pass
+            const vi=i/3;toeNorm[i]=sign*.0715-sign*.0015;toeNorm[i+1]=hw;toeNorm[i+2]=hh;toeW[vi]=tb;
+          }
         }
         // ankle bones: outer one sits a little lower than the inner one
         const g2=(px,py,r)=>{const d=Math.hypot(Math.abs(x)-px,y-py);return d<r?(1-d/r)*(1-d/r):0};
@@ -3505,24 +3521,31 @@
       }
       out[i]=nx;out[i+1]=ny;out[i+2]=nz;
     }
-    smoothFeet(out,source);
+    relaxToes(out,source);
     return out;
   }
-  // The scanned toes are low-poly and read as crumpled; relax the forefoot surface a few passes
-  // (Laplacian smoothing on the toe and ball vertices only) so the toes read as smooth, separate shapes.
-  let footNbrs=null;
-  function smoothFeet(out,src){
-    if(!footNbrs||footNbrs.src!==src){const sel=new Map();
-      for(let v=0;v<src.length/3;v++){const y=src[v*3+1],z=src[v*3+2];if(y<.035&&z>.055)sel.set(v,new Set())}
+  // a few gentle relaxation passes on the rebuilt toe box unfold any pinched triangles between the old toes
+  let toeNbrs=null;
+  function relaxToes(out,src){
+    if(!toeNbrs||toeNbrs.src!==src){const sel=new Map();
+      for(let v=0;v<src.length/3;v++){if(src[v*3+1]<.045&&src[v*3+2]>.06)sel.set(v,new Set())}
       for(let t=0;t<bodyTriangles.length;t+=3){const a=bodyTriangles[t],b=bodyTriangles[t+1],c=bodyTriangles[t+2];
         for(const [p,q] of [[a,b],[b,c],[c,a]]){if(sel.has(p))sel.get(p).add(q);if(sel.has(q))sel.get(q).add(p)}}
-      footNbrs={src,list:[...sel].map(([v,s])=>[v,[...s],Math.min(1,(src[v*3+2]-.055)/.03)])}}
-    const tmp=new Float32Array(3);
-    for(let it=0;it<4;it++)for(const [v,nb,wt] of footNbrs.list){if(!nb.length)continue;tmp[0]=tmp[1]=tmp[2]=0;
-      for(const q of nb){tmp[0]+=out[q*3];tmp[1]+=out[q*3+1];tmp[2]+=out[q*3+2]}
-      const k=.5*wt;for(let c=0;c<3;c++)out[v*3+c]+= (tmp[c]/nb.length-out[v*3+c])*k;
-      if(out[v*3+1]<0)out[v*3+1]=Math.max(out[v*3+1],src[v*3+1])}
+      toeNbrs={src,list:[...sel].map(([v,s])=>[v,[...s],Math.min(1,(src[v*3+2]-.06)/.02)])}}
+    const acc=[0,0,0];
+    // relax, then snap fully-rebuilt vertices back onto their toe-box section: vertices spread evenly
+    // over the smooth surface, so the old toe gaps can't leave folded (dark) triangles behind
+    const e=2/2.8;
+    for(let round=0;round<5;round++){
+      for(let it=0;it<4;it++)for(const [v,nb,wt] of toeNbrs.list){if(!nb.length)continue;acc[0]=acc[1]=acc[2]=0;
+        for(const q of nb){acc[0]+=out[q*3];acc[1]+=out[q*3+1];acc[2]+=out[q*3+2]}
+        for(let c=0;c<2;c++)out[v*3+c]+=(acc[c]/nb.length-out[v*3+c])*.5*wt}
+      for(const [v] of toeNbrs.list){const w0=toeW?toeW[v]:0;if(w0<.3)continue;const w=Math.min(1,(w0-.3)/.6),i=v*3,cx=toeNorm[i],hw=toeNorm[i+1],hh=toeNorm[i+2];
+        const th=Math.atan2((out[i+1]-hh/2)/(hh/2),(out[i]-cx)/hw),c=Math.cos(th),s=Math.sin(th);
+        const px=cx+hw*Math.sign(c)*Math.pow(Math.abs(c),e),py=Math.max(0,hh*.5*(1+Math.sign(s)*Math.pow(Math.abs(s),e)));
+        out[i]+=(px-out[i])*w;out[i+1]+=(py-out[i+1])*w}}
   }
+  let toeNorm=null,toeW=null;
   function bodyNormals(p){
     const n=new Float32Array(p.length);
     for(let i=0;i<bodyTriangles.length;i+=3){
