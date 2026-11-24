@@ -3458,14 +3458,19 @@
           let g=0;
           g+=.075*def*Math.pow(Math.max(0,fr),1.4)*bump(.22,.55,.92,t);          // biceps
           g+=.060*def*Math.pow(Math.max(0,-fr),1.3)*bump(.12,.38,.78,t);         // triceps (long + lateral head)
-          g+=.070*def*Math.max(0,.35+.65*out)*bump(-.08,.10,.34,t);              // deltoid cap
+          g+=.075*def*Math.max(0,.30+.55*out+.35*Math.max(0,-fr))*bump(-.08,.10,.34,t); // deltoid cap incl. rear head
           g-=.030*def*bump(.86,.98,1.08,t);                                      // narrow at the elbow
           g+=.055*def*Math.max(0,.25+.75*Math.max(fr,out))*bump(1.02,1.18,1.55,t);// forearm (brachioradialis) swell
           axs=cx+dx*(1+g);azs=center[2]+dz*(1+g);}
         // back: lats widen the upper back into a V, a soft groove runs down the spine, shoulder blades read under the skin
         if(z<0&&arm<.5){const ax2=Math.abs(x);
-          if(!female)tz+=-.0045*smooth(.60,.70,y)*(1-smooth(.80,.84,y))*smooth(.03,.075,ax2)*(1-smooth(.10,.13,ax2)); // lats / scapulae fullness
-          tz+=.0035*smooth(.50,.56,y)*(1-smooth(.83,.86,y))*(1-smooth(.004,.016,ax2));}                          // spine groove
+          const def=female?.5:1,blob=(cx,cy,rx,ry)=>{const u=(ax2-cx)/rx,v=(y-cy)/ry,r=u*u+v*v;return r<1?(1-r)*(1-r):0};
+          tz+=-.0040*def*smooth(.60,.70,y)*(1-smooth(.80,.84,y))*smooth(.03,.075,ax2)*(1-smooth(.10,.13,ax2)); // lats fullness
+          tz+=-.0110*def*blob(.064,.742,.042,.055);   // shoulder blade / infraspinatus mound
+          tz+=-.0065*def*blob(.094,.695,.028,.032);   // teres major at the lower outer blade
+          tz+=-.0080*def*blob(.040,acro-.004,.052,.048)*(1-smooth(.075,.095,ax2)); // upper trapezius, neck-to-shoulder slope
+          tz+=-.0050*def*blob(.022,.765,.030,.075);   // middle trapezius ridges either side of the spine
+          tz+=.0060*smooth(.50,.56,y)*(1-smooth(.83,.86,y))*(1-smooth(.003,.014,ax2));}                          // spine groove
         nx=tx*(1-arm)+axs*arm;nz=tz*(1-arm)+azs*arm;
       }else{
         const center=y>j['l-knee'][1]?segmentAtY(j['l-upper-leg'],j['l-knee'],y):segmentAtY(j['l-knee'],j['l-ankle'],y);
