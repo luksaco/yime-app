@@ -1569,6 +1569,33 @@
   .scan-heading .scan-name:hover,.scan-heading .scan-name:focus{border-bottom-color:rgba(18,18,17,.3)}
   .scan-heading .scan-name:empty::before{content:attr(data-ph);color:#a8a39d;font-weight:600}
   :root[data-theme="dark"] .scan-heading .scan-name{color:#f2f1ef!important}
+
+  /* ===== Health branding: Arctic Depths (navy -> cyan band -> azure), silver figures ===== */
+  html body .goal-card{position:relative;overflow:hidden;color:#fff;border:1px solid rgba(255,255,255,.16)!important;
+    background:linear-gradient(rgba(255,255,255,.075) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(255,255,255,.075) 1px,transparent 1px) 0 0/46px 46px,
+      radial-gradient(110% 55% at 60% 58%,rgba(76,170,206,.85) 0%,rgba(76,170,206,0) 72%),
+      radial-gradient(70% 60% at 15% 100%,rgba(58,124,200,.9) 0%,rgba(58,124,200,0) 75%),
+      linear-gradient(180deg,#1c2d40 0%,#22405a 38%,#3a87b2 68%,#3474c0 100%)!important;
+    box-shadow:0 28px 56px -30px rgba(28,45,64,.7),inset 0 1px 0 rgba(255,255,255,.18)!important}
+  html body #progress .eyebrow{color:rgba(255,255,255,.9)!important}
+  html body #progress .wg-big{background:linear-gradient(180deg,#fff 0%,#eef5fa 45%,#bcd3e4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 8px rgba(10,30,50,.35))}
+  html body #progress .wg-big span{-webkit-text-fill-color:rgba(255,255,255,.8)}
+  html body #progress .wg-sub{color:rgba(255,255,255,.85)!important}
+  html body #progress .wg-pct{background:linear-gradient(180deg,#fff,#cfe6f3);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+  html body #progress .wg-track{background:rgba(255,255,255,.18)!important}
+  html body #progress .wg-track i{background:linear-gradient(90deg,#9fe0f5,#ffffff)!important;box-shadow:0 0 14px rgba(159,224,245,.7)}
+  html body #progress .wg-stats{border-top:0!important;gap:10px}
+  html body #progress .wg-stats>div{background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 8px 20px -12px rgba(10,30,50,.5)}
+  html body #progress .wg-stats span{color:#5f6b76!important}
+  html body #progress .wg-stats b{color:#121211!important}html body #progress .wg-stats b.good{color:#1f9d55!important}html body #progress .wg-stats b.bad{color:#d92d20!important}
+  html body #progress .wg-pick select{background-color:#fff!important;color:#121211!important;border-color:rgba(255,255,255,.6)!important}
+  html body #progress .wg-cta{background:#fff!important;color:#1c2d40!important}
+  html body #progress .wg-empty h3{color:#fff!important}html body #progress .wg-empty p{color:rgba(255,255,255,.85)!important}
+  /* Health tab bar: selected pill in arctic navy */
+  html body #appTabs button[aria-selected="true"]:not([data-tab="goals"]){background:linear-gradient(180deg,#2a4d6b,#1c2d40)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 6px 16px -4px rgba(28,45,64,.45)!important}
+  /* body model: arctic accent dot */
+  body.space-health .scan-stage.studio .scan-heading i{background:#45a0c4!important;box-shadow:0 0 10px rgba(69,160,196,.6)!important}
+  html body #statWeight>.stat,html body #statWeight>div{background:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px) 0 0/40px 40px,radial-gradient(90% 70% at 80% 110%,rgba(69,160,196,.55),transparent 70%),linear-gradient(170deg,#1c2d40 0%,#22405a 70%,#2b5a7c 100%)!important;border-color:rgba(255,255,255,.12)!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
