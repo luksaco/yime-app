@@ -1802,11 +1802,11 @@
   :root[data-theme="dark"] .log-fab{background:rgba(242,241,239,.92);color:#111;border-color:rgba(0,0,0,.08)}
   /* Home: body-model panel ends on the same line as the last row of measurement tiles */
   @media(min-width:981px){
-    #panel-progress .layout{align-items:stretch}
+    #panel-progress .layout{align-items:stretch;margin-bottom:18px}
     #panel-progress .layout>aside{display:flex;flex-direction:column;position:static}
     #panel-progress .layout>aside>.stage{flex:1;display:flex;flex-direction:column;margin-bottom:0}
     #panel-progress .layout>aside>.stage>#bodyViewport{flex:1 1 auto;aspect-ratio:auto;min-height:420px}
-    #panel-progress .layout>div>*:last-child{margin-bottom:0}
+    #panel-progress .layout>div>*:last-child,#panel-progress #stats{margin-bottom:0}
   }
   /* VO2 card removed from Home; its gauge sits in the Fitness score card */
   #vo2Card{display:none!important}
