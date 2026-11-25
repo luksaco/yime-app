@@ -554,11 +554,11 @@
   @media(max-width:760px){.ta-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.ta-notes{grid-template-columns:1fr}}
 
   /* Log tab: glass cards, white input fields */
-  #panel-log .card,#panel-training .card{background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.7);
+  #panel-body .card,#panel-training .card{background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.7);
     -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
     box-shadow:0 8px 30px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.7)}
-  #panel-log .field input,#panel-training .field input{background:#fff;border-color:rgba(0,0,0,.08)}
-  #panel-log .table-scroll,#panel-training .table-scroll{background:#fff}
+  #panel-body .field input,#panel-training .field input{background:#fff;border-color:rgba(0,0,0,.08)}
+  #panel-body .table-scroll,#panel-training .table-scroll{background:#fff}
   #panel-training .train-analysis{background:rgba(255,255,255,.45)}
   #panel-training #trainingCard{box-shadow:0 18px 44px rgba(0,0,0,.16),0 4px 12px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.7)}
 
@@ -606,13 +606,13 @@
   :root[data-theme="dark"] .stale-note{background:#2a2014;border-color:#5a4422;color:#e7c08a}:root[data-theme="dark"] .load-warning,:root[data-theme="dark"] .blood-import-note.err{background:#2a1716;border-color:#5a2a27;color:#f0b4af}
   :root[data-theme="dark"] .field input:focus,:root[data-theme="dark"] .blood-field input:focus{background:#24262a}
   :root[data-theme="dark"] .blood-cat-btn:hover,:root[data-theme="dark"] .blood-import-note .chip,:root[data-theme="dark"] .setup-select-group button:hover{background:#24262a}
-  :root[data-theme="dark"] .ta-tile,:root[data-theme="dark"] .ta-chart,:root[data-theme="dark"] .ta-notes li,:root[data-theme="dark"] #panel-log .field input,:root[data-theme="dark"] #panel-training .field input,:root[data-theme="dark"] #panel-log .table-scroll,:root[data-theme="dark"] #panel-training .table-scroll{background:var(--soft);border-color:rgba(255,255,255,.07)}
+  :root[data-theme="dark"] .ta-tile,:root[data-theme="dark"] .ta-chart,:root[data-theme="dark"] .ta-notes li,:root[data-theme="dark"] #panel-body .field input,:root[data-theme="dark"] #panel-training .field input,:root[data-theme="dark"] #panel-body .table-scroll,:root[data-theme="dark"] #panel-training .table-scroll{background:var(--soft);border-color:rgba(255,255,255,.07)}
   :root[data-theme="dark"] svg:not([id=figure]) [stroke="#111"]{stroke:#f2f1ef}:root[data-theme="dark"] svg:not([id=figure]) [fill="#111"]{fill:#f2f1ef}:root[data-theme="dark"] svg:not([id=figure]) stop[stop-color="#111"]{stop-color:#f2f1ef}
   :root[data-theme="dark"] svg:not([id=figure]):not(.wt-spark) circle[fill="#fff"]{fill:var(--card)}
   :root[data-theme="dark"] svg [fill="#c9c6c0"]{fill:#3a3b3f}
   :root[data-theme="dark"] .btn:hover{background:#26282c}
 
-  :root[data-theme="dark"] #panel-log .card,:root[data-theme="dark"] #panel-training .card{background:var(--card);border-color:rgba(255,255,255,.07);box-shadow:var(--shadow)}
+  :root[data-theme="dark"] #panel-body .card,:root[data-theme="dark"] #panel-training .card{background:var(--card);border-color:rgba(255,255,255,.07);box-shadow:var(--shadow)}
   :root[data-theme="dark"] #panel-training .train-analysis{background:rgba(255,255,255,.04)}
   :root[data-theme="dark"] .field input,:root[data-theme="dark"] .blood-field input,:root[data-theme="dark"] .blood-date-row input,:root[data-theme="dark"] .blood-cat-btn,:root[data-theme="dark"] .setup-select-group button{background:var(--soft);border-color:rgba(255,255,255,.1);color:var(--ink)}
 
@@ -1768,6 +1768,20 @@
   @media(prefers-reduced-motion:reduce){.log-dialog[open]{animation:none}}
   @media(max-width:680px){.toast{bottom:calc(156px + env(safe-area-inset-bottom,0px))!important}}
   @media(min-width:681px){.toast{bottom:92px!important}}
+  /* ===== Navigation: four destinations + secondary Goals ===== */
+  .tabbar{align-items:center}
+  .tab-secondary{flex:0 0 auto!important;display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:600;padding:9px 14px;border-radius:11px;margin-left:6px;border-left:1px solid var(--stroke)!important;cursor:pointer}
+  .tab-secondary .t-ic{width:16px;height:16px}.tab-secondary:hover,.tab-secondary[aria-current="page"]{color:#ea3327}
+  .body-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:4px 0 16px}
+  .body-intro h2,.section-head h2{margin:0;font-size:22px;letter-spacing:-.03em}.body-intro p,.section-head p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+  .section-head{margin:28px 0 14px}
+  .btn-log-inline{border:0;border-radius:999px;background:#ea3327;color:#fff;font:inherit;font-weight:700;font-size:14px;height:40px;padding:0 18px;cursor:pointer;flex:none}
+  .sp-card{padding:0}.sp-card>summary{list-style:none;cursor:pointer;padding:18px 21px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;gap:3px}
+  .sp-card>summary::-webkit-details-marker{display:none}.sp-card>summary span{font-size:12.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted)}
+  .sp-body{padding:0 21px 21px}.sp-note{margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+  .sp-inner{box-shadow:none!important;border:1px solid var(--stroke)!important;margin:0!important}
+  @media(max-width:680px){#appTabs .tab-secondary{display:none!important}}
+  .sp-card>summary{position:relative;padding-right:56px}.sp-card>summary::after{position:absolute;right:22px;top:50%;transform:translateY(-50%)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2006,12 +2020,13 @@
             </div>
             <div class="mega-col mega-main">
               <p class="mega-h">Dashboard</p>
-              <button type="button" data-go="progress">Progress</button>
-              <button type="button" data-go="health">Body health</button>
+              <button type="button" data-go="progress">Home</button>
+              <button type="button" data-go="body">Body</button>
               <button type="button" data-go="training">Training</button>
-              <button type="button" data-go="blood">Blood Results</button>
+              <button type="button" data-go="health">Health</button>
+              <button type="button" data-go="blood">Blood results</button>
               <button type="button" data-go="goals">Goals</button>
-              <button type="button" data-go="log">Log a measurement</button>
+              <button type="button" data-go="log">＋ Log a measurement</button>
             </div>
             <div class="mega-col">
               <p class="mega-h">Your data</p>
@@ -2793,22 +2808,25 @@
      The cards are regrouped into tabs at runtime rather than in the markup. Moving
      the existing elements keeps every id and every listener attached exactly as it
      was, which is far safer than restructuring a file this size by hand. */
-  const TAB_ICONS={goals:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M21 19H3" /></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
+  const TAB_ICONS={body:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M8 9h8l-1.2 5.5H9.2L8 9ZM9.5 14.5 9 21M14.5 14.5 15 21"/></svg>',goals:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6h-6v6H4z"/></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
+  // Four main destinations; Goals is secondary (menu, goal card, small link). Old #blood / #log links redirect.
   const APP_TABS=[
-    {id:"progress",label:"Progress",short:"Progress"},
-    {id:"health",label:"Body health",short:"Health"},
-    {id:"training",label:"Training",short:"Training"},
-    {id:"blood",label:"Blood Results",short:"Blood"},
-    {id:"goals",label:"Goals",short:"Goals"},
-    {id:"log",label:"Log a measurement",short:"Log"}
+    {id:"progress",label:"Home",short:"Home",main:true},
+    {id:"body",label:"Body",short:"Body",main:true},
+    {id:"training",label:"Training",short:"Training",main:true},
+    {id:"health",label:"Health",short:"Health",main:true},
+    {id:"goals",label:"Goals",short:"Goals"}
   ];
+  const MAIN_TABS=APP_TABS.filter(t=>t.main);
+  const TAB_ALIAS={home:"progress",blood:"health",log:"progress",measurements:"body"};
   let activeTab="progress",modelAside=null,modelLayout=null,historyCard=null;
   function buildShell(){
     const layout=document.querySelector(".layout"),wrap=document.querySelector(".wrap");
     const nav=document.createElement("nav");
     nav.className="tabbar";nav.id="appTabs";nav.setAttribute("role","tablist");
-    nav.innerHTML=APP_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}">${TAB_ICONS[t.id]||""}<span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
+    nav.innerHTML=MAIN_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}">${TAB_ICONS[t.id]||""}<span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
     layout.parentNode.insertBefore(nav,layout);
+    {const g=document.createElement("button");g.type="button";g.className="tab-secondary";g.id="tabGoalsLink";g.innerHTML=`${TAB_ICONS.goals}<span>Goals</span>`;g.addEventListener("click",()=>setTab("goals"));nav.appendChild(g)}
     const panels={};
     for(const t of APP_TABS){
       const sec=document.createElement("section");
@@ -2820,41 +2838,48 @@
     modelLayout=layout;modelAside=layout.querySelector("aside");
     panels.progress.appendChild(layout);           // body model + readouts keep the two-column layout
     const move=(el,to)=>{if(el)panels[to].appendChild(el)};
-    move($("measurementTitle")?.closest(".card"),"log");
-    move($("baselineCard"),"log");
+    // Body: measurement history first; the full form only appears when editing an entry; starting point tucked away
+    {const intro=document.createElement("div");intro.className="body-intro";intro.innerHTML=`<div><h2>Body measurements</h2><p>Every measurement you have logged. Tap Edit on a row to change it.</p></div>`;panels.body.appendChild(intro)}
+    const formCard=$("measurementTitle")?.closest(".card");if(formCard){formCard.id="measurementCard";formCard.classList.add("hidden");move(formCard,"body")}
+    {const det=document.createElement("details");det.className="card sp-card";det.id="startPointCard";det.innerHTML=`<summary>Starting points<span>Change where “since start” is measured from</span></summary><div class="sp-body"><p class="sp-note">Each measurement starts from your earliest entry unless you set a starting point here. Existing starting points are kept.</p></div>`;panels.body.appendChild(det);if($("baselineCard")){det.querySelector(".sp-body").appendChild($("baselineCard"));$("baselineCard").classList.add("sp-inner")}}
     move($("goalsCard"),"goals");if($("goalsCard"))$("goalsCard").classList.add("hidden");
     {const g=document.createElement("div");g.id="goalsPage";panels.goals.insertBefore(g,panels.goals.firstChild)}
     move($("healthCard"),"health");
     move($("trainingCard"),"training");
     {const e=document.createElement("div");e.className="card";e.id="energyCard";panels.training.appendChild(e)}
-    move($("bloodCard"),"blood");
+    {const hd=document.createElement("div");hd.className="section-head";hd.id="bloodSection";hd.innerHTML=`<h2>Blood results</h2><p>Lab values, history and what they mean.</p>`;panels.health.appendChild(hd)}
+    move($("bloodCard"),"health");
     // Trend and history run the full width under the two-column block
     move($("metricTabs")?.closest(".card"),"progress");
     historyCard=$("history")?.closest(".card")||null;
-    if(historyCard){historyCard.id="historyCard";move(historyCard,"log")}
+    if(historyCard){historyCard.id="historyCard";panels.body.insertBefore(historyCard,panels.body.querySelector("#measurementCard")||null)}
     nav.addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)setTab(b.dataset.tab)});
     nav.addEventListener("keydown",e=>{
       const keys={ArrowLeft:-1,ArrowRight:1};if(!(e.key in keys))return;
       e.preventDefault();
-      const i=APP_TABS.findIndex(t=>t.id===activeTab);
-      setTab(APP_TABS[(i+keys[e.key]+APP_TABS.length)%APP_TABS.length].id,true);
+      const i=Math.max(0,MAIN_TABS.findIndex(t=>t.id===activeTab));
+      setTab(MAIN_TABS[(i+keys[e.key]+MAIN_TABS.length)%MAIN_TABS.length].id,true);
     });
-    window.addEventListener("hashchange",()=>{try{const h=location.hash.replace("#","");if(APP_TABS.some(t=>t.id===h))setTab(h)}catch(e){}});
+    window.addEventListener("hashchange",()=>{try{const h=location.hash.replace("#","");if(APP_TABS.some(t=>t.id===h)||TAB_ALIAS[h])setTab(h)}catch(e){}});
     let initial="";try{initial=location.hash.replace("#","")}catch(e){}
-    setTab(APP_TABS.some(t=>t.id===initial)?initial:"progress");
+    setTab(APP_TABS.some(t=>t.id===initial)||TAB_ALIAS[initial]?initial:"progress");
   }
   function setTab(id,focus){
+    const req=id;if(TAB_ALIAS[id])id=TAB_ALIAS[id];
     if(!APP_TABS.some(t=>t.id===id))return;
+    if(req==="blood")setTimeout(()=>{const s=$("bloodSection");if(s)s.scrollIntoView({behavior:"smooth",block:"start"})},60);
+    if(req==="log")setTimeout(()=>{try{openLog()}catch(e){}},60);
     activeTab=id;
     if(id==="goals")try{renderGoals()}catch(e){}
     for(const t of APP_TABS){
       const on=t.id===id;
       $("panel-"+t.id).classList.toggle("hidden",!on);
-      const b=$("tab-"+t.id);b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1;
+      const b=$("tab-"+t.id);if(b){b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1}
     }
-    if(focus)$("tab-"+id).focus();
+    if($("tabGoalsLink"))$("tabGoalsLink").setAttribute("aria-current",id==="goals"?"page":"false");
+    if(focus&&$("tab-"+id))$("tab-"+id).focus();
     // One measurement-history card, shown on both Progress and Log
-    if(historyCard&&id==="log"){
+    if(historyCard&&id==="body"){
       const host=$("panel-"+id);if(historyCard.parentElement!==host)host.appendChild(historyCard);
     }
     // The model only animates while it is on screen, and needs a redraw after being
@@ -5596,6 +5621,7 @@
     save();renderAll();showToast(`${m.label} ${fmt(v)} ${m.unit} saved for ${longDate(date)}.`,true);
     return true;
   }
+  document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-open-log]"))openLog()});
   function buildLogButton(){
     if($("logFab"))return;const b=document.createElement("button");b.type="button";b.id="logFab";b.className="log-fab";
     b.innerHTML=`<span aria-hidden="true">＋</span> Log`;b.setAttribute("aria-label","Log a measurement");b.addEventListener("click",()=>openLog());document.body.appendChild(b);
@@ -5603,8 +5629,8 @@
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
-  function resetMeasurementForm(){editingId=null;$("measurementTitle").textContent="Log a measurement";$("saveMeasurement").textContent="Log measurement";$("cancelEdit").classList.add("hidden");$("measurementError").textContent="";$("m-date").value=today();metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,null))}
-  function startEdit(id){const r=state.entries.find(e=>e.id===id);if(!r)return;editingId=id;$("measurementTitle").textContent="Edit measurement";$("saveMeasurement").textContent="Update measurement";$("cancelEdit").classList.remove("hidden");$("m-date").value=r.date;metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,r[k]));$("measurementTitle").scrollIntoView({behavior:"smooth",block:"center"})}
+  function resetMeasurementForm(){editingId=null;if($("measurementCard"))$("measurementCard").classList.add("hidden");$("measurementTitle").textContent="Log a measurement";$("saveMeasurement").textContent="Log measurement";$("cancelEdit").classList.add("hidden");$("measurementError").textContent="";$("m-date").value=today();metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,null))}
+  function startEdit(id){const r=state.entries.find(e=>e.id===id);if(!r)return;if($("measurementCard"))$("measurementCard").classList.remove("hidden");if(activeTab!=="body")setTab("body");editingId=id;$("measurementTitle").textContent="Edit measurement";$("saveMeasurement").textContent="Update measurement";$("cancelEdit").classList.remove("hidden");$("m-date").value=r.date;metricKeys.forEach(k=>setInput(`m-${metrics[k].input}`,r[k]));$("measurementTitle").scrollIntoView({behavior:"smooth",block:"center"})}
   function saveMeasurement(){
     const {record,error}=formRecord("m");if(error){$("measurementError").textContent=error;return}
     if(state.baseline&&dateValue(record.date)<dateValue(state.baseline.date)){$("measurementError").textContent="A measurement cannot be dated before the starting baseline.";return}
@@ -5615,7 +5641,7 @@
     if(editingId){state.entries=state.entries.map(e=>e.id===editingId?{...record,id:editingId}:e)}else state.entries.push({...record,id:uid()});
     state.entries.sort((a,b)=>dateValue(a.date)-dateValue(b.date)||a.id.localeCompare(b.id));save();resetMeasurementForm();renderAll();showToast(wasEditing?"Measurement updated.":"Measurement saved.",false)
   }
-  function openBaselineEdit(){const b=state.baseline;if(!b)return;$("baselineForm").classList.remove("hidden");$("baselineSummary").classList.add("hidden");$("cancelBaselineEdit").classList.remove("hidden");$("b-date").value=b.date;metricKeys.forEach(k=>setInput(`b-${metrics[k].input}`,b[k]));$("b-weight").focus()}
+  function openBaselineEdit(){const b=state.baseline;if(!b)return;if($("startPointCard")){$("startPointCard").open=true;setTimeout(()=>$("startPointCard").scrollIntoView({behavior:"smooth",block:"start"}),30)}$("baselineForm").classList.remove("hidden");$("baselineSummary").classList.add("hidden");$("cancelBaselineEdit").classList.remove("hidden");$("b-date").value=b.date;metricKeys.forEach(k=>setInput(`b-${metrics[k].input}`,b[k]));$("b-weight").focus()}
   function closeBaselineEdit(){if(!state.baseline)return;$("baselineForm").classList.add("hidden");$("baselineSummary").classList.remove("hidden");$("cancelBaselineEdit").classList.add("hidden");$("baselineError").textContent=""}
   function saveBaseline(){
     const {record,error}=formRecord("b");if(error){$("baselineError").textContent=error;return}
