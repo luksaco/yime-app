@@ -1666,6 +1666,27 @@
   .stats-top .wt-hero .wt-row>span{flex:1 1 0;justify-content:center;text-align:center;padding:6px 10px;font-size:12px}
   .stats-top .wt-hero .wt-chip{display:inline-flex;align-items:center}
   :root[data-theme="dark"] .stats-top .wt-hero .wt-top .k{color:#111!important}
+  /* Goal card — minimal, professional */
+  #progress .wg-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:6px 0 16px}
+  #progress .wg-big{font-size:34px;font-weight:750;letter-spacing:-.035em;line-height:1.05;color:var(--ink)}
+  #progress .wg-big span{font-size:15px;font-weight:550;color:var(--muted);letter-spacing:-.01em;margin-left:2px}
+  #progress .wg-sub{margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  #progress .wg-target{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;background:var(--soft);border:1px solid var(--stroke);color:var(--muted);font-size:12px}
+  #progress .wg-target b{color:var(--ink);font-weight:700}#progress .wg-dot{color:var(--muted2)}
+  #progress .wg-pct{font-size:34px;font-weight:750;letter-spacing:-.04em;color:var(--ink);line-height:1}#progress .wg-pct span{font-size:16px;color:var(--muted);font-weight:600;margin-left:1px}
+  #progress .wg-track{height:8px;border-radius:99px;background:rgba(17,24,39,.07);overflow:visible;position:relative}
+  #progress .wg-track i{position:relative;display:block;height:100%;border-radius:99px;background:#121211}
+  #progress .wg-track i::after{content:"";position:absolute;right:-6px;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #121211;transform:translateY(-50%);box-sizing:border-box}
+  #progress .wg-ends{display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;color:var(--muted2);font-variant-numeric:tabular-nums}
+  #progress .wg-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:18px;padding-top:16px;border-top:1px solid var(--stroke)}
+  #progress .wg-stats>div{padding:0 16px;border-left:1px solid var(--stroke);background:none!important;border-radius:0!important;box-shadow:none!important}
+  #progress .wg-stats>div:first-child{padding-left:0;border-left:0}
+  #progress .wg-stats span{display:block;font-size:11px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--muted2);margin-bottom:5px}
+  #progress .wg-stats b{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums}
+  #progress .wg-stats b small{font-size:13px;font-weight:550;color:var(--muted);letter-spacing:0}
+  #progress .wg-stats b.good{color:#1f9d55}#progress .wg-stats b.bad{color:#d94a43}#progress .wg-stats b.good small,#progress .wg-stats b.bad small{color:inherit;opacity:.7}
+  :root[data-theme="dark"] #progress .wg-track{background:rgba(255,255,255,.1)}:root[data-theme="dark"] #progress .wg-track i{background:#f2f1ef}:root[data-theme="dark"] #progress .wg-track i::after{border-color:#f2f1ef;background:#17181b}
+  @media(max-width:520px){#progress .wg-big,#progress .wg-pct{font-size:28px}#progress .wg-stats>div{padding:0 10px}#progress .wg-stats b{font-size:18px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3306,9 +3327,10 @@
     const verb=lose?(isW?"Lose":"Reduce"):(isW?"Gain":"Increase"),soFar=moved>=0?(lose?(isW?"Lost so far":"Down so far"):(isW?"Gained so far":"Up so far")):"Off track by";
     const picker=`<label class="wg-pick"><span class="sr-only">Goal to show</span><select id="progressGoalPick" aria-label="Goal to show">${keys.map(k=>`<option value="${k}" ${k===pick?"selected":""}>${metrics[k].label} goal</option>`).join("")}<option value="__add">+ Add another goal…</option></select></label>`;
     $("progress").innerHTML=`<div class="wg-top"><p class="eyebrow">${m.label} goal</p>${picker}</div>
-      <div class="wg-head"><div><div class="wg-big">${done?"Goal reached":`${fmt(remaining)} ${u} <span>to go</span>`}</div><div class="wg-sub">${verb} ${fmt(Math.abs(goal-b))} ${u} to reach ${fmt(goal)} ${u}</div></div><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
+      <div class="wg-head"><div><div class="wg-big">${done?"Goal reached":`${fmt(remaining)} ${u} <span>to go</span>`}</div><div class="wg-sub"><span class="wg-target">Target <b>${fmt(goal)} ${u}</b></span><span class="wg-dot">·</span>${verb.toLowerCase()} ${fmt(Math.abs(goal-b))} ${u} in total</div></div><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
       <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="${m.label} goal progress"><i style="width:${p}%"></i></div>
-      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)} ${u}</b></div><div><span>Now</span><b>${fmt(cur)} ${u}</b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${fmt(Math.abs(change))} ${u}</b></div></div>`;
+      <div class="wg-ends"><span>${fmt(b)} ${u}</span><span>${fmt(goal)} ${u}</span></div>
+      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div></div>`;
   }
   document.addEventListener("change",e=>{if(e.target.id!=="progressGoalPick")return;const v=e.target.value;
     if(v==="__add"){try{setTab("goals")}catch(err){}scrollTo({top:0,behavior:"smooth"});renderProgress();return}
