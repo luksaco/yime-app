@@ -1972,6 +1972,19 @@
     .ch-lab{font-size:9.5px}.ch-val{font-size:20px}.ch-val.sm{font-size:18px}.ch-chg{font-size:17px}.ch-val small,.ch-chg small{font-size:11px}.ch-sub{font-size:10.5px}
     .ch-range{display:flex}.ch-range button{flex:1}}
   .ch-empty-msg{margin:8px 0 6px;padding:22px 16px;text-align:center;border:1px dashed rgba(6,7,6,.14);border-radius:14px;color:var(--muted);font-size:13.5px}
+  /* ===== Monthly Review ===== */
+  #trainingTiles{grid-template-columns:repeat(var(--tcols,4),minmax(0,1fr))!important}
+  .act-k{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .act-sel{appearance:none;-webkit-appearance:none;border:0;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23857b70' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 2px center;padding:0 16px 0 0;font:inherit;font-size:11.5px;font-weight:700;color:var(--ink);cursor:pointer;max-width:100%}
+  .act-x{border:0;background:rgba(6,7,6,.06);width:18px;height:18px;margin:-2px 0;border-radius:50%;font-size:14px;line-height:1;color:var(--muted);cursor:pointer;flex:none}
+  .act-x:hover{background:rgba(6,7,6,.12);color:var(--ink)}
+  .act-add{all:unset;box-sizing:border-box;cursor:pointer;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1.5px dashed rgba(6,7,6,.18)!important;background:transparent!important;border-radius:16px;min-height:96px;color:var(--muted)}
+  .act-add span{font-size:26px;line-height:1;font-weight:500;color:var(--ink)}.act-add small{font-size:12px;font-weight:650}
+  .act-add:hover{border-color:rgba(6,7,6,.4)!important;color:var(--ink)}
+  .act-add:focus-visible{outline:3px solid rgba(6,7,6,.25);outline-offset:2px}
+  table.mr-table th{background:#060706!important;color:#fff!important;font-weight:800!important;font-size:11px!important;letter-spacing:.06em}
+  table.mr-table td{font-variant-numeric:tabular-nums}
+  @media(max-width:760px){#trainingTiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4880,17 +4893,37 @@
       if(Math.abs(d)<(digits?0.05:0.5))return ['<span class="flat">level</span>',against];
       return [`<span class="${d>0?"up":"down"}">${d>0?"↑":"↓"} ${sign(Number(d.toFixed(digits)))}${unit?" "+unit:""}</span>`,against];
     };
-    const runKm=cur.km("Run"),rideKm=cur.km("Ride");
+    // ---- Monthly Review tiles: total sessions, total time, then 1–3 activities the person picks ----
+    const ORDER0=["Run","Ride","Strength","Swim","Walk","Row","Other"];
+    const allGroups=[...new Set(state.workouts.map(w=>w.group))].sort((a,b)=>(ORDER0.indexOf(a)+1||99)-(ORDER0.indexOf(b)+1||99));
+    let picks=[];try{picks=JSON.parse(localStorage.getItem("yime_train_tiles")||"[]")}catch(e){}
+    picks=(Array.isArray(picks)?picks:[]).filter(g=>allGroups.includes(g)).slice(0,3);
+    if(!picks.length)picks=[allGroups.includes("Run")?"Run":allGroups[0]];
+    const actTile=(g,i)=>{const km=cur.km(g),mins=cur.minutesOf(g),useKm=state.workouts.some(w=>w.group===g&&w.km>0);
+      const v=useKm?(km?`${km.toFixed(1)}<span class="u">km</span>`:"—"):(mins?hm(mins):"—");
+      const dd=useKm?delta(km,prev.km(g),"km",1):delta(mins/60,prev.minutesOf(g)/60,"h",1);
+      const opts=allGroups.map(o=>`<option value="${esc(o)}"${o===g?" selected":""}${o!==g&&picks.includes(o)?" disabled":""}>${esc(sportLabel(o))}</option>`).join("");
+      return `<div class="stat act-tile"><div class="k act-k"><select class="act-sel" data-act-i="${i}" aria-label="Activity shown in this tile">${opts}</select>${i>0?`<button type="button" class="act-x" data-act-del="${i}" aria-label="Remove this activity tile">×</button>`:""}</div><div class="v">${v}</div><div class="delta">${dd[0]}</div><div class="delta sub neutral">${dd[1]}</div></div>`};
+    const canAdd=picks.length<3&&allGroups.some(g=>!picks.includes(g));
     $("trainingTiles").innerHTML=[
-      ["Sessions",String(cur.sessions),delta(cur.sessions,prev.sessions,"")],
-      ["Total time",hm(cur.minutes),delta(cur.minutes/60,prev.minutes/60,"h",1)],
-      ["Running",runKm?`${runKm.toFixed(1)}<span class="u">km</span>`:"—",delta(runKm,prev.km("Run"),"km",1)],
-      ["Cycling",rideKm?`${rideKm.toFixed(1)}<span class="u">km</span>`:(cur.minutesOf("Ride")?hm(cur.minutesOf("Ride")):"—"),delta(rideKm,prev.km("Ride"),"km",1)]
-    ].map(([k,v,d])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="delta">${d[0]}</div><div class="delta sub neutral">${d[1]}</div></div>`).join("");
+      ["Total sessions",String(cur.sessions),delta(cur.sessions,prev.sessions,"")],
+      ["Total activity time",hm(cur.minutes),delta(cur.minutes/60,prev.minutes/60,"h",1)]
+    ].map(([k,v,d])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="delta">${d[0]}</div><div class="delta sub neutral">${d[1]}</div></div>`).join("")
+      +picks.map(actTile).join("")
+      +(canAdd?`<button type="button" class="stat act-add" data-act-add aria-label="Add another activity"><span>+</span><small>Add activity</small></button>`:"");
+    $("trainingTiles").style.setProperty("--tcols",2+picks.length+(canAdd?1:0));
 
-    $("trainingTable").innerHTML=`<div class="table-scroll"><table class="history train-table"><thead><tr><th>Type</th><th class="num">Sessions</th><th class="num">Time</th><th class="num">Distance</th><th>Includes</th></tr></thead><tbody>${
-      cur.groups.map(g=>`<tr><td><strong>${esc(sportLabel(g.group))}</strong></td><td class="num">${g.sessions}</td><td class="num">${hm(g.minutes)}</td><td class="num">${g.km>0?`${g.km.toFixed(1)} km`:"—"}</td><td class="muted-cell">${esc([...g.sports].sort().join(", "))}</td></tr>`).join("")
-    }<tr class="total-row"><td><strong>Total</strong></td><td class="num"><strong>${cur.sessions}</strong></td><td class="num"><strong>${hm(cur.minutes)}</strong></td><td class="num"></td><td></td></tr></tbody></table></div>`;
+    // ---- Monthly table: type, sessions, time, distance, average HR, average speed ----
+    const inMonth=state.workouts.filter(w=>(w.date||"").slice(0,7)===trainingMonth&&(dayCut==null||true));
+    const statsOf=list=>{const mins=list.reduce((a,w)=>a+(w.minutes||0),0),kmL=list.filter(w=>w.km>0),km=kmL.reduce((a,w)=>a+w.km,0),kmMin=kmL.reduce((a,w)=>a+w.minutes,0),
+      hrL=list.filter(w=>w.hr),hrMin=hrL.reduce((a,w)=>a+w.minutes,0);
+      return {n:list.length,mins,km,hr:hrMin?Math.round(hrL.reduce((a,w)=>a+w.hr*w.minutes,0)/hrMin):null,spd:kmMin?km/(kmMin/60):null}};
+    const rows=cur.groups.map(g=>({g:g.group,s:statsOf(inMonth.filter(w=>w.group===g.group))}));
+    const tot=statsOf(inMonth);
+    const cell=(s,b)=>`<td class="num">${b?"<strong>":""}${s.n}${b?"</strong>":""}</td><td class="num">${b?"<strong>":""}${hm(s.mins)}${b?"</strong>":""}</td><td class="num">${s.km>0?`${s.km.toFixed(1)} km`:"—"}</td><td class="num">${s.hr?`${s.hr} bpm`:"—"}</td><td class="num">${s.spd?`${s.spd.toFixed(1)} km/h`:"—"}</td>`;
+    $("trainingTable").innerHTML=`<div class="table-scroll mr-wrap"><table class="history train-table mr-table"><thead><tr><th>Workout type</th><th class="num">Sessions</th><th class="num">Time</th><th class="num">Distance</th><th class="num">Avg HR</th><th class="num">Avg speed</th></tr></thead><tbody>${
+      rows.map(r=>`<tr><td><strong>${esc(sportLabel(r.g))}</strong></td>${cell(r.s)}</tr>`).join("")
+    }<tr class="total-row"><td><strong>Total</strong></td>${cell(tot,true)}</tr></tbody></table></div>`;
 
     const ORDER=["Run","Ride","Strength","Swim","Walk","Row","Other"];
     const groups=[...new Set(state.workouts.map(w=>w.group))]
@@ -4900,6 +4933,15 @@
     drawTrainingChart();
   }
 
+  // Monthly Review activity tiles: change, add (max 3), remove
+  (function(){
+    const get=()=>{try{return JSON.parse(localStorage.getItem("yime_train_tiles")||"[]")}catch(e){return []}},put=p=>{try{localStorage.setItem("yime_train_tiles",JSON.stringify(p))}catch(e){}};
+    const current=()=>[...document.querySelectorAll("#trainingTiles .act-sel")].map(s=>s.value);
+    document.addEventListener("change",e=>{const s=e.target.closest&&e.target.closest(".act-sel");if(!s)return;const p=current();put(p);renderTraining()});
+    document.addEventListener("click",e=>{
+      if(e.target.closest&&e.target.closest("[data-act-add]")){const p=current(),all=[...new Set(state.workouts.map(w=>w.group))],next=all.find(g=>!p.includes(g));if(next&&p.length<3){p.push(next);put(p);renderTraining()}return}
+      const x=e.target.closest&&e.target.closest("[data-act-del]");if(x){const p=current();p.splice(Number(x.dataset.actDel),1);put(p);renderTraining()}});
+  })();
   function drawTrainingChart(){
     const all=workoutMonths();if(!all.length){$("trainingChart").innerHTML="";return}
     const last=all[0],series=[];
