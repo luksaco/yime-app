@@ -1635,6 +1635,15 @@
   .stats-top .bm-health>.hs-stack{align-items:center;gap:16px;padding:2px 0 4px}
   .hs-stack .fs-big{margin:6px 0 2px}.hs-stack .fs-big .bm-num{font-size:48px;min-width:0}
   .hs-stack .bm-trend{margin-top:2px}
+  /* weight: label left, number right on one line */
+  .stats-top .wt-hero .wt-top{display:block}
+  .stats-top .wt-hero .wt-top>div{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+  .stats-top .wt-hero .wt-top .k{margin:0;font-size:12.5px;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.75)!important;display:flex;align-items:center;gap:8px}
+  .stats-top .wt-hero .wt-top .k::before{content:"";width:8px;height:8px;border-radius:50%;background:#ea3327;box-shadow:0 0 10px rgba(234,51,39,.7)}
+  .stats-top .wt-hero .wt-top .v{margin:0!important;font-size:34px!important;line-height:1;letter-spacing:-.04em}
+  .stats-top .wt-hero .wt-top .v .unit{font-size:14px;margin-left:3px}
+  .stats-top .wt-hero .wt-row{margin-top:6px}
+  :root[data-theme="dark"] .stats-top .wt-hero .wt-top .k{color:rgba(0,0,0,.6)!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
