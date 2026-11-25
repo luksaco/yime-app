@@ -1794,6 +1794,8 @@
   #appTabs button[data-tab]:not([data-tab="progress"]){touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   #appTabs.tabs-reordering button[data-tab]{transition:none!important}
   #appTabs button.tab-dragging{cursor:grabbing!important;transform:scale(1.06);opacity:.92;z-index:2;outline:2px dashed rgba(234,51,39,.55);outline-offset:-2px}
+  /* Home: wider body-model column so the figure fills its panel (less empty space above the head and below the feet) */
+  @media(min-width:981px){#panel-progress .layout{grid-template-columns:minmax(360px,1.08fr) minmax(0,1.15fr)}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
