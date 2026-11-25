@@ -1625,6 +1625,13 @@
   .wg-bar i::after{content:"";position:absolute;right:-3px;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 0 3px rgba(234,51,39,.45)}
   .wg-foot{flex-wrap:wrap;row-gap:2px}.wt-goal .wg-foot span{display:inline;white-space:nowrap;margin:0;font-size:11.5px;color:rgba(255,255,255,.6)}.wg-foot b{color:#fff;font-weight:700}
   :root[data-theme="dark"] .wt-goal{border-top-color:rgba(0,0,0,.08)}:root[data-theme="dark"] .wg-lab b,:root[data-theme="dark"] .wt-goal .wg-pc,:root[data-theme="dark"] .wg-foot b{color:#111}:root[data-theme="dark"] .wt-goal .wg-lab,:root[data-theme="dark"] .wt-goal .wg-foot span{color:rgba(0,0,0,.55)}:root[data-theme="dark"] .wg-bar{background:rgba(0,0,0,.1)}
+  /* top pair: health score content centred in its tile; weight tile tighter so both rows match */
+  .stats-top .bm-health>.bm-row{flex:1;align-items:center;padding:4px 0}
+  .stats-top .bm-health .bm-spark{height:58px;width:200px;flex-basis:200px}
+  .stats-top .stat.wt-hero{gap:6px;padding:14px 16px}
+  .stats-top .wt-hero .wt-goal{margin-top:6px;padding-top:10px}
+  .stats-top .wt-hero .wg-pc{font-size:18px}.stats-top .wt-hero .wg-bar{height:6px;margin:6px 0}
+  .stats-top .wt-hero .wg-bar i::after{width:11px;height:11px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3243,7 +3250,7 @@
       const x=i=>p+i*(W-2*p)/(pts.length-1),y=v=>p+(1-(v-lo)/(hi-lo))*(H-2*p);
       const line=pts.map((q,i)=>`${i?"L":"M"}${x(i).toFixed(1)} ${y(q.score).toFixed(1)}`).join(" ");
       const col=TREND_COL[tr?tr.dir:"steady"];
-      spark=`<svg class="bm-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${line} L${x(pts.length-1).toFixed(1)} ${H} L${x(0).toFixed(1)} ${H} Z" fill="${col}" opacity=".08"/><path d="${line}" fill="none" stroke="${col}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(pts.length-1).toFixed(1)}" cy="${y(pts[pts.length-1].score).toFixed(1)}" r="3.6" fill="${col}"/></svg>`;
+      spark=`<svg class="bm-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${line} L${x(pts.length-1).toFixed(1)} ${H} L${x(0).toFixed(1)} ${H} Z" fill="${col}" opacity=".05"/><path d="${line}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(pts.length-1).toFixed(1)}" cy="${y(pts[pts.length-1].score).toFixed(1)}" r="3.6" fill="${col}"/></svg>`;
     }
     const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}<em>${tr.dir==="steady"?"":`${tr.delta>0?"+":""}${Math.round(tr.delta)} `}since ${shortDate(tr.from)}</em></div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
