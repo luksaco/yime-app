@@ -1645,6 +1645,21 @@
   .stats-top .wt-hero .wt-row{margin-top:6px}
   :root[data-theme="dark"] .stats-top .wt-hero .wt-top .k{color:rgba(0,0,0,.6)!important}
   .stats-top .stat.wt-hero{justify-content:center;gap:16px}.stats-top .wt-hero .wt-row{margin-top:0}
+  /* compact top pair: both tiles hug their content, same height */
+  .stats-top{align-items:stretch}
+  .stats-top .bm-health{padding:14px 16px 0}
+  .stats-top .bm-health>.hs-stack{padding:0;gap:14px}
+  .hs-stack .fs-big{margin:4px 0 0;gap:12px}.hs-stack .fs-big .bm-num{font-size:44px;line-height:1}
+  .hs-side{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+  .hs-side .bm-trend{margin:0;font-size:13px}.hs-side .bm-trend.muted{font-size:12px}.hs-d{opacity:.8;font-weight:600}
+  .stats-top .bm-health .bm-spark{height:44px;width:170px;flex-basis:170px}
+  .stats-top .bm-health .bm-link{margin-top:12px}
+  .stats-top .stat.wt-hero{justify-content:center;gap:14px;padding:16px 18px}
+  @media(max-width:680px){.stats-top .bm-health .bm-spark{width:96px;flex-basis:96px}}
+  @media(min-width:681px){.stats-top{grid-template-columns:1.25fr 1fr}}
+  .stats-top .wt-hero .wt-row{display:flex;flex-wrap:nowrap;gap:6px}
+  .stats-top .wt-hero .wt-chip,.stats-top .wt-hero .wt-glass{white-space:nowrap;font-size:11px;padding:3px 9px}
+  .stats-top .wt-hero .wt-glass small{font-size:10.5px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3265,10 +3280,10 @@
       const col=TREND_COL[tr?tr.dir:"steady"];
       spark=`<svg class="bm-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${line} L${x(pts.length-1).toFixed(1)} ${H} L${x(0).toFixed(1)} ${H} Z" fill="${col}" opacity=".05"/><path d="${line}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(pts.length-1).toFixed(1)}" cy="${y(pts[pts.length-1].score).toFixed(1)}" r="3.6" fill="${col}"/></svg>`;
     }
-    const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}<em>${tr.dir==="steady"?"":`${tr.delta>0?"+":""}${Math.round(tr.delta)} `}since ${shortDate(tr.from)}</em></div>`
+    const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}${tr.dir==="steady"?"":` <span class="hs-d">${tr.delta>0?"+":""}${Math.round(tr.delta)}</span>`}</div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
     el.innerHTML=`<div class="bm-row hs-stack"><div class="bm-mid"><div class="bm-label">Health score</div>
-        <div class="fs-big"><span class="bm-num">${s==null?"—":s}</span>${s==null?"":`<span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
+        <div class="fs-big"><span class="bm-num">${s==null?"—":s}</span><span class="hs-side">${s==null?"":`<span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}${trendLine}</span></div></div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
   }
   // Progress goal card: any measurement with a goal can be shown here; the choice is remembered.
