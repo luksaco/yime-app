@@ -1724,6 +1724,9 @@
   #progress .wg-stats .st-go b{color:#ea3327}#progress .wg-stats .st-go b small{color:#ea3327;opacity:.6}
   :root[data-theme="dark"] #progress .wg-stats .st-now{background:#f2f1ef!important}:root[data-theme="dark"] #progress .wg-stats .st-now b{color:#111}:root[data-theme="dark"] #progress .wg-stats .st-now span,:root[data-theme="dark"] #progress .wg-stats .st-now b small{color:rgba(0,0,0,.55)}:root[data-theme="dark"] #progress .wg-stats .st-now span::before{background:#111}
   @media(max-width:520px){#progress .wg-stats{gap:8px}#progress .wg-stats>div{padding:12px 14px!important}}
+  #progress .wg-stats .st-now span::before{background:#34c759!important;box-shadow:0 0 0 0 rgba(52,199,89,.6);animation:nowPulse 1.6s ease-in-out infinite}
+  @keyframes nowPulse{0%{opacity:1;box-shadow:0 0 0 0 rgba(52,199,89,.6)}50%{opacity:.35;box-shadow:0 0 0 5px rgba(52,199,89,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(52,199,89,0)}}
+  @media(prefers-reduced-motion:reduce){#progress .wg-stats .st-now span::before{animation:none}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
