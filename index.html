@@ -1613,6 +1613,9 @@
   .fs-val{font-size:12px;font-weight:800}
   :root[data-theme="dark"] .fs-grid{stroke:rgba(255,255,255,.08)}
   @media(max-width:680px){.fs-wrap{grid-template-columns:1fr;gap:10px}}
+  .wt-glass{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 14px rgba(0,0,0,.25);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%)}
+  .wt-glass small{font-size:11px;font-weight:500;color:rgba(255,255,255,.7)}.wt-glass b{font-weight:800}.wt-glass.good b{color:#9be06c}.wt-glass.bad b{color:#ff7a6e}
+  :root[data-theme="dark"] .wt-glass{color:#111;background:linear-gradient(135deg,rgba(0,0,0,.08),rgba(0,0,0,.02));border-color:rgba(0,0,0,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 4px 12px rgba(0,0,0,.08)}:root[data-theme="dark"] .wt-glass small{color:rgba(0,0,0,.55)}:root[data-theme="dark"] .wt-glass.good b{color:#137a5f}:root[data-theme="dark"] .wt-glass.bad b{color:#c2352b}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3180,7 +3183,7 @@
     if(v!=null&&base!=null&&goal!=null&&base!==goal){const pc=clamp((v-base)/(goal-base)*100,0,100),left=Math.abs(goal-v);
       prog=`<div class="wt-goal"><div class="wt-bar"><i style="width:${pc.toFixed(1)}%"></i></div><span>${Math.round(pc)}% to ${fmt(goal)} kg · ${fmt(left)} kg to go</span></div>`}
     return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div></div>
-      <div class="wt-row"><span class="wt-chip ${recent==null||recent===0?"":recent<0?"good":"bad"}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-chip ${total==null||total===0?"":(goal!=null&&base!=null&&goal>base?total>0:total<0)?"good":"bad"}">${total==null?"Set a baseline":`${total>0?"↑":total<0?"↓":"—"} ${sg(total)} from start`}</span></div>${prog}</div>`;
+      <div class="wt-row"><span class="wt-chip ${recent==null||recent===0?"":recent<0?"good":"bad"}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-glass ${total==null||total===0?"":(goal!=null&&base!=null&&goal>base?total>0:total<0)?"good":"bad"}">${total==null?"Set a baseline":`<b>${total>0?"↑":total<0?"↓":"—"}</b> ${sg(total)} <small>from start</small>`}</span></div>${prog}</div>`;
   }
   // Full health-score trend on the Body health tab, under the headline rings
   function renderHealthTrend(){
