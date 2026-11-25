@@ -1917,6 +1917,11 @@
   /* Body weight label: no dot, bolder */
   .stats-top .wt-hero .wt-top .k::before{display:none!important}
   .stats-top .wt-hero .wt-top .k{font-weight:800!important;font-size:13.5px!important;letter-spacing:.07em!important;color:#fff!important}
+  /* unselected tabs: always bold black */
+  html body #appTabs button[data-tab]:not([aria-selected="true"]):not(#tab-goals){color:#060706!important;font-weight:700!important;opacity:1!important}
+  html body #appTabs button[data-tab]:not([aria-selected="true"]):not(#tab-goals) .t-ic{color:#060706!important;opacity:1!important}
+  html body #appTabs button[data-tab]{font-weight:700!important}
+  :root[data-theme="dark"] body #appTabs button[data-tab]:not([aria-selected="true"]):not(#tab-goals),:root[data-theme="dark"] body #appTabs button[data-tab]:not([aria-selected="true"]):not(#tab-goals) .t-ic{color:#f2f1ef!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
