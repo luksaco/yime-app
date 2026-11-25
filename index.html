@@ -1782,6 +1782,18 @@
   .sp-inner{box-shadow:none!important;border:1px solid var(--stroke)!important;margin:0!important}
   @media(max-width:680px){#appTabs .tab-secondary{display:none!important}}
   .sp-card>summary{position:relative;padding-right:56px}.sp-card>summary::after{position:absolute;right:22px;top:50%;transform:translateY(-50%)}
+
+  /* Goals tab keeps its own colour on top of the glass tab bar */
+  html body #appTabs #tab-goals{color:#ea3327!important;background:rgba(234,51,39,.08)!important;box-shadow:inset 0 0 0 1.5px rgba(234,51,39,.38)!important;animation:goalGlow 2.6s ease-in-out infinite}
+  html body #appTabs #tab-goals:not([aria-selected="true"]):hover{background:rgba(234,51,39,.13)!important}
+  html body #appTabs #tab-goals[aria-selected="true"]{background:linear-gradient(135deg,#ea3327,#ff6a5c)!important;color:#fff!important;box-shadow:0 8px 22px rgba(234,51,39,.35)!important;animation:none}
+  :root[data-theme="dark"] body #appTabs #tab-goals{color:#ff5a4d!important;background:rgba(255,90,77,.1)!important}
+  :root[data-theme="dark"] body #appTabs #tab-goals[aria-selected="true"]{background:linear-gradient(135deg,#ea3327,#ff6a5c)!important;color:#fff!important}
+  @media(prefers-reduced-motion:reduce){html body #appTabs #tab-goals{animation:none}}
+  /* drag to reorder tabs (Home stays first) */
+  #appTabs button[data-tab]:not([data-tab="progress"]){touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  #appTabs.tabs-reordering button[data-tab]{transition:none!important}
+  #appTabs button.tab-dragging{cursor:grabbing!important;transform:scale(1.06);opacity:.92;z-index:2;outline:2px dashed rgba(234,51,39,.55);outline-offset:-2px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2808,25 +2820,60 @@
      The cards are regrouped into tabs at runtime rather than in the markup. Moving
      the existing elements keeps every id and every listener attached exactly as it
      was, which is far safer than restructuring a file this size by hand. */
-  const TAB_ICONS={body:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 19a7 7 0 1 1 7-7v7H10Z"/><circle cx="10" cy="12" r="2.2"/><path d="M17 19h4.5M19 19v-2"/></svg>',goals:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6h-6v6H4z"/></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
+  const TAB_ICONS={body:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="11" r="6"/><circle cx="9" cy="11" r="1.6"/><path d="M9 17h11v-4h-5"/><path d="M18 17v-2M15.5 17v-1.5"/></svg>',goals:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg>',progress:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6h-6v6H4z"/></svg>',health:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"/></svg>',training:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',blood:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',log:'<svg class="t-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>'};
   // Four main destinations; Goals is secondary (menu, goal card, small link). Old #blood / #log links redirect.
   const APP_TABS=[
     {id:"progress",label:"Home",short:"Home",main:true},
     {id:"body",label:"Body",short:"Body",main:true},
     {id:"training",label:"Training",short:"Training",main:true},
     {id:"health",label:"Health",short:"Health",main:true},
-    {id:"goals",label:"Goals",short:"Goals"}
+    {id:"goals",label:"Goals",short:"Goals",main:true}
   ];
   const MAIN_TABS=APP_TABS.filter(t=>t.main);
   const TAB_ALIAS={home:"progress",blood:"health",log:"progress",measurements:"body"};
   let activeTab="progress",modelAside=null,modelLayout=null,historyCard=null;
+  /* Tab order is the user's own: drag any tab (except Home, which stays first) to move it. Saved per browser. */
+  const TAB_ORDER_KEY="yime_tab_order";
+  function loadTabOrder(){let o=[];try{o=JSON.parse(localStorage.getItem(TAB_ORDER_KEY)||"[]")}catch(e){}
+    const ids=MAIN_TABS.map(t=>t.id).filter(id=>id!=="progress");
+    o=(Array.isArray(o)?o:[]).filter(id=>ids.includes(id));for(const id of ids)if(!o.includes(id))o.push(id);
+    return ["progress",...o]}
+  function saveTabOrder(order){try{localStorage.setItem(TAB_ORDER_KEY,JSON.stringify(order.filter(id=>id!=="progress")))}catch(e){}}
+  function applyTabOrder(nav){for(const id of loadTabOrder()){const b=nav.querySelector(`button[data-tab="${id}"]`);if(b)nav.appendChild(b)}}
+  function enableTabDrag(nav){
+    let drag=null;
+    const btns=()=>[...nav.querySelectorAll("button[data-tab]")];
+    nav.addEventListener("pointerdown",e=>{
+      const b=e.target.closest("button[data-tab]");if(!b||b.dataset.tab==="progress"||e.button>0)return;
+      drag={b,x:e.clientX,y:e.clientY,id:e.pointerId,on:false,
+        timer:e.pointerType==="mouse"?0:setTimeout(()=>{if(drag&&!drag.on)start()},320)};
+    });
+    function start(){drag.on=true;drag.b.classList.add("tab-dragging");nav.classList.add("tabs-reordering");try{drag.b.setPointerCapture(drag.id)}catch(e){}try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
+    nav.addEventListener("pointermove",e=>{
+      if(!drag||e.pointerId!==drag.id)return;
+      const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+      if(!drag.on){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy))start();else{if(Math.abs(dy)>10){clearTimeout(drag.timer);drag=null}return}}
+      e.preventDefault();
+      const list=btns(),home=list[0];
+      for(const o of list){if(o===drag.b||o===home)continue;const r=o.getBoundingClientRect(),mid=r.left+r.width/2;
+        const before=list.indexOf(drag.b)<list.indexOf(o);
+        if(before&&e.clientX>mid){o.after(drag.b);break}
+        if(!before&&e.clientX<mid){o.before(drag.b);break}}
+    });
+    const end=e=>{if(!drag||(e&&e.pointerId!==drag.id))return;clearTimeout(drag.timer);
+      if(drag.on){drag.b.classList.remove("tab-dragging");nav.classList.remove("tabs-reordering");nav._justDragged=true;setTimeout(()=>{nav._justDragged=false},350);
+        saveTabOrder(btns().map(b=>b.dataset.tab))}
+      drag=null};
+    nav.addEventListener("pointerup",end);nav.addEventListener("pointercancel",end);
+    nav.addEventListener("contextmenu",e=>{if(e.target.closest("button[data-tab]")&&drag)e.preventDefault()});
+  }
   function buildShell(){
     const layout=document.querySelector(".layout"),wrap=document.querySelector(".wrap");
     const nav=document.createElement("nav");
     nav.className="tabbar";nav.id="appTabs";nav.setAttribute("role","tablist");
     nav.innerHTML=MAIN_TABS.map(t=>`<button type="button" role="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="panel-${t.id}" aria-selected="false" aria-label="${esc(t.label)}">${TAB_ICONS[t.id]||""}<span class="t-long">${esc(t.label)}</span><span class="t-short" aria-hidden="true">${esc(t.short||t.label)}</span></button>`).join("");
     layout.parentNode.insertBefore(nav,layout);
-    {const g=document.createElement("button");g.type="button";g.className="tab-secondary";g.id="tabGoalsLink";g.innerHTML=`${TAB_ICONS.goals}<span>Goals</span>`;g.addEventListener("click",()=>setTab("goals"));nav.appendChild(g)}
+    applyTabOrder(nav);enableTabDrag(nav);
     const panels={};
     for(const t of APP_TABS){
       const sec=document.createElement("section");
@@ -2853,12 +2900,14 @@
     move($("metricTabs")?.closest(".card"),"progress");
     historyCard=$("history")?.closest(".card")||null;
     if(historyCard){historyCard.id="historyCard";panels.body.insertBefore(historyCard,panels.body.querySelector("#measurementCard")||null)}
-    nav.addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)setTab(b.dataset.tab)});
+    nav.addEventListener("click",e=>{if(nav._justDragged){nav._justDragged=false;e.preventDefault();return}const b=e.target.closest("button[data-tab]");if(b)setTab(b.dataset.tab)});
     nav.addEventListener("keydown",e=>{
       const keys={ArrowLeft:-1,ArrowRight:1};if(!(e.key in keys))return;
       e.preventDefault();
-      const i=Math.max(0,MAIN_TABS.findIndex(t=>t.id===activeTab));
-      setTab(MAIN_TABS[(i+keys[e.key]+MAIN_TABS.length)%MAIN_TABS.length].id,true);
+      const order=[...nav.querySelectorAll("button[data-tab]")].map(b=>b.dataset.tab);
+      if(e.altKey&&activeTab!=="progress"){const i=order.indexOf(activeTab),k=i+keys[e.key];if(k>=1&&k<order.length){order.splice(i,1);order.splice(k,0,activeTab);saveTabOrder(order);applyTabOrder(nav);$("tab-"+activeTab)?.focus()}return}
+      const i=Math.max(0,order.indexOf(activeTab));
+      setTab(order[(i+keys[e.key]+order.length)%order.length],true);
     });
     window.addEventListener("hashchange",()=>{try{const h=location.hash.replace("#","");if(APP_TABS.some(t=>t.id===h)||TAB_ALIAS[h])setTab(h)}catch(e){}});
     let initial="";try{initial=location.hash.replace("#","")}catch(e){}
