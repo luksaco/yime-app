@@ -1727,6 +1727,12 @@
   #progress .wg-stats .st-now span::before{background:#34c759!important;box-shadow:0 0 0 0 rgba(52,199,89,.6);animation:nowPulse 1.6s ease-in-out infinite}
   @keyframes nowPulse{0%{opacity:1;box-shadow:0 0 0 0 rgba(52,199,89,.6)}50%{opacity:.35;box-shadow:0 0 0 5px rgba(52,199,89,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(52,199,89,0)}}
   @media(prefers-reduced-motion:reduce){#progress .wg-stats .st-now span::before{animation:none}}
+  #progress .wg-head{align-items:center}
+  #progress .wg-goalpill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:999px;background:rgba(234,51,39,.08);border:1px solid rgba(234,51,39,.18)}
+  #progress .wg-goalpill svg{width:18px;height:18px;fill:none;stroke:#ea3327;stroke-width:2}#progress .wg-goalpill svg .f{fill:#ea3327;stroke:none}
+  #progress .wg-goalpill span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#ea3327;opacity:.75}
+  #progress .wg-goalpill b{font-size:16px;font-weight:750;letter-spacing:-.02em;color:#ea3327;font-variant-numeric:tabular-nums}
+  :root[data-theme="dark"] #progress .wg-goalpill{background:rgba(234,51,39,.14);border-color:rgba(234,51,39,.3)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3368,7 +3374,7 @@
     const picker=`<label class="wg-pick"><span class="sr-only">Goal to show</span><select id="progressGoalPick" aria-label="Goal to show">${keys.map(k=>`<option value="${k}" ${k===pick?"selected":""}>${metrics[k].label} goal</option>`).join("")}<option value="__add">+ Add another goal…</option></select></label>`;
     $("progress").innerHTML=`<div class="wg-top"><p class="eyebrow">${m.label} goal</p>${picker}</div>
       <div class="wg-head"><div class="wg-l"><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
-        <div class="wg-r"><div class="wg-glab">${done?"Goal reached":"Goal"}</div><div class="wg-gval">${fmt(goal)}<small> ${u}</small></div></div></div>
+        <div class="wg-r"><div class="wg-goalpill"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" class="f"/></svg><span>${done?"Reached":"Goal"}</span><b>${fmt(goal)} ${u}</b></div></div></div>
       <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="${m.label} goal progress"><i style="width:${p}%"></i></div>
       <div class="wg-stats"><div class="st-start"><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now st-now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div class="st-so ${moved>=0?"good":"bad"}"><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div><div class="st-go"><span>To go</span><b>${done?"0":fmt(remaining)}<small> ${u}</small></b></div></div>`;
   }
