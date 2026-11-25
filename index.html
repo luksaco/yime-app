@@ -1608,6 +1608,13 @@
   .fm-base{stroke:#e6e2dc;stroke-dasharray:4 5}
   @media(max-width:680px){.fm-head{grid-template-columns:auto minmax(0,1fr)}.fm-head .fm-chart{grid-column:1/-1}.fm-nums{grid-template-columns:repeat(3,minmax(0,1fr))!important;row-gap:12px}.fm-nums b{font-size:18px!important}.fm-cap{font-size:10px}}
   .fit-mini .bm-word{color:#fff!important}
+  .fs-wrap{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,1.6fr);gap:18px;align-items:center}
+  .fs-big{display:flex;align-items:center;gap:10px;margin:6px 0 2px}.fs-big .bm-num{min-width:0;font-size:48px}
+  .fs-chart{width:100%;height:auto;display:block;overflow:visible}
+  .fs-grid{stroke:rgba(18,18,17,.07);stroke-width:1}.fs-ax{font-size:9.5px;fill:#a39a90;font-weight:500}.fs-ax.cur{font-weight:700;fill:#6b6259}
+  .fs-val{font-size:12px;font-weight:800}
+  :root[data-theme="dark"] .fs-grid{stroke:rgba(255,255,255,.08)}
+  @media(max-width:680px){.fs-wrap{grid-template-columns:1fr;gap:10px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5301,90 +5308,76 @@
   }
   document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-wtp]");if(b){wtPeriod=b.dataset.wtp;renderWorkoutTrend()}});
   document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}});
-  // ===== Progress: Fitness trend card — a monthly fitness score (like Health score) =====
-  // Each month is scored against the person's own usual month (median of months with training):
-  // consistency (sessions), volume (time), distance and, for runs, efficiency (pace, and speed per heartbeat when HR exists).
-  // 60 = a typical month for you; ~100 = clearly your strongest. Trend needs 3+ complete months.
-  function renderFitnessMini(){
-    const el=$("fitMini");if(!el)return;const ws=state.workouts||[],now=new Date();
-    const link=`<span class="bm-link"><span>Open fitness activity trend</span><span>→</span></span>`;
-    if(!ws.length){el.innerHTML=`<div class="bm-row"><div class="bm-mid"><div class="bm-label">Fitness trend</div><div class="bm-trend muted">Import your Strava or Garmin workouts to get a monthly fitness score.</div></div></div>${link}`;return}
-    const first=new Date(Math.min(...ws.map(w=>dateValue(w.date))));
-    // main activity over the last 3 months decides which numbers matter
-    const recent=ws.filter(w=>dateValue(w.date)>=new Date(now.getFullYear(),now.getMonth()-3,1).getTime());
-    const cnt={};(recent.length?recent:ws).forEach(w=>cnt[w.group]=(cnt[w.group]||0)+w.minutes);
-    const main=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+  // ===== Progress: Fitness score card =====
+  // Monthly score 0–100 from four parts, for any activity:
+  //   Fitness 40  — chronic training load at month end (42-day weighted daily load; HR-weighted when HR exists); 60 load/day ≈ full
+  //   Consistency 25 — training days in the month; half the days ≈ full
+  //   Efficiency 25 — run speed per heartbeat (or pace) vs your own usual; 12.5 = your usual, ±8% = ±12.5
+  //   Endurance 10 — longest session in the month; 2 h ≈ full
+  // Trend compares the last 3 full months with the 3 before (needs 3 full months).
+  function fitnessScores(){
+    const ws=(state.workouts||[]).filter(w=>w.minutes>0);if(!ws.length)return null;
+    const now=new Date(),day=864e5,t0=new Date(Math.min(...ws.map(w=>dateValue(w.date))));
+    const runHr=ws.filter(w=>w.group==="Run"&&w.hr).map(w=>w.hr).sort((a,b)=>a-b),refHr=runHr.length?runHr[Math.floor(runHr.length/2)]:null;
+    const factor=w=>{if(w.hr&&refHr)return Math.min(1.6,Math.max(.4,(w.hr/refHr)**2));return {Run:1,Ride:.75,Swim:.9,Row:.9,Strength:.7,Walk:.45}[w.group]??.7};
+    const byDay={};ws.forEach(w=>{byDay[w.date]=(byDay[w.date]||0)+w.minutes*factor(w)});
+    const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    const ctl={};let c=0,k=1-Math.exp(-1/42);
+    for(let d=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate());d<=now;d=new Date(d.getTime()+day+3600e3*2),d.setHours(0,0,0,0)){c+=((byDay[iso(d)]||0)-c)*k;ctl[iso(d)]=c}
+    const effOf=r=>{const h=r.filter(w=>w.group==="Run"&&w.km>0&&w.hr),m=h.reduce((a,w)=>a+w.minutes,0);
+      if(m)return {v:h.reduce((a,w)=>a+(w.km*1000/w.minutes)/w.hr*w.minutes,0)/m,kind:"hr"};
+      const p=r.filter(w=>w.group==="Run"&&w.km>0),pm=p.reduce((a,w)=>a+w.minutes,0);return pm?{v:p.reduce((a,w)=>a+w.km,0)*1000/pm,kind:"pace"}:null};
+    const firstFull=new Date(t0.getFullYear(),t0.getMonth()+(t0.getDate()>7?1:0),1);
     const months=[];
-    for(let i=23;i>=0;i--){const s=new Date(now.getFullYear(),now.getMonth()-i,1),e=new Date(now.getFullYear(),now.getMonth()-i+1,1);
-      // skip months before the first full month of data (a half month would look like a dip)
-      if(s<new Date(first.getFullYear(),first.getMonth()+(first.getDate()>7?1:0),1))continue;
-      const r=ws.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()}),m=r.filter(w=>w.group===main);
-      const dist=m.filter(w=>w.km>0),dk=dist.reduce((a,w)=>a+w.km,0),dm=dist.reduce((a,w)=>a+w.minutes,0);
-      const hrs=m.filter(w=>w.hr&&w.km>0),hm=hrs.reduce((a,w)=>a+w.minutes,0);
-      months.push({s,cur:i===0,n:r.length,min:r.reduce((a,w)=>a+w.minutes,0),mn:m.length,mmin:m.reduce((a,w)=>a+w.minutes,0),km:dk,
-        pace:dk?dm/dk:null,hr:hm?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hm:null,
-        eff:hm?hrs.reduce((a,w)=>a+(w.km/w.minutes*60)/w.hr*w.minutes,0)/hm:null})}
-    // drop the current month when it has nothing yet
-    if(months.length&&months.at(-1).cur&&!months.at(-1).n)months.pop();
-    const med=a=>{a=a.filter(v=>v!=null&&v>0).sort((x,y)=>x-y);return a.length?a[Math.floor(a.length/2)]:null};
-    const full=months.filter(m=>!m.cur);
-    const base={n:med(full.map(m=>m.n)),min:med(full.map(m=>m.min)),km:med(full.map(m=>m.km)),pace:med(full.map(m=>m.pace)),eff:med(full.map(m=>m.eff))};
-    const cap=v=>Math.max(0,Math.min(1.7,v));
-    const hasKm=base.km>0;
+    for(let i=23;i>=0;i--){const s=new Date(now.getFullYear(),now.getMonth()-i,1);if(s<firstFull)continue;
+      const cur=i===0,e=cur?new Date(now.getFullYear(),now.getMonth(),now.getDate()+1):new Date(now.getFullYear(),now.getMonth()-i+1,1);
+      const r=ws.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});if(cur&&!r.length)continue;
+      const days=Math.round((e-s)/day),end=new Date(e.getTime()-day);
+      months.push({s,cur,r,days,load:ctl[iso(end)]??0,active:new Set(r.map(w=>w.date)).size,long:Math.max(0,...r.map(w=>w.minutes)),eff:effOf(r)})}
+    if(!months.length)return null;
+    const kind=months.some(m=>m.eff&&m.eff.kind==="hr")?"hr":"pace";
+    const ev=months.filter(m=>!m.cur&&m.eff&&m.eff.kind===kind).map(m=>m.eff.v).sort((a,b)=>a-b),base=ev.length?ev[Math.floor(ev.length/2)]:null;
     months.forEach(m=>{
-      if(!base.n){m.score=null;return}
-      // a partial current month is projected to a full month for volume parts
-      const f=m.cur?new Date(now.getFullYear(),now.getMonth()+1,0).getDate()/now.getDate():1;
-      const parts=[[.25,cap(m.n*f/base.n)],[.25,cap(m.min*f/base.min)]];
-      if(hasKm)parts.push([.2,cap(m.km*f/base.km)]);
-      if(base.eff&&m.eff)parts.push([.3,cap(1+(m.eff/base.eff-1)*4)]);else if(base.pace&&m.pace)parts.push([.3,cap(1+(base.pace/m.pace-1)*4)]);
-      const wsum=parts.reduce((a,p)=>a+p[0],0);m.score=Math.round(Math.min(100,60*parts.reduce((a,p)=>a+p[0]*p[1],0)/wsum))});
-    const done=full.filter(m=>m.score!=null),last3=done.slice(-3),prev=done.slice(-6,-3);
-    const avg=a=>a.reduce((x,m)=>x+m.score,0)/a.length;
+      const fit=40*Math.min(1,m.load/60),cons=25*Math.min(1,m.active/(m.days*.5)),end=10*Math.min(1,m.long/120);
+      const eff=base&&m.eff&&m.eff.kind===kind?12.5+12.5*Math.max(-1,Math.min(1,(m.eff.v/base-1)/.08)):12.5;
+      m.parts={fit,cons,eff,end};m.score=Math.round(fit+cons+eff+end)});
+    return months;
+  }
+  function renderFitnessMini(){
+    const el=$("fitMini");if(!el)return;
+    const link=`<span class="bm-link"><span>Open fitness activity trend</span><span>→</span></span>`;
+    const months=fitnessScores();
+    if(!months){el.innerHTML=`<div class="bm-row"><div class="bm-mid"><div class="bm-label">Fitness score</div><div class="bm-trend muted">Import your Strava or Garmin workouts to get a monthly fitness score.</div></div></div>${link}`;return}
+    const done=months.filter(m=>!m.cur),last3=done.slice(-3),prev=done.slice(-6,-3),avg=a=>a.reduce((x,m)=>x+m.score,0)/a.length;
     let dir=null,delta=null,note;
-    if(done.length<3)note=`Trend after 3 full months · ${done.length} of 3`;
-    else{delta=prev.length?avg(last3)-avg(prev):last3[2].score-last3[0].score;dir=delta>=4?"up":delta<=-4?"down":"steady";
-      note=prev.length?`last 3 months vs the ${prev.length} before`:`over the last 3 months`}
+    if(done.length<3)note=`Trend shows after 3 full months · ${done.length} of 3 so far`;
+    else{delta=prev.length?avg(last3)-avg(prev):last3[2].score-last3[0].score;dir=delta>=3?"up":delta<=-3?"down":"steady";
+      note=prev.length?`last 3 months vs the ${prev.length} before`:"over your first 3 months"}
     const word=dir?{up:"Improving",down:"Declining",steady:"Steady"}[dir]:"Building baseline";
-    const col=dir&&dir!=="steady"?TREND_COL[dir]:"#0099FF",show=months.slice(-12),ref=last3.length?last3:months.slice(-1);
-    const latest=ref.length?Math.round(avg(ref)):null;
-    // diagram: score line, like Health trend
-    const W=320,H=96,pl=6,pr=6,pt=16,pb=16,pts=show.filter(m=>m.score!=null);
-    let chart="";
-    if(pts.length>=2){const lo=Math.max(0,Math.min(...pts.map(m=>m.score))-8),hi=Math.min(100,Math.max(...pts.map(m=>m.score))+8);
-      const X=i=>pl+i*(W-pl-pr)/(show.length-1),Y=v=>pt+(1-(v-lo)/(hi-lo||1))*(H-pt-pb);
-      const P=show.map((m,i)=>m.score==null?null:[X(i),Y(m.score),m]).filter(Boolean),solid=P.filter(p=>!p[2].cur);
-      const path=a=>a.map((p,i)=>`${i?"L":"M"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ");
-      const y60=Y(60);
-      chart=`<svg class="fm-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly fitness score, last ${show.length} months">
-        ${60>lo&&60<hi?`<line x1="${pl}" x2="${W-pr}" y1="${y60.toFixed(1)}" y2="${y60.toFixed(1)}" class="fm-base"/><title>Dashed line: 60 = a typical month for you</title>`:""}
-        ${solid.length>1?`<path d="${path(solid)} L${solid.at(-1)[0].toFixed(1)} ${H-pb} L${solid[0][0].toFixed(1)} ${H-pb} Z" fill="${col}" opacity=".08"/><path d="${path(solid)}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`:""}
-        ${P.at(-1)[2].cur&&solid.length?`<path d="M${solid.at(-1)[0].toFixed(1)} ${solid.at(-1)[1].toFixed(1)} L${P.at(-1)[0].toFixed(1)} ${P.at(-1)[1].toFixed(1)}" stroke="${col}" stroke-width="2" stroke-dasharray="3 4" fill="none"/>`:""}
-        ${P.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="${p[2].cur?"#fff":col}" stroke="${col}" stroke-width="1.8"><title>${p[2].s.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}${p[2].cur?" (so far)":""}: score ${p[2].score} · ${p[2].n} sessions</title></circle>`).join("")}
-        ${show.map((m,i)=>`<text x="${X(i).toFixed(1)}" y="${H-3}" text-anchor="middle" class="fm-lab">${m.s.toLocaleDateString("en-GB",{month:"short"})[0]}</text>`).join("")}</svg>`}
-    // numbers: monthly average of the last 3 full months vs the 3 before, for the main activity
-    const mavg=(a,k)=>a.length?a.reduce((x,m)=>x+(m[k]||0),0)/a.length:null;
-    const wavg=(a,k)=>{const b=a.filter(m=>m[k]);return b.length?b.reduce((x,m)=>x+m[k],0)/b.length:null};
-    const hh=m=>m>=60?`${Math.floor(m/60)}h ${String(Math.round(m%60)).padStart(2,"0")}`:`${Math.round(m)}m`;
-    const pc=p=>`${Math.floor(p)}:${String(Math.round(p%1*60)).padStart(2,"0")}`;
-    const pct=(a,b)=>a==null||!b?"":(d=>!d?`<i class="fm-flat">same</i>`:`<i class="${d>0?"fm-good":"fm-bad"}">${d>0?"↑":"↓"}${Math.abs(d)}%</i>`)(Math.round((a-b)/b*100));
-    const L=last3.length?last3:done.slice(-1),Pv=prev;
-    const speedy=/Ride/.test(main),swim=/Swim/.test(main);
-    const nums=[[`${main} sessions`,mavg(L,"mn"),v=>v.toFixed(1),pct(mavg(L,"mn"),mavg(Pv,"mn"))],
-      ["Time",mavg(L,"mmin"),hh,pct(mavg(L,"mmin"),mavg(Pv,"mmin"))]];
-    if(hasKm)nums.push(["Distance",mavg(L,"km"),v=>`${v.toFixed(0)}<em> km</em>`,pct(mavg(L,"km"),mavg(Pv,"km"))]);
-    const pa=wavg(L,"pace"),pb2=wavg(Pv,"pace");
-    if(pa){if(speedy)nums.push(["Avg speed",60/pa,v=>`${v.toFixed(1)}<em> km/h</em>`,pct(60/pa,pb2?60/pb2:null)]);
-      else{const dd=pb2?Math.round((pa-pb2)*60*(swim?.1:1)):null;nums.push([swim?"Pace":"Pace",pa*(swim?.1:1),v=>`${pc(v)}<em> ${swim?"/100m":"/km"}</em>`,dd==null?"":!dd?`<i class="fm-flat">same</i>`:`<i class="${dd<0?"fm-good":"fm-bad"}">${dd<0?"↓":"↑"}${Math.abs(dd)}s</i>`])}}
-    const hra=wavg(L,"hr"),hrb=wavg(Pv,"hr");
-    if(hra){const dh=hrb?Math.round(hra-hrb):null;nums.push(["Avg HR",hra,v=>`${Math.round(v)}<em> bpm</em>`,dh==null?"":!dh?`<i class="fm-flat">same</i>`:`<i class="${dh<0?"fm-good":"fm-bad"}">${dh<0?"↓":"↑"}${Math.abs(dh)}</i>`])}
-    el.setAttribute("aria-label",`Fitness score ${latest??"not available"}, ${word}. Open fitness activity trend`);
-    el.innerHTML=`<div class="fm-head"><div class="bm-num">${latest??"—"}</div>
-        <div class="bm-mid"><div class="bm-label">Fitness score <span class="bm-word" style="background:${col};color:#fff">${word}</span></div>
-          <div class="bm-trend" style="color:${dir?col:"#6b6259"}">${dir?`${TREND_ARROW[dir]} ${delta>0?"+":""}${Math.round(delta)} point${Math.abs(Math.round(delta))===1?"":"s"}`:""}<em>${note} · dashed line = your usual month (60)</em></div></div>${chart}</div>
-      <div class="fm-nums"><p class="fm-cap">${main} · monthly average, ${L.length>1?`last ${L.length} full months`:"last full month"}${Pv.length?` vs the ${Pv.length} before`:""}</p>
-        ${nums.map(([k,v,f,d])=>`<div><span>${k}</span><b>${v==null?"—":f(v)}</b><small>${d||"&nbsp;"}</small></div>`).join("")}</div>
-      ${link}`;
+    const col=dir==="up"?"#1f9d55":dir==="down"?"#d94a43":"#1a6fe8";
+    const shown=(done.at(-1)||months.at(-1)).score;
+    // ---- graph: smooth score line with 0–100 grid ----
+    const show=months.slice(-12),W=340,H=118,pl=22,pr=12,pt=14,pb=20;
+    const X=i=>show.length===1?(pl+W-pr)/2:pl+i*(W-pl-pr)/(show.length-1),Y=v=>pt+(1-v/100)*(H-pt-pb);
+    const P=show.map((m,i)=>[X(i),Y(m.score),m]),solid=P.filter(p=>!p[2].cur);
+    const curve=a=>{if(!a.length)return"";let d=`M${a[0][0].toFixed(1)} ${a[0][1].toFixed(1)}`;
+      for(let i=0;i<a.length-1;i++){const p0=a[i-1]||a[i],p1=a[i],p2=a[i+1],p3=a[i+2]||p2;
+        d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`}return d};
+    const last=P.at(-1),fmt=m=>m.s.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+    const grid=[0,50,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" class="fs-grid"/><text x="${pl-6}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end" class="fs-ax">${v}</text>`).join("");
+    const chart=`<svg class="fs-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Fitness score per month, last ${show.length} months">
+      <defs><linearGradient id="fsFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".22"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
+      ${grid}
+      ${solid.length>1?`<path d="${curve(solid)} L${solid.at(-1)[0].toFixed(1)} ${Y(0).toFixed(1)} L${solid[0][0].toFixed(1)} ${Y(0).toFixed(1)} Z" fill="url(#fsFill)"/><path d="${curve(solid)}" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round"/>`:""}
+      ${last[2].cur&&solid.length?`<path d="M${solid.at(-1)[0].toFixed(1)} ${solid.at(-1)[1].toFixed(1)} L${last[0].toFixed(1)} ${last[1].toFixed(1)}" stroke="${col}" stroke-width="2" stroke-dasharray="2 4" stroke-linecap="round" fill="none"/>`:""}
+      ${P.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${p===last||p===solid.at(-1)?4:2.6}" fill="${p[2].cur?"#fff":col}" stroke="${p[2].cur?col:"#fff"}" stroke-width="${p[2].cur?2:1.4}"><title>${fmt(p[2])}${p[2].cur?" (so far)":""}: ${p[2].score} — fitness ${Math.round(p[2].parts.fit)}/40, consistency ${Math.round(p[2].parts.cons)}/25, efficiency ${Math.round(p[2].parts.eff)}/25, endurance ${Math.round(p[2].parts.end)}/10</title></circle>`).join("")}
+      ${solid.length?`<text x="${Math.min(solid.at(-1)[0],W-pr-8).toFixed(1)}" y="${(solid.at(-1)[1]-9).toFixed(1)}" text-anchor="middle" class="fs-val" fill="${col}">${solid.at(-1)[2].score}</text>`:""}
+      ${show.map((m,i)=>`<text x="${X(i).toFixed(1)}" y="${H-4}" text-anchor="middle" class="fs-ax${m.cur?" cur":""}">${m.s.toLocaleDateString("en-GB",{month:"short"})}</text>`).join("")}</svg>`;
+    el.setAttribute("aria-label",`Fitness score ${shown}, ${word}. Open fitness activity trend`);
+    el.innerHTML=`<div class="fs-wrap"><div class="fs-left"><div class="bm-label">Fitness score</div>
+        <div class="fs-big"><span class="bm-num">${shown}</span><span class="bm-word" style="background:${col}">${word}</span></div>
+        <div class="bm-trend" style="color:${dir?col:"#6b6259"}">${dir?`${{up:"↑",down:"↓",steady:"→"}[dir]} ${delta>0?"+":""}${Math.round(delta)} point${Math.abs(Math.round(delta))===1?"":"s"}`:""}<em>${note}</em></div></div>
+      ${chart}</div>${link}`;
   }
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
