@@ -1796,6 +1796,12 @@
   #appTabs button.tab-dragging{cursor:grabbing!important;transform:scale(1.06);opacity:.92;z-index:2;outline:2px dashed rgba(234,51,39,.55);outline-offset:-2px}
   /* Home: wider body-model column so the figure fills its panel (less empty space above the head and below the feet) */
   @media(min-width:981px){#panel-progress .layout{grid-template-columns:minmax(360px,1.08fr) minmax(0,1.15fr)}}
+  /* Log button: calmer — dark glass pill, red only on the plus */
+  .log-fab{background:rgba(18,18,17,.88);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 24px rgba(0,0,0,.22);height:48px;padding:0 20px 0 8px;font-size:14.5px;gap:10px}
+  .log-fab span{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#ea3327;color:#fff;font-size:18px;font-weight:600}
+  .log-fab:hover{background:rgba(18,18,17,.96);box-shadow:0 12px 28px rgba(0,0,0,.28)}
+  .log-fab:focus-visible{outline:3px solid rgba(234,51,39,.55);outline-offset:3px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+  :root[data-theme="dark"] .log-fab{background:rgba(242,241,239,.92);color:#111;border-color:rgba(0,0,0,.08)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
