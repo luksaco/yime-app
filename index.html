@@ -1616,6 +1616,15 @@
   .wt-glass{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 14px rgba(0,0,0,.25);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%)}
   .wt-glass small{font-size:11px;font-weight:500;color:rgba(255,255,255,.7)}.wt-glass b{font-weight:800}.wt-glass.good b{color:#9be06c}.wt-glass.bad b{color:#ff7a6e}
   :root[data-theme="dark"] .wt-glass{color:#111;background:linear-gradient(135deg,rgba(0,0,0,.08),rgba(0,0,0,.02));border-color:rgba(0,0,0,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 4px 12px rgba(0,0,0,.08)}:root[data-theme="dark"] .wt-glass small{color:rgba(0,0,0,.55)}:root[data-theme="dark"] .wt-glass.good b{color:#137a5f}:root[data-theme="dark"] .wt-glass.bad b{color:#c2352b}
+  .wt-goal{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+  .wg-top,.wg-foot{display:flex!important;justify-content:space-between;align-items:baseline;gap:10px}
+  .wt-goal .wg-lab{display:inline;margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.55)}.wg-lab b{color:#fff;font-weight:700;letter-spacing:.02em;margin-left:3px}
+  .wt-goal .wg-pc{display:inline;margin:0;font-size:20px;font-weight:800;letter-spacing:-.03em;color:#fff}
+  .wg-bar{position:relative;height:8px;border-radius:99px;background:rgba(255,255,255,.12);margin:7px 0 7px;overflow:visible}
+  .wg-bar i{position:relative;display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ea3327,#ff8a6b);box-shadow:0 0 12px rgba(234,51,39,.45)}
+  .wg-bar i::after{content:"";position:absolute;right:-3px;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 0 3px rgba(234,51,39,.45)}
+  .wg-foot{flex-wrap:wrap;row-gap:2px}.wt-goal .wg-foot span{display:inline;white-space:nowrap;margin:0;font-size:11.5px;color:rgba(255,255,255,.6)}.wg-foot b{color:#fff;font-weight:700}
+  :root[data-theme="dark"] .wt-goal{border-top-color:rgba(0,0,0,.08)}:root[data-theme="dark"] .wg-lab b,:root[data-theme="dark"] .wt-goal .wg-pc,:root[data-theme="dark"] .wg-foot b{color:#111}:root[data-theme="dark"] .wt-goal .wg-lab,:root[data-theme="dark"] .wt-goal .wg-foot span{color:rgba(0,0,0,.55)}:root[data-theme="dark"] .wg-bar{background:rgba(0,0,0,.1)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3181,7 +3190,13 @@
       spark=`<svg class="wt-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true">${goal!=null&&goal>=lo&&goal<=hi?`<line x1="0" x2="${W}" y1="${y(goal).toFixed(1)}" y2="${y(goal).toFixed(1)}" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 4"/>`:""}<path d="${line} L${x(pts.length-1)} ${H} L${x(0)} ${H} Z" fill="rgba(255,255,255,.08)"/><path d="${line}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(pts.length-1)}" cy="${y(pts.at(-1))}" r="3.2" fill="#fff"/></svg>`}
     let prog="";
     if(v!=null&&base!=null&&goal!=null&&base!==goal){const pc=clamp((v-base)/(goal-base)*100,0,100),left=Math.abs(goal-v);
-      prog=`<div class="wt-goal"><div class="wt-bar"><i style="width:${pc.toFixed(1)}%"></i></div><span>${Math.round(pc)}% to ${fmt(goal)} kg · ${fmt(left)} kg to go</span></div>`}
+      // estimate: average rate from start to the latest weigh-in
+      const all=[...(state.baseline?.weightKg!=null?[state.baseline]:[]),...state.entries].filter(e=>e.weightKg!=null).sort((a,b)=>dateValue(a.date)-dateValue(b.date));
+      let eta="";if(all.length>=2){const wk=(dateValue(all.at(-1).date)-dateValue(all[0].date))/(7*864e5),rate=wk>0?(all.at(-1).weightKg-all[0].weightKg)/wk:0;
+        if(rate&&Math.sign(rate)===Math.sign(goal-v)&&left>0){const d=new Date(dateValue(all.at(-1).date)+left/Math.abs(rate)*7*864e5);eta=`~${d.toLocaleDateString("en-GB",{month:"short",year:"numeric"})} at ${fmt(Math.abs(rate))} kg/wk`}}
+      prog=`<div class="wt-goal"><div class="wg-top"><span class="wg-lab">Goal <b>${fmt(goal)} kg</b></span><span class="wg-pc">${Math.round(pc)}%</span></div>
+        <div class="wg-bar"><i style="width:${Math.max(pc,3).toFixed(1)}%"></i></div>
+        <div class="wg-foot"><span><b>${left<=0?"Goal reached":`${fmt(left)} kg`}</b>${left<=0?"":" to go"}</span>${eta?`<span>${eta}</span>`:""}</div></div>`}
     return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div></div>
       <div class="wt-row"><span class="wt-chip ${recent==null||recent===0?"":recent<0?"good":"bad"}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-glass ${total==null||total===0?"":(goal!=null&&base!=null&&goal>base?total>0:total<0)?"good":"bad"}">${total==null?"Set a baseline":`<b>${total>0?"↑":total<0?"↓":"—"}</b> ${sg(total)} <small>from start</small>`}</span></div>${prog}</div>`;
   }
