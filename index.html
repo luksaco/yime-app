@@ -3238,7 +3238,7 @@
       prog=`<div class="wt-goal"><div class="wg-top"><span class="wg-lab">Goal <b>${fmt(goal)} kg</b></span><span class="wg-pc">${Math.round(pc)}%</span></div>
         <div class="wg-bar"><i style="width:${Math.max(pc,3).toFixed(1)}%"></i></div>
         <div class="wg-foot"><span><b>${left<=0?"Goal reached":`${fmt(left)} kg`}</b>${left<=0?"":" to go"}</span>${eta?`<span>${eta}</span>`:""}</div></div>`}
-    return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div></div>
+    return `<div class="stat wt-hero" data-key="weightKg"><div class="wt-top"><div><div class="k">Body weight</div><div class="v">${fmt(v)}<span class="unit">${v==null?"":" kg"}</span></div></div></div>
       <div class="wt-row"><span class="wt-chip ${recent==null||recent===0?"":recent<0?"good":"bad"}">${recent==null?"No recent change":`${recent>0?"↑":recent<0?"↓":"—"} ${sg(recent)} latest`}</span><span class="wt-glass ${total==null||total===0?"":(goal!=null&&base!=null&&goal>base?total>0:total<0)?"good":"bad"}">${total==null?"Set a baseline":`<b>${total>0?"↑":total<0?"↓":"—"}</b> ${sg(total)} <small>from start</small>`}</span></div></div>`;
   }
   // Full health-score trend on the Body health tab, under the headline rings
