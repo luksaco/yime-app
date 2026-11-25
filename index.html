@@ -4851,8 +4851,8 @@
     if(rec&&rec.at){const t=new Date(rec.at);if(!isNaN(t)){const ago=Math.floor((Date.now()-t)/86400000);
       parts.push(`<span class="ii-main">Last import: <b>${dd(t.toISOString().slice(0,10))}</b>, ${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}${ago>=1?` <em>(${ago} day${ago===1?"":"s"} ago)</em>`:""}</span>`);
       parts.push(`${esc(rec.file||"file")} · ${rec.count} session${rec.count===1?"":"s"}${rec.fresh!=null?` (${rec.fresh} new)`:""}`)}}
-    else parts.push(`<span class="ii-main">No file imported yet</span>`);
-    if(latest)parts.push(`Latest session: <b>${dd(latest)}</b>`);
+    else parts.push(`<span class="ii-main">Last updated: <b>${latest?dd(latest):"—"}</b></span>`);
+    if(latest&&rec&&rec.at)parts.push(`Latest session: <b>${dd(latest)}</b>`);
     el.innerHTML=parts.join('<span class="ii-dot">·</span>');
   }
   function renderTraining(){
