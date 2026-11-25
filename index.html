@@ -4285,8 +4285,8 @@
     });
     for(const column of [-1,1]){
       const labels=rings.filter(r=>r.column===column).sort((a,b)=>a.labelY-b.labelY);
-      let next=150;for(const r of labels){r.labelY=Math.max(next,Math.min(640,r.labelY));next=r.labelY+57}
-      if(labels.length&&labels.at(-1).labelY>644){labels.at(-1).labelY=644;for(let i=labels.length-2;i>=0;i--)labels[i].labelY=Math.min(labels[i].labelY,labels[i+1].labelY-57)}
+      let next=146;for(const r of labels){r.labelY=Math.max(next,Math.min(640,r.labelY));next=r.labelY+64}
+      if(labels.length&&labels.at(-1).labelY>644){labels.at(-1).labelY=644;for(let i=labels.length-2;i>=0;i--)labels[i].labelY=Math.min(labels[i].labelY,labels[i+1].labelY-64)}
     }
     const fmtPoint=p=>`${p[0].toFixed(2)} ${p[1].toFixed(2)}`;
     const ringPaths=rings.map(r=>{
@@ -4298,13 +4298,13 @@
       return `<g class="measurement-ring" data-key="${r.key}" data-occluded="${r.hidden}" data-visible-segments="${r.hidden?0:r.visible.filter(Boolean).length}"><title>${r.label}: ${fmt(cur[r.key])} cm</title>${path?`<path class="ring-edge" d="${path}" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><path class="ring-front" d="${path}" fill="none" stroke="${r.color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>`:''}</g>`;
     }).join('');
     const labels=rings.map(r=>{
-      const left=r.column<0,x=left?92:408,anchor=left?'end':'start',ly=r.labelY,start=state.baseline?.[r.key];
-      const connector=r.hidden?'':`<path class="measurement-leader" d="M ${fmtPoint(r.anchor)} L ${left?114:386} ${ly} H ${left?103:397}" fill="none" stroke="${r.color}" stroke-opacity=".75" stroke-width="1" stroke-dasharray="3 3"/><circle cx="${r.anchor[0]}" cy="${r.anchor[1]}" r="2.2" fill="${r.color}"/>`;
+      const left=r.column<0,x=left?92:408,anchor=left?'end':'start',ly=r.labelY,start=state.baseline?.[r.key]??startValue(r.key);
+      const connector=r.hidden?'':`<path class="measurement-leader" d="M ${fmtPoint(r.anchor)} L ${left?124:376} ${ly} H ${left?112:388}" fill="none" stroke="${r.color}" stroke-opacity=".75" stroke-width="1" stroke-dasharray="3 3"/><circle cx="${r.anchor[0]}" cy="${r.anchor[1]}" r="2.2" fill="${r.color}"/>`;
       const now=cur[r.key],delta=start!=null&&now!=null?now-start:null,goal=state.goals?.[r.key];
       const dir=goal!=null&&start!=null&&goal!==start?Math.sign(goal-start):(/^(chest|waist|hip)|Thigh/.test(r.key)?-1:1);
       const tone=delta==null||Math.abs(delta)<.05?'#8a8580':delta*dir>0?'#2e9e4f':'#F04438';
       const dtxt=delta==null?'':Math.abs(delta)<.05?'No change':`${delta>0?'↑ +':'↓ −'}${fmt(Math.abs(delta))} since start`;
-      const CW=102,rx=left?1:500-1-CW,tx=rx+10,hasD=start!=null;
+      const CW=100,rx=left?12:500-12-CW,tx=rx+10,hasD=start!=null;
       return `<g class="measurement-label" data-key="${r.key}" data-occluded="${r.hidden}" data-label-y="${ly.toFixed(2)}" opacity="${r.hidden?.5:1}"><title>${r.hidden?'This body part is hidden from this angle. ':''}${metrics[r.key].label}: ${fmt(now)} cm${start!=null?` (start ${fmt(start)})`:''}</title>${connector}<rect x="${rx}" y="${ly-26}" width="${CW}" height="${hasD?52:40}" rx="10" fill="#fff" stroke="rgba(18,18,17,.08)" stroke-width=".8" filter="url(#labelShadow)"/><circle cx="${tx+3}" cy="${ly-14.6}" r="3.2" fill="${r.color}"/><text x="${tx+11}" y="${ly-11.4}" font-size="9" font-weight="700" letter-spacing=".55" fill="#6b6866">${r.label}</text><text x="${tx}" y="${ly+6}" font-size="16" font-weight="700" fill="#121211" letter-spacing="-.2">${fmt(now)}<tspan dx="3" font-size="10" font-weight="500" fill="#8a8580">cm</tspan></text>${hasD?`<text x="${tx}" y="${ly+20}" font-size="9.6" font-weight="650" fill="${tone}">${dtxt}</text>`:''}</g>`;
     }).join('');
     return `<defs><filter id="labelShadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#111827" flood-opacity=".10"/></filter></defs><g id="measurementRings">${ringPaths}</g><g id="measurementLabels">${labels}</g>`;
