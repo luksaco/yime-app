@@ -1912,6 +1912,8 @@
   /* header: plain white in light mode, solid dark in dark mode */
   html body .top::before{background:#fff!important}
   :root[data-theme="dark"] body .top::before{background:#121315!important;border-bottom-color:rgba(255,255,255,.06)!important}
+  #bmHealth .bm-link{background:var(--hs-col,#060706)!important;color:var(--hs-ink,#fff)!important}
+  #bmHealth:hover .bm-link{filter:brightness(.95)}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3585,6 +3587,9 @@
     }
     const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}${tr.dir==="steady"?"":` <span class="hs-d">${tr.delta>0?"+":""}${Math.round(tr.delta)}</span>`}</div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
+    // the "Open full breakdown" strip takes the score's colour (same as the badge)
+    {const c=s==null?null:s>=80?["#89D25B","#0d1a06"]:s>=50?["#0099FF","#fff"]:["#F04438","#fff"];
+     if(c){el.style.setProperty("--hs-col",c[0]);el.style.setProperty("--hs-ink",c[1])}else{el.style.removeProperty("--hs-col");el.style.removeProperty("--hs-ink")}}
     el.innerHTML=`<div class="bm-row hs-stack"><div class="bm-mid"><div class="bm-label">Health score</div>
         <div class="fs-big"><span class="bm-num">${s==null?"—":s}</span><span class="hs-side">${s==null?"":`<span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}${trendLine}</span></div></div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
