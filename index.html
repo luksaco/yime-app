@@ -1985,6 +1985,15 @@
   table.mr-table th{background:#060706!important;color:#fff!important;font-weight:800!important;font-size:11px!important;letter-spacing:.06em}
   table.mr-table td{font-variant-numeric:tabular-nums}
   @media(max-width:760px){#trainingTiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+  /* Monthly Review table: clean white body, soft dividers, tinted total row */
+  .mr-wrap{border:1px solid rgba(6,7,6,.08)!important;border-radius:16px!important;overflow:hidden;background:#fff!important;box-shadow:0 6px 20px rgba(40,60,100,.06)}
+  table.mr-table{background:#fff!important}
+  table.mr-table tbody tr td{background:#fff!important;border-top:1px solid rgba(6,7,6,.06)!important;padding:14px 16px!important}
+  table.mr-table thead th{padding:13px 16px!important}
+  table.mr-table tbody tr:not(.total-row):hover td{background:#f6f9fe!important}
+  table.mr-table tr.total-row td{background:#EDF4FE!important;border-top:1px solid rgba(6,7,6,.12)!important;font-weight:800}
+  :root[data-theme="dark"] .mr-wrap,:root[data-theme="dark"] table.mr-table,:root[data-theme="dark"] table.mr-table tbody tr td{background:#17181b!important}
+  :root[data-theme="dark"] table.mr-table tr.total-row td{background:#1f2228!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
