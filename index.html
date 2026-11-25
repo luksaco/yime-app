@@ -1816,6 +1816,10 @@
   .fm-vo2 svg{width:100%;height:auto;display:block}
   .fm-vo2-cap{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b6259;margin-top:-2px}
   @media(max-width:680px){.fs-wrap,.fs-wrap.fs-empty{grid-template-columns:1fr!important}.fm-vo2{border-left:0;padding-left:0;border-top:1px solid rgba(18,18,17,.07);padding-top:10px}.fm-vo2 svg{max-width:220px}}
+  /* Fitness card: bigger, clearer chart (6 months) */
+  .fs-wrap{grid-template-columns:minmax(160px,.75fr) minmax(0,1.5fr) 200px!important}
+  .fs-chart .fs-ax{font-size:11px}.fs-chart .fs-val{font-size:14px}
+  @media(max-width:680px){.fs-wrap{grid-template-columns:1fr!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5616,18 +5620,18 @@
     const col=dir==="up"?"#1f9d55":dir==="down"?"#d94a43":"#1a6fe8";
     const shown=(done.at(-1)||months.at(-1)).score;
     // ---- graph: smooth score line with 0–100 grid ----
-    const show=months.slice(-12),W=340,H=118,pl=22,pr=12,pt=14,pb=20;
-    const X=i=>show.length===1?(pl+W-pr)/2:pl+i*(W-pl-pr)/(show.length-1),Y=v=>pt+(1-v/100)*(H-pt-pb);
+    const show=months.slice(-6),W=300,H=150,pl=24,pr=16,pt=20,pb=22;
+    const X=i=>show.length===1?(pl+W-pr)/2:pl+i*(W-pl-pr)/(show.length-1),sc=show.map(m=>m.score),lo0=Math.max(0,Math.floor((Math.min(...sc)-10)/10)*10),hi0=Math.min(100,Math.ceil((Math.max(...sc)+10)/10)*10),Y=v=>pt+(1-(v-lo0)/((hi0-lo0)||1))*(H-pt-pb);
     const P=show.map((m,i)=>[X(i),Y(m.score),m]),solid=P.filter(p=>!p[2].cur);
     const curve=a=>{if(!a.length)return"";let d=`M${a[0][0].toFixed(1)} ${a[0][1].toFixed(1)}`;
       for(let i=0;i<a.length-1;i++){const p0=a[i-1]||a[i],p1=a[i],p2=a[i+1],p3=a[i+2]||p2;
         d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`}return d};
     const last=P.at(-1),fmt=m=>m.s.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
-    const grid=[0,50,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" class="fs-grid"/><text x="${pl-6}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end" class="fs-ax">${v}</text>`).join("");
+    const grid=[lo0,Math.round((lo0+hi0)/2),hi0].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" class="fs-grid"/><text x="${pl-6}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end" class="fs-ax">${v}</text>`).join("");
     const chart=`<svg class="fs-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Fitness score per month, last ${show.length} months">
       <defs><linearGradient id="fsFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".22"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
       ${grid}
-      ${solid.length>1?`<path d="${curve(solid)} L${solid.at(-1)[0].toFixed(1)} ${Y(0).toFixed(1)} L${solid[0][0].toFixed(1)} ${Y(0).toFixed(1)} Z" fill="url(#fsFill)"/><path d="${curve(solid)}" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round"/>`:""}
+      ${solid.length>1?`<path d="${curve(solid)} L${solid.at(-1)[0].toFixed(1)} ${Y(lo0).toFixed(1)} L${solid[0][0].toFixed(1)} ${Y(lo0).toFixed(1)} Z" fill="url(#fsFill)"/><path d="${curve(solid)}" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round"/>`:""}
       ${last[2].cur&&solid.length?`<path d="M${solid.at(-1)[0].toFixed(1)} ${solid.at(-1)[1].toFixed(1)} L${last[0].toFixed(1)} ${last[1].toFixed(1)}" stroke="${col}" stroke-width="2" stroke-dasharray="2 4" stroke-linecap="round" fill="none"/>`:""}
       ${P.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${p===last||p===solid.at(-1)?4:2.6}" fill="${p[2].cur?"#fff":col}" stroke="${p[2].cur?col:"#fff"}" stroke-width="${p[2].cur?2:1.4}"><title>${fmt(p[2])}${p[2].cur?" (so far)":""}: ${p[2].score} — fitness ${Math.round(p[2].parts.fit)}/40, consistency ${Math.round(p[2].parts.cons)}/25, efficiency ${Math.round(p[2].parts.eff)}/25, endurance ${Math.round(p[2].parts.end)}/10</title></circle>`).join("")}
       ${solid.length?`<text x="${Math.min(solid.at(-1)[0],W-pr-8).toFixed(1)}" y="${(solid.at(-1)[1]-9).toFixed(1)}" text-anchor="middle" class="fs-val" fill="${col}">${solid.at(-1)[2].score}</text>`:""}
