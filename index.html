@@ -1632,6 +1632,9 @@
   .stats-top .wt-hero .wt-goal{margin-top:6px;padding-top:10px}
   .stats-top .wt-hero .wg-pc{font-size:18px}.stats-top .wt-hero .wg-bar{height:6px;margin:6px 0}
   .stats-top .wt-hero .wg-bar i::after{width:11px;height:11px}
+  .stats-top .bm-health>.hs-stack{align-items:center;gap:16px;padding:2px 0 4px}
+  .hs-stack .fs-big{margin:6px 0 2px}.hs-stack .fs-big .bm-num{font-size:48px;min-width:0}
+  .hs-stack .bm-trend{margin-top:2px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3254,8 +3257,8 @@
     }
     const trendLine=tr?`<div class="bm-trend" style="color:${TREND_COL[tr.dir]}">${TREND_ARROW[tr.dir]} ${TREND_TXT[tr.dir]}<em>${tr.dir==="steady"?"":`${tr.delta>0?"+":""}${Math.round(tr.delta)} `}since ${shortDate(tr.from)}</em></div>`
       :`<div class="bm-trend muted">${s==null?"Add height, birth date and VO₂ max":"Trend appears after your next measurement"}</div>`;
-    el.innerHTML=`<div class="bm-row"><div class="bm-num">${s==null?"—":s}</div>
-      <div class="bm-mid"><div class="bm-label">Health score${s==null?"":` <span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
+    el.innerHTML=`<div class="bm-row hs-stack"><div class="bm-mid"><div class="bm-label">Health score</div>
+        <div class="fs-big"><span class="bm-num">${s==null?"—":s}</span>${s==null?"":`<span class="bm-word" style="background:${s>=80?"#89D25B":s>=50?"#0099FF":"#F04438"}">${word}</span>`}</div>${trendLine}</div>${spark}</div>
       <span class="bm-link"><span>Open full breakdown</span><span>→</span></span>`;
   }
   // Progress goal card: any measurement with a goal can be shown here; the choice is remembered.
