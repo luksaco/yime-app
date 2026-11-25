@@ -1704,6 +1704,26 @@
   #progress .wg-gval{font-size:24px;font-weight:750;letter-spacing:-.03em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}#progress .wg-gval small{font-size:14px;font-weight:550;color:var(--muted)}
   #progress .wg-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media(max-width:520px){#progress .wg-stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}#progress .wg-stats>div:nth-child(3){padding-left:0;border-left:0}}
+  /* Goal card: spacing rhythm + colour */
+  #progress .wg-top{margin-bottom:18px}
+  #progress .wg-head{margin:0 0 18px}
+  #progress .wg-l .wg-pct{color:var(--ink)}#progress .wg-l .wg-pct span{color:#ea3327}
+  #progress .wg-gval{color:#ea3327}#progress .wg-gval small{color:#ea3327;opacity:.6}
+  #progress .wg-track{height:10px;background:rgba(234,51,39,.1)}
+  #progress .wg-track i{background:linear-gradient(90deg,#ea3327,#ff8a6b);box-shadow:0 2px 10px rgba(234,51,39,.3)}
+  #progress .wg-track i::after{width:16px;height:16px;right:-8px;border-color:#ea3327}
+  #progress .wg-stats{margin-top:22px;padding-top:0;border-top:0;gap:10px}
+  #progress .wg-stats>div{padding:14px 16px!important;border:0!important;border-radius:14px!important;background:var(--soft)!important}
+  #progress .wg-stats span{margin-bottom:8px;display:flex;align-items:center;gap:7px}
+  #progress .wg-stats span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted2);flex:none}
+  #progress .wg-stats .st-now{background:#121211!important}#progress .wg-stats .st-now span{color:rgba(255,255,255,.6)}#progress .wg-stats .st-now span::before{background:#fff}
+  #progress .wg-stats .st-now b{color:#fff}#progress .wg-stats .st-now b small{color:rgba(255,255,255,.6)}
+  #progress .wg-stats .st-so.good{background:rgba(31,157,85,.09)!important}#progress .wg-stats .st-so.good span{color:#1f9d55}#progress .wg-stats .st-so.good span::before{background:#1f9d55}
+  #progress .wg-stats .st-so.bad{background:rgba(217,74,67,.09)!important}#progress .wg-stats .st-so.bad span{color:#d94a43}#progress .wg-stats .st-so.bad span::before{background:#d94a43}
+  #progress .wg-stats .st-go{background:rgba(234,51,39,.07)!important}#progress .wg-stats .st-go span{color:#ea3327}#progress .wg-stats .st-go span::before{background:#ea3327}
+  #progress .wg-stats .st-go b{color:#ea3327}#progress .wg-stats .st-go b small{color:#ea3327;opacity:.6}
+  :root[data-theme="dark"] #progress .wg-stats .st-now{background:#f2f1ef!important}:root[data-theme="dark"] #progress .wg-stats .st-now b{color:#111}:root[data-theme="dark"] #progress .wg-stats .st-now span,:root[data-theme="dark"] #progress .wg-stats .st-now b small{color:rgba(0,0,0,.55)}:root[data-theme="dark"] #progress .wg-stats .st-now span::before{background:#111}
+  @media(max-width:520px){#progress .wg-stats{gap:8px}#progress .wg-stats>div{padding:12px 14px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3347,7 +3367,7 @@
       <div class="wg-head"><div class="wg-l"><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
         <div class="wg-r"><div class="wg-glab">${done?"Goal reached":"Goal"}</div><div class="wg-gval">${fmt(goal)}<small> ${u}</small></div></div></div>
       <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="${m.label} goal progress"><i style="width:${p}%"></i></div>
-      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div><div><span>To go</span><b>${done?"0":fmt(remaining)}<small> ${u}</small></b></div></div>`;
+      <div class="wg-stats"><div class="st-start"><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now st-now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div class="st-so ${moved>=0?"good":"bad"}"><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div><div class="st-go"><span>To go</span><b>${done?"0":fmt(remaining)}<small> ${u}</small></b></div></div>`;
   }
   document.addEventListener("change",e=>{if(e.target.id!=="progressGoalPick")return;const v=e.target.value;
     if(v==="__add"){try{setTab("goals")}catch(err){}scrollTo({top:0,behavior:"smooth"});renderProgress();return}
