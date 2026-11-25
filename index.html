@@ -1800,6 +1800,14 @@
   .log-fab:hover{background:rgba(18,18,17,.96);box-shadow:0 12px 28px rgba(0,0,0,.28)}
   .log-fab:focus-visible{outline:3px solid rgba(234,51,39,.55);outline-offset:3px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
   :root[data-theme="dark"] .log-fab{background:rgba(242,241,239,.92);color:#111;border-color:rgba(0,0,0,.08)}
+  /* Home: the body-model panel hugs the model (no stretched empty space) and stays in view while scrolling */
+  @media(min-width:981px){
+    #panel-progress .layout{align-items:start}
+    #panel-progress .layout>aside{display:block;position:sticky;top:18px}
+    #panel-progress .layout>aside>.stage{flex:none;display:flex;flex-direction:column}
+    #panel-progress .layout>aside>.stage>#bodyViewport{flex:none;aspect-ratio:5/6.6}
+    #panel-progress .layout>aside>.stage>#bodyViews{margin-top:0}
+  }
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
