@@ -1698,6 +1698,12 @@
   #progress .wg-line{font-size:15px;color:var(--muted);white-space:nowrap}
   #progress .wg-line b{font-size:22px;font-weight:750;letter-spacing:-.03em;color:var(--ink);margin-right:4px;font-variant-numeric:tabular-nums}
   @media(max-width:520px){#progress .wg-line{font-size:13px}#progress .wg-line b{font-size:19px}}
+  #progress .wg-head{align-items:flex-end;margin-bottom:16px}
+  #progress .wg-r{text-align:right}
+  #progress .wg-glab{font-size:11px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
+  #progress .wg-gval{font-size:24px;font-weight:750;letter-spacing:-.03em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}#progress .wg-gval small{font-size:14px;font-weight:550;color:var(--muted)}
+  #progress .wg-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media(max-width:520px){#progress .wg-stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}#progress .wg-stats>div:nth-child(3){padding-left:0;border-left:0}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3339,10 +3345,9 @@
     const picker=`<label class="wg-pick"><span class="sr-only">Goal to show</span><select id="progressGoalPick" aria-label="Goal to show">${keys.map(k=>`<option value="${k}" ${k===pick?"selected":""}>${metrics[k].label} goal</option>`).join("")}<option value="__add">+ Add another goal…</option></select></label>`;
     $("progress").innerHTML=`<div class="wg-top"><p class="eyebrow">${m.label} goal</p>${picker}</div>
       <div class="wg-head"><div class="wg-l"><div class="wg-pct">${Math.round(p)}<span>%</span></div></div>
-        <div class="wg-r"><div class="wg-line">${done?`<b>Goal reached</b> <span>· ${fmt(goal)} ${u}</span>`:`<b>${fmt(remaining)} ${u}</b> <span>left to ${fmt(goal)} ${u} goal</span>`}</div></div></div>
+        <div class="wg-r"><div class="wg-glab">${done?"Goal reached":"Goal"}</div><div class="wg-gval">${fmt(goal)}<small> ${u}</small></div></div></div>
       <div class="wg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p)}" aria-label="${m.label} goal progress"><i style="width:${p}%"></i></div>
-      <div class="wg-ends"><span>${fmt(b)} ${u}</span><span>${fmt(goal)} ${u}</span></div>
-      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div></div>`;
+      <div class="wg-stats"><div><span>Start</span><b>${fmt(b)}<small> ${u}</small></b></div><div class="now"><span>Now</span><b>${fmt(cur)}<small> ${u}</small></b></div><div><span>${soFar}</span><b class="${moved>=0?"good":"bad"}">${moved>=0?(lose?"−":"+"):""}${fmt(Math.abs(change))}<small> ${u}</small></b></div><div><span>To go</span><b>${done?"0":fmt(remaining)}<small> ${u}</small></b></div></div>`;
   }
   document.addEventListener("change",e=>{if(e.target.id!=="progressGoalPick")return;const v=e.target.value;
     if(v==="__add"){try{setTab("goals")}catch(err){}scrollTo({top:0,behavior:"smooth"});renderProgress();return}
