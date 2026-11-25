@@ -1944,6 +1944,34 @@
   :root[data-theme="dark"] .log-fab span{background:#060706!important;color:#fff!important}
   #progress .wg-stats .st-start{background:transparent!important;box-shadow:inset 0 0 0 1px rgba(6,7,6,.1)!important}
   #progress .wg-stats .st-start span{color:var(--muted)!important}#progress .wg-stats .st-start span::before{background:#9aa3a9!important}
+  /* ===== Trend chart ===== */
+  .ch-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:4px 0 14px}
+  .ch-kpis{display:flex;gap:28px;flex-wrap:wrap}
+  .ch-kpis>div{display:flex;flex-direction:column}
+  .ch-lab{font-size:11px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--muted2)}
+  .ch-val{font-size:28px;font-weight:800;letter-spacing:-.035em;line-height:1.15;color:var(--ink)}.ch-val.sm{font-size:22px}.ch-val small,.ch-chg small{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0}
+  .ch-chg{font-size:22px;font-weight:750;letter-spacing:-.03em;line-height:1.3}.ch-chg.good{color:#1f9d55}.ch-chg.bad{color:#d94a43}.ch-chg.flat{color:var(--muted)}.ch-chg.good small,.ch-chg.bad small{color:inherit;opacity:.7}
+  .ch-sub{font-size:12px;color:var(--muted)}
+  .ch-range{display:inline-flex;background:rgba(6,7,6,.05);border-radius:999px;padding:3px}
+  .ch-range button{border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:650;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer}
+  .ch-range button[aria-pressed="true"]{background:#060706;color:#fff}
+  #spark{width:100%;height:auto;display:block;overflow:visible;touch-action:pan-y}
+  #spark .ch-grid{stroke:rgba(6,7,6,.07);stroke-width:1}#spark .ch-base{stroke:rgba(6,7,6,.18)}#spark .ch-tick{stroke:rgba(6,7,6,.18)}
+  #spark .ch-ax{font-size:11.5px;fill:#8a929a;font-weight:500;font-variant-numeric:tabular-nums}
+  #spark .ch-line{fill:none;stroke:#060706;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  #spark .ch-dot{fill:#fff;stroke:#060706;stroke-width:1.8}
+  #spark .ch-halo{fill:rgba(6,7,6,.10)}#spark .ch-last{fill:#060706;stroke:#fff;stroke-width:2}
+  #spark .ch-badge rect{fill:#060706}#spark .ch-badge text{fill:#fff;font-size:12px;font-weight:700}
+  #spark .ch-goal{stroke:#f05a4f;stroke-width:1.5;stroke-dasharray:6 6}
+  #spark .ch-goal-pill{fill:#fff;stroke:rgba(240,90,79,.5)}#spark .ch-goal-t{fill:#e9473c;font-size:11.5px;font-weight:700}
+  #spark .ch-cross{stroke:rgba(6,7,6,.25);stroke-width:1;stroke-dasharray:3 4}#spark .ch-hdot{fill:#fff;stroke:#060706;stroke-width:2.4}
+  #spark .ch-tip rect{fill:#060706}#spark .ch-tip-v{fill:#fff;font-size:13px;font-weight:700}#spark .ch-tip-d{fill:rgba(255,255,255,.65);font-size:11px}
+  #spark .ch-empty{font-size:14px;fill:#8a929a}
+  :root[data-theme="dark"] #spark .ch-line{stroke:#f2f1ef}:root[data-theme="dark"] #spark .ch-last,:root[data-theme="dark"] #spark .ch-badge rect,:root[data-theme="dark"] #spark .ch-tip rect{fill:#f2f1ef}:root[data-theme="dark"] #spark .ch-badge text,:root[data-theme="dark"] #spark .ch-tip-v{fill:#111}:root[data-theme="dark"] #spark .ch-grid{stroke:rgba(255,255,255,.08)}
+  @media(max-width:680px){.ch-head{flex-direction:column;align-items:stretch;gap:12px}.ch-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .ch-lab{font-size:9.5px}.ch-val{font-size:20px}.ch-val.sm{font-size:18px}.ch-chg{font-size:17px}.ch-val small,.ch-chg small{font-size:11px}.ch-sub{font-size:10.5px}
+    .ch-range{display:flex}.ch-range button{flex:1}}
+  .ch-empty-msg{margin:8px 0 6px;padding:22px 16px;text-align:center;border:1px dashed rgba(6,7,6,.14);border-radius:14px;color:var(--muted);font-size:13.5px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2329,7 +2357,7 @@
 
       <div class="card">
         <div class="card-title-row"><p class="eyebrow">Trend</p><div class="metric-tabs" id="metricTabs" role="group" aria-label="Chart metric"></div></div>
-        <svg id="spark" viewBox="0 0 1000 190" role="img" aria-label="Measurement trend chart"></svg>
+        <svg id="spark" viewBox="0 0 1000 260" role="img" aria-label="Measurement trend chart"></svg>
       </div>
 
       <div class="card wt-card" id="workoutTrend"></div>
@@ -4520,18 +4548,75 @@
   }
 
   function renderTabs(){$("metricTabs").innerHTML=metricKeys.map(k=>`<button type="button" data-metric="${k}" aria-pressed="${viewMetric===k}">${metrics[k].label}</button>`).join("")}
+  // ===== Trend chart: summary, range (4W / 12W / All), nice axes, smooth line, goal, hover read-out =====
+  let chartRange="all";
   function renderChart(){
-    const data=series(viewMetric),m=metrics[viewMetric],W=1000,H=190,pl=45,pr=18,pt=18,pb=34;
-    if(data.length<2){$("spark").innerHTML=`<text x="500" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="13" fill="#9298a6">Add at least two ${m.label.toLowerCase()} measurements to see a trend</text>`;return}
-    let minDate=Math.min(...data.map(p=>dateValue(p.date))),maxDate=Math.max(...data.map(p=>dateValue(p.date)));if(minDate===maxDate)maxDate=minDate+86400000;
-    const values=data.map(p=>p.value),goal=state.goals[viewMetric];let min=Math.min(...values),max=Math.max(...values);if(goal!=null){min=Math.min(min,goal);max=Math.max(max,goal)}const pad=Math.max((max-min)*.15,.8);min-=pad;max+=pad;
-    const X=d=>pl+((dateValue(d)-minDate)/(maxDate-minDate))*(W-pl-pr),Y=v=>pt+(1-(v-min)/(max-min))*(H-pt-pb);
-    const d=data.map((p,i)=>`${i?"L":"M"}${X(p.date).toFixed(1)} ${Y(p.value).toFixed(1)}`).join(" "),area=`${d} L${X(data[data.length-1].date).toFixed(1)} ${H-pb} L${X(data[0].date).toFixed(1)} ${H-pb} Z`;
-    const dots=data.map((p,i)=>`<circle cx="${X(p.date)}" cy="${Y(p.value)}" r="${i===data.length-1?4:3}" fill="${i===data.length-1?"#111":"#fff"}" stroke="#111" stroke-width="1.6"><title>${p.date}: ${fmt(p.value)} ${m.unit}</title></circle>`).join("");
-    const goalLine=goal==null?"":`<line x1="${pl}" y1="${Y(goal)}" x2="${W-pr}" y2="${Y(goal)}" stroke="#ff6a5c" stroke-dasharray="5 5"/><text x="${W-pr}" y="${Y(goal)-6}" text-anchor="end" font-size="10" font-weight="700" fill="#ff6a5c">GOAL ${fmt(goal)}</text>`;
-    const labelDate=s=>{const [y,mo,d]=s.split("-");return `${d}.${mo}.${y.slice(2)}`};
-    $("spark").innerHTML=`<defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#111" stop-opacity=".10"/><stop offset="1" stop-color="#111" stop-opacity="0"/></linearGradient></defs><line x1="${pl}" y1="${pt}" x2="${pl}" y2="${H-pb}" stroke="#dfe3ea"/><line x1="${pl}" y1="${H-pb}" x2="${W-pr}" y2="${H-pb}" stroke="#dfe3ea"/><text x="${pl-8}" y="${pt+4}" text-anchor="end" font-size="10" fill="#7b8190">${fmt(max)}</text><text x="${pl-8}" y="${H-pb}" text-anchor="end" font-size="10" fill="#7b8190">${fmt(min)}</text><text x="${pl}" y="${H-10}" text-anchor="start" font-size="10" fill="#7b8190">${labelDate(data[0].date)}</text><text x="${W-pr}" y="${H-10}" text-anchor="end" font-size="10" fill="#7b8190">${labelDate(data[data.length-1].date)}</text>${goalLine}<path d="${area}" fill="url(#chartFill)"/><path d="${d}" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+    const svg=$("spark");if(!svg)return;
+    let sum=$("chartSummary");if(!sum){sum=document.createElement("div");sum.id="chartSummary";sum.className="ch-sum";svg.parentNode.insertBefore(sum,svg)}
+    const m=metrics[viewMetric],all=series(viewMetric),now=Date.now(),cut={"4w":28,"12w":84}[chartRange];
+    const data=cut?all.filter(p=>dateValue(p.date)>=now-cut*864e5):all;
+    const rangeBtns=`<div class="ch-range" role="group" aria-label="Chart period">${[["4w","4 weeks"],["12w","12 weeks"],["all","All time"]].map(([k,l])=>`<button type="button" data-crange="${k}" aria-pressed="${chartRange===k}">${l}</button>`).join("")}</div>`;
+    const longDate=s=>new Date(dateValue(s)).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+    if(data.length<2){
+      sum.innerHTML=`<div class="ch-head"><div class="ch-kpis"><div><span class="ch-lab">Latest</span><b class="ch-val">${all.length?`${fmt(all.at(-1).value)}<small> ${m.unit}</small>`:"—"}</b></div></div>${rangeBtns}</div>
+        <p class="ch-empty-msg">${all.length<2?`Add at least two ${esc(m.label.toLowerCase())} measurements to see a trend.`:"Fewer than two measurements in this period. Choose a longer range to see the trend."}</p>`;
+      svg.style.display="none";svg.innerHTML="";svg._pts=null;return}
+    svg.style.display="";
+    const first=data[0],last=data.at(-1),chg=last.value-first.value,goal=state.goals?.[viewMetric];
+    const sv=state.baseline?.[viewMetric]??startValue(viewMetric);
+    const dir=goal!=null&&sv!=null&&goal!==sv?Math.sign(goal-sv):(/^(chest|waist|hip|weight)|Thigh/i.test(viewMetric)?-1:1);
+    const tone=Math.abs(chg)<.05?"flat":chg*dir>0?"good":"bad";
+    const days=Math.max(1,Math.round((dateValue(last.date)-dateValue(first.date))/864e5));
+    sum.innerHTML=`<div class="ch-head"><div class="ch-kpis">
+        <div><span class="ch-lab">Latest</span><b class="ch-val">${fmt(last.value)}<small> ${m.unit}</small></b></div>
+        <div><span class="ch-lab">Change</span><b class="ch-chg ${tone}">${Math.abs(chg)<.05?"No change":`${chg>0?"↑ +":"↓ −"}${fmt(Math.abs(chg))}<small> ${m.unit}</small>`}</b><span class="ch-sub">over ${days} day${days===1?"":"s"} · ${data.length} entries</span></div>
+        ${goal!=null?`<div><span class="ch-lab">Goal</span><b class="ch-val sm">${fmt(goal)}<small> ${m.unit}</small></b><span class="ch-sub">${fmt(Math.abs(goal-last.value))} ${m.unit} to go</span></div>`:""}
+      </div>${rangeBtns}</div>`;
+    // geometry in real pixels so text stays crisp and readable on phones
+    const W=Math.max(320,Math.round(svg.clientWidth||1000)),H=W<560?220:260,pl=W<560?38:52,pr=W<560?14:22,pt=22,pb=34;
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+    let t0=dateValue(first.date),t1=dateValue(last.date);if(t0===t1)t1=t0+864e5;
+    let lo=Math.min(...data.map(p=>p.value)),hi=Math.max(...data.map(p=>p.value));if(goal!=null){lo=Math.min(lo,goal);hi=Math.max(hi,goal)}
+    const span=Math.max(hi-lo,.5),raw=span/4,mag=10**Math.floor(Math.log10(raw)),step=[1,2,2.5,5,10].map(k=>k*mag).find(s=>s>=raw);
+    lo=Math.floor((lo-span*.08)/step)*step;hi=Math.ceil((hi+span*.08)/step)*step;
+    const X=t=>pl+(t-t0)/(t1-t0)*(W-pl-pr),Y=v=>pt+(1-(v-lo)/(hi-lo))*(H-pt-pb);
+    const P=data.map(p=>[X(dateValue(p.date)),Y(p.value),p]);
+    const curve=a=>{let d=`M${a[0][0].toFixed(1)} ${a[0][1].toFixed(1)}`;for(let i=0;i<a.length-1;i++){const p0=a[i-1]||a[i],p1=a[i],p2=a[i+1],p3=a[i+2]||p2,k=.18;
+      d+=` C${(p1[0]+(p2[0]-p0[0])*k).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])*k).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])*k).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])*k).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`}return d};
+    const line=curve(P),area=`${line} L${P.at(-1)[0].toFixed(1)} ${H-pb} L${P[0][0].toFixed(1)} ${H-pb} Z`;
+    let yg="";for(let v=lo;v<=hi+1e-9;v+=step){const y=Y(v).toFixed(1);yg+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" class="ch-grid"/><text x="${pl-10}" y="${(+y+4).toFixed(1)}" text-anchor="end" class="ch-ax">${+v.toFixed(2)}</text>`}
+    // x ticks: month starts, or weeks for short ranges
+    const ticks=[],spanDays=(t1-t0)/864e5,maxT=W<560?4:7;
+    if(spanDays>70){const d=new Date(t0);d.setDate(1);d.setMonth(d.getMonth()+1);const every=Math.ceil((spanDays/30)/maxT);let i=0;for(;d.getTime()<=t1;d.setMonth(d.getMonth()+1),i++)if(i%every===0)ticks.push([d.getTime(),d.toLocaleDateString("en-GB",{month:"short"})+(d.getMonth()===0?` ${String(d.getFullYear()).slice(2)}`:"")])}
+    else{const n=Math.min(maxT,Math.max(2,Math.round(spanDays/7)+1));for(let i=0;i<n;i++){const t=t0+(t1-t0)*i/(n-1);ticks.push([t,new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short"})])}}
+    const xg=ticks.map(([t,l])=>`<line x1="${X(t).toFixed(1)}" x2="${X(t).toFixed(1)}" y1="${H-pb}" y2="${H-pb+5}" class="ch-tick"/><text x="${X(t).toFixed(1)}" y="${H-pb+20}" text-anchor="middle" class="ch-ax">${l}</text>`).join("");
+    const goalEl=goal==null?"":`<line x1="${pl}" x2="${W-pr}" y1="${Y(goal).toFixed(1)}" y2="${Y(goal).toFixed(1)}" class="ch-goal"/><g transform="translate(${W-pr},${Y(goal).toFixed(1)})"><rect x="-74" y="-11" width="74" height="22" rx="11" class="ch-goal-pill"/><text x="-37" y="4" text-anchor="middle" class="ch-goal-t">Goal ${fmt(goal)}</text></g>`;
+    const lp=P.at(-1),lab=`${fmt(last.value)} ${m.unit}`,lw=lab.length*7.4+18,lx=Math.min(W-pr-lw,Math.max(pl,lp[0]-lw/2)),ly=lp[1]-34<pt?lp[1]+14:lp[1]-34;
+    svg.innerHTML=`<defs><linearGradient id="chFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060706" stop-opacity=".14"/><stop offset="1" stop-color="#060706" stop-opacity="0"/></linearGradient></defs>
+      ${yg}<line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" class="ch-base"/>${xg}${goalEl}
+      <path d="${area}" fill="url(#chFill)"/><path d="${line}" class="ch-line"/>
+      ${P.map((p,i)=>i===P.length-1?"":`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" class="ch-dot"/>`).join("")}
+      <circle cx="${lp[0].toFixed(1)}" cy="${lp[1].toFixed(1)}" r="8" class="ch-halo"/><circle cx="${lp[0].toFixed(1)}" cy="${lp[1].toFixed(1)}" r="4.5" class="ch-last"/>
+      <g class="ch-badge"><rect x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" width="${lw.toFixed(1)}" height="22" rx="11"/><text x="${(lx+lw/2).toFixed(1)}" y="${(ly+15).toFixed(1)}" text-anchor="middle">${lab}</text></g>
+      <g class="ch-hover" style="display:none"><line class="ch-cross" y1="${pt}" y2="${H-pb}"/><circle r="5" class="ch-hdot"/><g class="ch-tip"><rect rx="9" height="40"/><text class="ch-tip-v" y="17"></text><text class="ch-tip-d" y="32"></text></g></g>
+      <rect class="ch-hit" x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent"/>`;
+    svg._pts=P;svg._geo={W,H,pl,pr,pt,pb};svg._unit=m.unit;svg._fmtDate=longDate;
   }
+  // hover / touch read-out on the trend chart
+  (function(){
+    const move=e=>{const svg=$("spark");if(!svg||!svg._pts)return;const r=svg.getBoundingClientRect(),g=svg._geo;const x=(e.clientX-r.left)*g.W/r.width;
+      let best=svg._pts[0];for(const p of svg._pts)if(Math.abs(p[0]-x)<Math.abs(best[0]-x))best=p;
+      const hv=svg.querySelector(".ch-hover");if(!hv)return;hv.style.display="";
+      hv.querySelector(".ch-cross").setAttribute("x1",best[0]);hv.querySelector(".ch-cross").setAttribute("x2",best[0]);
+      const c=hv.querySelector(".ch-hdot");c.setAttribute("cx",best[0]);c.setAttribute("cy",best[1]);
+      const tv=hv.querySelector(".ch-tip-v"),td=hv.querySelector(".ch-tip-d");tv.textContent=`${fmt(best[2].value)} ${svg._unit}`;td.textContent=svg._fmtDate(best[2].date);
+      const w=Math.max(tv.textContent.length*8,td.textContent.length*6.4)+22,tx=Math.min(g.W-g.pr-w,Math.max(g.pl,best[0]+12>g.W-g.pr-w?best[0]-w-12:best[0]+12)),ty=Math.max(g.pt,best[1]-50);
+      const tip=hv.querySelector(".ch-tip");tip.setAttribute("transform",`translate(${tx},${ty})`);tip.querySelector("rect").setAttribute("width",w);tv.setAttribute("x",11);td.setAttribute("x",11)};
+    const leave=()=>{const hv=$("spark")?.querySelector(".ch-hover");if(hv)hv.style.display="none"};
+    document.addEventListener("pointermove",e=>{if(e.target.closest&&e.target.closest("#spark"))move(e);else leave()});
+    document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-crange]");if(b){chartRange=b.dataset.crange;renderChart()}});
+    let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{try{renderChart()}catch(e){}},150)});
+  })();
   function renderHistory(){
     const rows=[];if(state.baseline)rows.push({...state.baseline,baseline:true});sortedEntries().reverse().forEach(e=>rows.push(e));
     if(!rows.length){$("history").innerHTML=`<div class="empty">No measurements yet. Set your baseline to begin.</div>`;return}
