@@ -1738,6 +1738,36 @@
   #progress .wg-l .wg-pct span{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-left:2px;color:var(--ink);opacity:.35}
   #progress .wg-pl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)}
   @media(max-width:520px){#progress .wg-l .wg-pct{font-size:40px}#progress .wg-l .wg-pct span{font-size:22px}}
+  /* ===== Quick log ===== */
+  .log-fab{position:fixed;right:24px;bottom:24px;z-index:40;display:inline-flex;align-items:center;gap:8px;height:52px;padding:0 22px 0 18px;border:0;border-radius:999px;background:#ea3327;color:#fff;font:inherit;font-size:15px;font-weight:700;letter-spacing:-.01em;box-shadow:0 10px 26px rgba(234,51,39,.35);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+  .log-fab span{font-size:20px;line-height:1;font-weight:600}.log-fab:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(234,51,39,.42)}
+  .log-fab:focus-visible{outline:3px solid #fff;box-shadow:0 0 0 6px #ea3327}
+  body:not(.space-health) .log-fab{display:none}
+  .log-dialog{border:0;padding:0;border-radius:22px;width:min(420px,calc(100vw - 32px));background:var(--card);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.22)}
+  .log-dialog::backdrop{background:rgba(20,18,16,.38);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  .log-dialog form{padding:22px 22px 20px;display:flex;flex-direction:column}
+  .log-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.log-head h2{margin:0;font-size:19px;letter-spacing:-.02em}
+  .log-x{border:0;background:var(--soft);width:34px;height:34px;border-radius:50%;font-size:14px;color:var(--muted);cursor:pointer}
+  .log-lab{font-size:12px;font-weight:650;color:var(--muted);margin:10px 0 6px}
+  .log-input{width:100%;box-sizing:border-box;height:48px;border:1px solid var(--stroke2);border-radius:12px;background:var(--soft);color:var(--ink);font:inherit;font-size:16px;font-weight:600;padding:0 14px}
+  .log-input:focus{outline:0;border-color:#ea3327;background:var(--card);box-shadow:0 0 0 3px rgba(234,51,39,.14)}
+  .log-input[aria-invalid="true"]{border-color:#d94a43}
+  .log-val{position:relative}.log-val input{font-size:24px;font-weight:700;padding-right:90px}.log-val span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;font-size:14px}
+  .log-prev{margin:7px 0 0;font-size:12.5px;color:var(--muted)}
+  .log-err{margin:10px 0 0;min-height:18px;font-size:12.5px;font-weight:600;color:#d94a43}
+  .log-actions{display:flex;gap:10px;margin-top:8px}
+  .log-save{flex:1;height:48px;border:0;border-radius:12px;background:#ea3327;color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+  .log-more{height:48px;border:1px solid var(--stroke2);border-radius:12px;background:transparent;color:var(--ink);font:inherit;font-size:13.5px;font-weight:600;padding:0 14px;cursor:pointer}
+  .log-save:focus-visible,.log-more:focus-visible,.log-x:focus-visible{outline:3px solid rgba(234,51,39,.45);outline-offset:2px}
+  @media(max-width:680px){
+    .log-fab{right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0px));height:52px}
+    .log-dialog{margin:auto 0 0;width:100vw;max-width:100vw;border-radius:22px 22px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+    .log-dialog[open]{animation:sheetUp .22s ease}
+  }
+  @keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+  @media(prefers-reduced-motion:reduce){.log-dialog[open]{animation:none}}
+  @media(max-width:680px){.toast{bottom:calc(156px + env(safe-area-inset-bottom,0px))!important}}
+  @media(min-width:681px){.toast{bottom:92px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3216,6 +3246,9 @@
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(e){if(!storageWarningShown){alert("This browser could not save your data. Download a backup before closing this page.");storageWarningShown=true}return false}}
   function sortedEntries(){return [...state.entries].sort((a,b)=>dateValue(a.date)-dateValue(b.date)||a.id.localeCompare(b.id))}
   function series(key){const a=[];if(state.baseline?.[key]!=null)a.push({date:state.baseline.date,value:state.baseline[key],baseline:true});sortedEntries().forEach(e=>{if(e[key]!=null)a.push({date:e.date,value:e[key],id:e.id})});return a.sort((x,y)=>dateValue(x.date)-dateValue(y.date))}
+  // Starting point per metric: the manual baseline if one was set, otherwise the earliest dated value.
+  function startValue(k){const s=series(k);return s.length?s[0].value:null}
+  function startSnapshot(){const o={};let any=false;metricKeys.forEach(k=>{o[k]=state.baseline?.[k]??startValue(k);if(o[k]!=null)any=true});return any?o:null}
   function snapshot(asOf){
     if(!state.baseline&&!state.entries.length)return null;
     const cut=asOf?dateValue(asOf):null;
@@ -3278,7 +3311,7 @@
   }
   function renderStats(){
     const cur=snapshot();
-    const startTone=(k,t)=>{if(Math.abs(t)<.05)return "flat";const g=state.goals?.[k],b=state.baseline?.[k];const dir=g!=null&&b!=null&&g!==b?Math.sign(g-b):(/^(weight|chest|waist|hip)|Thigh/.test(k)?-1:1);return t*dir>0?"good":"bad"};
+    const startTone=(k,t)=>{if(Math.abs(t)<.05)return "flat";const g=state.goals?.[k],b=state.baseline?.[k]??startValue(k);const dir=g!=null&&b!=null&&g!==b?Math.sign(g-b):(/^(weight|chest|waist|hip)|Thigh/.test(k)?-1:1);return t*dir>0?"good":"bad"};
     const tile=k=>{
       const m=metrics[k],v=cur?.[k],base=state.baseline?.[k],prev=previousValue(k);
       const total=v!=null&&base!=null?v-base:null,recent=v!=null&&prev!=null?v-prev:null,tone=goalTone(k,v,prev);
@@ -3293,7 +3326,7 @@
   }
   // Weight gets its own hero card: dark, large number, trend line and goal progress
   function weightTile(cur){
-    const v=cur?.weightKg,base=state.baseline?.weightKg,prev=previousValue("weightKg"),goal=state.goals?.weightKg;
+    const v=cur?.weightKg,base=startValue("weightKg"),prev=previousValue("weightKg"),goal=state.goals?.weightKg;
     const recent=v!=null&&prev!=null?v-prev:null,total=v!=null&&base!=null?v-base:null,tone=goalTone("weightKg",v,prev);
     const sg=x=>`${x>0?"+":""}${fmt(x)} kg`;
     const pts=[...(state.baseline?.weightKg!=null?[state.baseline]:[]),...state.entries].filter(e=>e.weightKg!=null).sort((a,b)=>dateValue(a.date)-dateValue(b.date)).slice(-10).map(e=>e.weightKg);
@@ -4253,7 +4286,7 @@
     $('bodyCanvas').addEventListener('webglcontextrestored',()=>{bodyRenderer=createBodyRenderer($('bodyCanvas'));bodyRenderer.set(currentBodyVertices,currentBaseVertices);drawBody()});
   }
   function renderFigure(){
-    initializeBodyView();currentBodyVertices=buildBody(snapshot());currentBaseVertices=buildBody(state.baseline);bodyRenderer.set(currentBodyVertices,currentBaseVertices);updateMeasurementRings();drawBody();
+    initializeBodyView();currentBodyVertices=buildBody(snapshot());currentBaseVertices=buildBody(state.baseline||startSnapshot());bodyRenderer.set(currentBodyVertices,currentBaseVertices);updateMeasurementRings();drawBody();
     $('figureOptions').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(figureOptions[b.dataset.option])));
     $('baselineLegend').classList.toggle('hidden',!state.baseline||!figureOptions.baseline);
     document.querySelector('.scan-stage')?.classList.add('studio');
@@ -5509,6 +5542,64 @@
         <div class="bm-trend" style="color:${dir?col:"#6b6259"}">${dir?`${{up:"↑",down:"↓",steady:"→"}[dir]} ${delta>0?"+":""}${Math.round(delta)} point${Math.abs(Math.round(delta))===1?"":"s"}`:""}<em>${note}</em></div></div>
       ${chart}</div>${link}`;
   }
+  // ===== Quick log: one measurement at a time, from anywhere =====
+  const LOG_KEY="yime_log_metric";
+  function logLastMetric(){try{const k=localStorage.getItem(LOG_KEY);if(k&&metrics[k])return k}catch(e){}return "weightKg"}
+  function longDate(d){return new Date(dateValue(d)).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
+  function buildLogDialog(){
+    if($("logDialog"))return;
+    const dlg=document.createElement("dialog");dlg.id="logDialog";dlg.className="log-dialog";dlg.setAttribute("aria-labelledby","logTitle");
+    dlg.innerHTML=`<form method="dialog" id="logForm" novalidate>
+      <div class="log-head"><h2 id="logTitle">Log a measurement</h2><button type="button" class="log-x" id="logClose" aria-label="Close">✕</button></div>
+      <label class="log-lab" for="logMetric">Measurement</label>
+      <select id="logMetric" class="log-input">${metricKeys.map(k=>`<option value="${k}">${esc(metrics[k].label)}</option>`).join("")}</select>
+      <label class="log-lab" for="logValue">Value</label>
+      <div class="log-val"><input id="logValue" class="log-input" type="number" step="0.1" inputmode="decimal" autocomplete="off" aria-describedby="logPrev logErr"><span id="logUnit"></span></div>
+      <p class="log-prev" id="logPrev"></p>
+      <label class="log-lab" for="logDate">Date</label>
+      <input id="logDate" class="log-input" type="date">
+      <p class="log-err" id="logErr" role="alert"></p>
+      <div class="log-actions"><button type="button" class="log-more" id="logMore">Save &amp; add another</button><button type="submit" class="log-save" id="logSave">Save</button></div>
+    </form>`;
+    document.body.appendChild(dlg);
+    const sync=()=>{const k=$("logMetric").value,m=metrics[k],s=series(k);$("logUnit").textContent=m.unit;$("logValue").min=m.min;$("logValue").max=m.max;
+      $("logValue").step=k==="vo2max"?"0.1":"0.1";
+      $("logPrev").textContent=s.length?`Last recorded: ${fmt(s.at(-1).value)} ${m.unit} on ${longDate(s.at(-1).date)}`:`No ${m.label.toLowerCase()} recorded yet — this will be your starting point.`;
+      $("logErr").textContent="";$("logValue").removeAttribute("aria-invalid")};
+    $("logMetric").addEventListener("change",()=>{sync();$("logValue").focus()});
+    $("logClose").addEventListener("click",()=>dlg.close());
+    dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+    $("logForm").addEventListener("submit",e=>{e.preventDefault();if(saveQuickLog())dlg.close()});
+    $("logMore").addEventListener("click",()=>{if(saveQuickLog()){const sel=$("logMetric"),i=sel.selectedIndex;sel.selectedIndex=(i+1)%sel.options.length;sync();$("logValue").focus()}});
+    dlg._sync=sync;
+  }
+  function openLog(key){
+    buildLogDialog();const dlg=$("logDialog");
+    $("logMetric").value=key&&metrics[key]?key:logLastMetric();$("logValue").value="";$("logDate").value=today();$("logDate").max=today();dlg._sync();
+    if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
+    setTimeout(()=>$("logValue").focus(),30);
+  }
+  function saveQuickLog(){
+    const k=$("logMetric").value,m=metrics[k],raw=$("logValue").value.trim(),date=$("logDate").value,err=t=>{$("logErr").textContent=t;$("logValue").setAttribute("aria-invalid","true");$("logValue").focus();return false};
+    if(raw==="")return err(`Enter your ${m.label.toLowerCase()} in ${m.unit}.`);
+    const v=Number(raw.replace(",","."));
+    if(!Number.isFinite(v)||v<m.min||v>m.max)return err(`${m.label} should be between ${m.min} and ${m.max} ${m.unit}.`);
+    if(!validDate(date))return err("Choose a valid date.");
+    if(date>today())return err("Choose today or an earlier date.");
+    if(state.baseline&&dateValue(date)<dateValue(state.baseline.date))return err(`Your starting point is ${longDate(state.baseline.date)}. Choose that date or later.`);
+    logUndo=JSON.parse(JSON.stringify(state.entries));
+    const same=state.entries.find(e=>e.date===date);
+    if(same)same[k]=Math.round(v*10)/10; // add to that day's entry, other values stay
+    else{const rec={id:uid(),date};metricKeys.forEach(x=>rec[x]=null);rec[k]=Math.round(v*10)/10;state.entries.push(rec)}
+    state.entries.sort((a,b)=>dateValue(a.date)-dateValue(b.date)||a.id.localeCompare(b.id));
+    try{localStorage.setItem(LOG_KEY,k)}catch(e){}
+    save();renderAll();showToast(`${m.label} ${fmt(v)} ${m.unit} saved for ${longDate(date)}.`,true);
+    return true;
+  }
+  function buildLogButton(){
+    if($("logFab"))return;const b=document.createElement("button");b.type="button";b.id="logFab";b.className="log-fab";
+    b.innerHTML=`<span aria-hidden="true">＋</span> Log`;b.setAttribute("aria-label","Log a measurement");b.addEventListener("click",()=>openLog());document.body.appendChild(b);
+  }
   function renderAll(){if(loadFailed)showLoadWarning();renderStats();renderProgress();renderVo2();renderHealth();renderCapability();renderTraining();renderFigure();renderTabs();renderChart();renderHistory();renderBaseline();syncSex();try{renderGoals()}catch(e){console.error(e)}try{renderEnergy()}catch(e){console.error(e)}}
   function syncSex(){$("sexToggle").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sex===state.sex)))}
 
@@ -5533,7 +5624,8 @@
   }
   function saveGoals(){let invalid=false;const nextGoals={};metricKeys.forEach(k=>{const v=numberFrom(`g-${metrics[k].input}`,k,false);if(v===undefined)invalid=true;else nextGoals[k]=v});if(invalid){$("goalsError").textContent="Check the highlighted goal values.";return}$("goalsError").textContent="";state.goals=nextGoals;save();renderAll();showToast("Goals saved.",false)}
   function deleteEntry(id){const index=state.entries.findIndex(e=>e.id===id);if(index<0)return;deletedCache={record:state.entries[index],index};state.entries.splice(index,1);save();if(editingId===id)resetMeasurementForm();renderAll();showToast("Measurement deleted.",true)}
-  function undoDelete(){if(!deletedCache)return;state.entries.splice(Math.min(deletedCache.index,state.entries.length),0,deletedCache.record);deletedCache=null;save();renderAll();hideToast()}
+  let logUndo=null;
+  function undoDelete(){if(logUndo){state.entries=logUndo;logUndo=null;save();renderAll();hideToast();showToast("Entry undone.",false);return}if(!deletedCache)return;state.entries.splice(Math.min(deletedCache.index,state.entries.length),0,deletedCache.record);deletedCache=null;save();renderAll();hideToast()}
   function showToast(message,undo){clearTimeout(toastTimer);$("toastText").textContent=message;$("toastAction").classList.toggle("hidden",!undo);$("toast").classList.add("show");toastTimer=setTimeout(hideToast,7000)}
   function hideToast(){$("toast").classList.remove("show")}
 
@@ -5813,7 +5905,7 @@
     $("fitMini").addEventListener("click",()=>{setTab("training");setTimeout(()=>{const t=$("workoutTrend");if(t)t.scrollIntoView({behavior:"smooth",block:"start"})},80)});
     $("metricTabs").addEventListener("click",e=>{const b=e.target.closest("button[data-metric]");if(!b)return;viewMetric=b.dataset.metric;renderTabs();renderChart()});
     $("history").addEventListener("click",e=>{const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]"),base=e.target.closest("[data-baseline-edit]");if(edit)startEdit(edit.dataset.edit);else if(del)deleteEntry(del.dataset.delete);else if(base)openBaselineEdit()});
-    $("exportJson").addEventListener("click",exportJson);$("exportCsv").addEventListener("click",exportCsv);$("importBtn").addEventListener("click",()=>$("importFile").click());$("importFile").addEventListener("change",e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=""});$("toastAction").addEventListener("click",undoDelete);
+    $("exportJson").addEventListener("click",exportJson);$("exportCsv").addEventListener("click",exportCsv);$("importBtn").addEventListener("click",()=>$("importFile").click());$("importFile").addEventListener("change",e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=""});$("toastAction").addEventListener("click",undoDelete);try{buildLogButton();buildLogDialog()}catch(e){console.error(e)}
     const monthBack=()=>{const m=workoutMonths(),i=m.indexOf(trainingMonth);if(i<m.length-1){trainingMonth=m[i+1];renderTraining()}};
     const monthFwd=()=>{const m=workoutMonths(),i=m.indexOf(trainingMonth);if(i>0){trainingMonth=m[i-1];renderTraining()}};
     $("monthPrev").addEventListener("click",monthBack);$("monthPrev2").addEventListener("click",monthBack);
