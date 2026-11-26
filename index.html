@@ -2170,6 +2170,11 @@
   :root[data-theme="dark"] #logDialog .log-input,:root[data-theme="dark"] #logDialog .log-mode,:root[data-theme="dark"] #logDialog .log-x{background:#1f2024!important;color:#f2f1ef}
   :root[data-theme="dark"] #logDialog .log-lab,:root[data-theme="dark"] #logDialog .log-f>span,:root[data-theme="dark"] #logDialog .log-mode button{color:#f2f1ef}
   :root[data-theme="dark"] #logDialog .log-mode button[aria-pressed="true"]{background:#f2f1ef;color:#111}
+  #trainingAnalysis .ta-sub{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#857b70;margin:4px 0 8px}
+  #trainingAnalysis .ta-tiles2{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .ta-cat{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-bottom:5px}
+  .ta-cat.c-train{background:#EDF4FE;color:#2559a8}.ta-cat.c-body{background:#fdeeed;color:#c7372c}.ta-cat.c-sleep{background:#efeafd;color:#5b3fc4}
+  @media(max-width:760px){#trainingAnalysis .ta-tiles2{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5023,7 +5028,7 @@
     else{P={sess:[3,4],time:[120,fatLoss?200:150],km:null,runs:null,long:null};
       ctx={mode:"general",label:fatLoss?`Goal: reach ${wGoal} kg`:"General health & fitness check",who:fatLoss?"fat loss":"good health",foot:"Based on WHO physical-activity guidance (150–300 min moderate activity and 2 strength days a week) — general advice, not a coaching plan."}}
     const strW=win.filter(w=>w.group==="Strength"||/strength|weight|workout|gym|hiit|functional|crossfit|pilates/i.test(String(w.sport||""))).length/WEEKS;
-    const notes=[];const add=(lvl,title,why,goal)=>notes.push({lvl,title,why,goal:lvl==="good"||lvl==="info"?null:goal||null});
+    const notes=[];let CAT="Training";const add=(lvl,title,why,goal)=>notes.push({lvl,title,why,cat:CAT,goal:lvl==="good"||lvl==="info"?null:goal||null});
     const r5=v=>Math.max(5,Math.round(v/5)*5),up=(v,top)=>Math.min(top,r5(Math.max(v+10,v*1.25)));
     const nextRuns=P.runs?Math.min(P.runs[1]+1,Math.max(P.runs[0],Math.ceil(runsW)+1)):0,nextLong=P.long?Math.min(P.long[1]+2,Math.max(P.long[0]*.7,Math.round(longest+4))):0;
     const G={freq:{title:`Train ${P.sess[1]} sessions every week`,target:`${P.sess[1]}+ sessions / week`},
@@ -5062,6 +5067,40 @@
     if(gap>=7)add("watch","Long break in training",`The longest gap between sessions was ${gap} days.`,G.gap);
     if(fullWeeks)add("watch","No rest day in some weeks",`${fullWeeks} week${fullWeeks===1?"":"s"} with training every day. Keep at least one easy or rest day.`,G.rest);
     if(pace&&runs.length)add("info","Average run pace",ctx.targetPace?`${paceTxt(pace)} across all runs. Your goal pace is ${paceTxt(ctx.targetPace)} — most runs should be slower, with some sessions at or near it.`:`${paceTxt(pace)} across all runs. Keep most runs at an easy, conversational pace.`);
+    // ---- body: weight, waist and the other measurements over the same 8 weeks
+    CAT="Body";const bodyTiles=[];
+    const winSeries=k=>{const s=series(k)||[];const before=s.filter(p=>toMs(p.date)<start).at(-1),inW=s.filter(p=>toMs(p.date)>=start&&toMs(p.date)<=end);
+      const first=before||inW[0],last=inW.at(-1);return first&&last&&first!==last?{a:first.value,b:last.value,d:last.value-first.value,wk:Math.max(1,(toMs(last.date)-toMs(first.date))/(7*DAY)),last:last.value}:last?{a:null,b:last.value,d:null,last:last.value}:null};
+    const fx=v=>`${v>0?"+":v<0?"−":""}${Math.abs(v).toFixed(1)}`;
+    const W=winSeries("weightKg"),WA=winSeries("waistCm"),hi=healthInputs();
+    if(W&&W.d!=null){const perWk=W.d/W.wk,pct=perWk/W.a*100;
+      if(fatLoss){const left=W.last-wGoal;
+        if(pct<=-1.1)add("watch","Losing weight too fast",`${fx(W.d)} kg in ${Math.round(W.wk)} weeks (${fx(perWk)} kg/week). Over 1% a week risks muscle loss and hurts training — eat a little more.`,{title:"Lose 0.5–0.8 kg a week",target:"0.5–0.8 kg / week"});
+        else if(pct<=-.2)add("good","Weight is coming down nicely",`${fx(W.d)} kg in ${Math.round(W.wk)} weeks (${fx(perWk)} kg/week). ${left>0?`At this pace you reach ${wGoal} kg in about ${Math.ceil(left/Math.abs(perWk))} weeks.`:""}`);
+        else if(perWk<.1)add("ok",pct<=-.05?"Weight loss is slow":"Weight loss has stalled",`${fx(W.d)} kg in ${Math.round(W.wk)} weeks. ${left.toFixed(1)} kg to go to ${wGoal} kg — a small, steady calorie deficit gets it moving.`,{title:"Lose 0.5 kg a week",target:"0.5 kg / week"});
+        else add("watch","Weight is going up",`${fx(W.d)} kg in ${Math.round(W.wk)} weeks while your goal is ${wGoal} kg. Check calories, especially on rest days.`,{title:"Lose 0.5 kg a week",target:"0.5 kg / week"});}
+      else add(Math.abs(pct)>1?"ok":"info","Weight",`${fx(W.d)} kg in ${Math.round(W.wk)} weeks (now ${W.last.toFixed(1)} kg).${Math.abs(pct)>1?" That's a fast change — make sure it's intended.":" Stable."}`);
+      bodyTiles.push(["Weight change",fx(W.d),"kg",fatLoss?`goal ${wGoal} kg`:"last 8 weeks",fatLoss?(pct<=-1.1?"watch":pct<=-.2?"good":perWk<.1?"ok":"watch"):"good"]);}
+    else if(W)bodyTiles.push(["Weight",W.last.toFixed(1),"kg","only 1 entry","ok"]);
+    if(WA&&WA.d!=null){const g=state.goals?.waistCm;
+      add(WA.d<=-.5?"good":WA.d<.5?"ok":"watch",WA.d<=-.5?"Waist is shrinking":WA.d<.5?"Waist hasn't moved":"Waist is growing",`${fx(WA.d)} cm in ${Math.round(WA.wk)} weeks (now ${WA.last.toFixed(1)} cm). Waist is the best everyday marker of belly fat.${g!=null?` Goal ${g} cm.`:""}`,{title:"Waist down 2 cm in 8 weeks",target:`${(WA.last-2).toFixed(1)} cm`});
+      bodyTiles.push(["Waist change",fx(WA.d),"cm",g!=null?`goal ${g} cm`:"last 8 weeks",WA.d<=-.5?"good":WA.d<.5?"ok":"watch"]);}
+    if(hi.whtr!=null){const r=hi.whtr;add(r<.5?"good":r<.6?"ok":"watch","Waist-to-height ratio",`${r.toFixed(2)} — ${r<.5?"healthy range (under 0.5).":r<.6?"slightly raised; under 0.5 is the healthy target.":"raised health risk; aim to bring it under 0.5."}`,{title:"Waist under half your height",target:`< ${(hi.heightCm/2).toFixed(0)} cm`})}
+    const others=["chestCm","hipCm","leftBicepsCm","rightBicepsCm","leftThighCm","rightThighCm","leftCalfCm","rightCalfCm"].map(k=>[k,winSeries(k)]).filter(([,s])=>s&&s.d!=null&&Math.abs(s.d)>=.3);
+    if(others.length)add("info","Other measurements",others.map(([k,s])=>`${metrics[k].label} ${fx(s.d)} cm`).join(" · ")+".");
+    const lastLog=Math.max(0,...metricKeys.filter(k=>k!=="vo2max").flatMap(k=>(series(k)||[]).map(p=>toMs(p.date))));
+    const since=lastLog?Math.round((todayMs-lastLog)/DAY):null;
+    if(since==null||since>21)add("ok",since==null?"No body measurements yet":"Body measurements are out of date",since==null?"Log weight and waist to see how training changes your body.":`Last measured ${since} days ago. A full check-in every 2 weeks shows real progress.`,{title:"Full body check-in every 2 weeks",target:"every 14 days"});
+    // ---- recovery: sleep, resting HR, HRV (Garmin import or Health inputs)
+    CAT="Sleep & recovery";
+    if(hi.sleepH!=null){const s=hi.sleepH;add(s>=7?"good":s>=6.5?"ok":"watch",s>=7?"Sleep is enough":"Not enough sleep",`${s.toFixed(1)} h a night on average${hi.shortNights?` · ${hi.shortNights} night${hi.shortNights===1?"":"s"} under 6 h`:""}. ${ctx.mode==="race"?"Hard training needs 7–9 h to adapt.":fatLoss?"Short sleep raises hunger and makes fat loss harder — aim for 7–9 h.":"Adults need 7–9 h."}`,{title:"Sleep 7+ hours a night",target:"7–9 h / night"});
+      bodyTiles.push(["Sleep",s.toFixed(1),"h","goal 7–9 h",s>=7?"good":s>=6.5?"ok":"watch"]);}
+    if(hi.sleepScore!=null){const s=hi.sleepScore;add(s>=80?"good":s>=70?"ok":"watch","Sleep score",`${Math.round(s)}/100 — ${s>=80?"good quality sleep.":s>=70?"fair; a fixed bedtime and less screen time before bed help.":"poor; recovery and energy will suffer."}`,{title:"Sleep score 80+",target:"80 / 100"});
+      bodyTiles.push(["Sleep score",Math.round(s),"/100","goal 80+",s>=80?"good":s>=70?"ok":"watch"]);}
+    if(hi.sleepH==null&&hi.sleepScore==null)add("info","No sleep data yet","Import your Garmin export or add sleep in Health — sleep is half of recovery.");
+    if(hi.rhr!=null)add("info","Resting heart rate",`${Math.round(hi.rhr)} bpm${hi.rhr<=55?" — a sign of good aerobic fitness.":hi.rhr<=65?" — normal; it drops as your base grows.":" — on the high side; easy aerobic running brings it down."}`);
+    if(hi.hrv!=null&&hi.hrvLo!=null&&hi.hrv<hi.hrvLo)add("watch","HRV below your normal range",`${Math.round(hi.hrv)} ms vs your usual ${Math.round(hi.hrvLo)}–${Math.round(hi.hrvHi)} ms. Take an easy day or two.`,{title:"1 rest or easy day every week",target:"1 rest day / week"});
+    CAT="Training";
     if(ctx.mode==="general")add("info","Training for something?",`Add a race or target in Goals (e.g. "Marathon" with target "2:59:59") and this check will judge you against that plan.`);
 
     // ---- render: what to fix, what to improve, what's on track, with one-tap goals
@@ -5080,17 +5119,18 @@
       ["Consistent weeks",consistent,"/8","goal 7+",st(consistent,7,5)],["Longest break",gap,gap===1?"day":"days","goal ≤ 4",gap<=4?"good":gap<7?"ok":"watch"],["Active days / week",(weeks.reduce((t,w)=>t+w.days.size,0)/WEEKS).toFixed(1),"","goal 3–6",(()=>{const a=weeks.reduce((t,w)=>t+w.days.size,0)/WEEKS;return a>=3&&a<=6.5?"good":a>=2?"ok":"watch"})()]];
     const grp={watch:notes.filter(n=>n.lvl==="watch"),ok:notes.filter(n=>n.lvl==="ok"),good:notes.filter(n=>n.lvl==="good"),info:notes.filter(n=>n.lvl==="info")};
     const icon={watch:"!",ok:"↑",good:"✓",info:"i"};
-    const card=(n,i)=>`<li class="ta-n ta-${n.lvl}"><span class="ta-ic">${icon[n.lvl]}</span><div class="ta-tx"><b>${esc(n.title)}</b><p>${esc(n.why)}</p>
+    const card=(n,i)=>`<li class="ta-n ta-${n.lvl}"><span class="ta-ic">${icon[n.lvl]}</span><div class="ta-tx"><span class="ta-cat c-${n.cat==="Body"?"body":n.cat==="Training"?"train":"sleep"}">${esc(n.cat)}</span><b>${esc(n.title)}</b><p>${esc(n.why)}</p>
       ${n.goal?`<div class="ta-goal"><span class="ta-gl">Suggested goal</span><strong>${esc(n.goal.title)}</strong>${inGoals(n.goal.title)?`<span class="ta-added">✓ In your Goals</span>`:`<button type="button" class="ta-add" data-ta-goal="${i}">＋ Add to Goals</button>`}</div>`:""}</div></li>`;
     const idx=n=>notes.indexOf(n);
     const sect=(k,label,sub)=>grp[k].length?`<section class="ta-sec ta-sec-${k}"><h4><span>${label}</span><em>${grp[k].length}</em><small>${sub}</small></h4><ul>${grp[k].map(n=>card(n,idx(n))).join("")}</ul></section>`:"";
     const open=notes.filter(n=>n.goal&&!inGoals(n.goal.title));
     const verdict=grp.watch.length>=3?["Needs work",ctx.mode==="race"?`Your base is too small for ${ctx.who} yet — fix the red items first.`:"Your weekly routine needs more structure — fix the red items first."]:grp.watch.length?["Getting there","A few things are holding you back — start with the red ones."]:grp.ok.length?["On the right track","Keep stacking weeks and push the amber items."]:["Marathon-ready base","Everything checks out — keep it consistent."];
-    el.innerHTML=`<div class="ta-head"><div><span class="ta-k">Training check · last 8 weeks</span><span class="ta-d">${ddmm(start)} – ${ddmm(end)} · ${win.length} session${win.length===1?"":"s"}</span><span class="ta-ctx ${ctx.mode}">${ctx.mode==="race"?"🏁":"♡"} ${esc(ctx.label)}</span></div><button type="button" class="ta-close" id="taClose" aria-label="Close analysis">Close ✕</button></div>
+    el.innerHTML=`<div class="ta-head"><div><span class="ta-k">Training, body &amp; recovery check · last 8 weeks</span><span class="ta-d">${ddmm(start)} – ${ddmm(end)} · ${win.length} session${win.length===1?"":"s"}</span><span class="ta-ctx ${ctx.mode}">${ctx.mode==="race"?"🏁":"♡"} ${esc(ctx.label)}</span></div><button type="button" class="ta-close" id="taClose" aria-label="Close analysis">Close ✕</button></div>
       <div class="ta-verdict ${grp.watch.length?"bad":grp.ok.length?"mid":"good"}"><div><strong>${verdict[0]}</strong><p>${verdict[1]}</p></div>
         <div class="ta-counts"><span class="c-watch"><b>${grp.watch.length}</b>to fix</span><span class="c-ok"><b>${grp.ok.length}</b>to improve</span><span class="c-good"><b>${grp.good.length}</b>on track</span></div>
         ${open.length?`<button type="button" class="ta-addall" data-ta-all>＋ Add ${open.length} goal${open.length===1?"":"s"} to Goals</button>`:""}</div>
-      <div class="ta-tiles">${tiles.map(([k,v,u,g,s])=>`<div class="ta-tile t-${s}"><span>${k}</span><strong>${v}<i>${u}</i></strong><small>${g}</small></div>`).join("")}</div>
+      <div class="ta-sub">Training</div><div class="ta-tiles">${tiles.map(([k,v,u,g,s])=>`<div class="ta-tile t-${s}"><span>${k}</span><strong>${v}<i>${u}</i></strong><small>${g}</small></div>`).join("")}</div>
+      ${bodyTiles.length?`<div class="ta-sub">Body &amp; recovery</div><div class="ta-tiles ta-tiles2">${bodyTiles.map(([k,v,u,g,s])=>`<div class="ta-tile t-${s}"><span>${k}</span><strong>${v}<i>${u}</i></strong><small>${g}</small></div>`).join("")}</div>`:""}
       <div class="ta-chart"><div class="ta-chart-label"><b>${CH.lab}</b><span><i class="lg-r"></i>below ${Math.round(TGT*.6)} <i class="lg-a"></i>${Math.round(TGT*.6)}–${TGT-1} <i class="lg-g"></i>${TGT}+ <i class="lg-t"></i>${esc(CH.line)}</span></div><svg viewBox="0 0 ${CW} ${H}" role="img" aria-label="${CH.lab}, last 8 weeks">${tline}${bars}</svg></div>
       ${sect("watch","Fix first",ctx.mode==="race"?`biggest gaps for ${ctx.who}`:"biggest gaps for "+ctx.who)}${sect("ok","Improve next","close, push a bit more")}${sect("good","On track","keep doing this")}${sect("info","Good to know","")}
       <p class="ta-foot">${esc(ctx.foot)}</p>`;
