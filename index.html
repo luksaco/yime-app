@@ -4949,8 +4949,8 @@
       if(/Swim/i.test(g))return `${mmss(6/spd)} /100m`;
       if(/Row/i.test(g))return `${mmss(30/spd)} /500m`;
       return `${spd.toFixed(1)} km/h`};
-    const cell=(s,b,g)=>`<td class="num">${b?"<strong>":""}${s.n}${b?"</strong>":""}</td><td class="num">${b?"<strong>":""}${hm(s.mins)}${b?"</strong>":""}</td><td class="num">${s.km>0?`${s.km.toFixed(1)} km`:"—"}</td><td class="num">${s.hr?`${s.hr} bpm`:"—"}</td><td class="num">${g?paceOf(g,s.spd):"—"}</td>`;
-    $("trainingTable").innerHTML=`<div class="table-scroll mr-wrap"><table class="history train-table mr-table"><thead><tr><th>Workout type</th><th class="num">Sessions</th><th class="num">Time</th><th class="num">Distance</th><th class="num">Avg HR</th><th class="num">Avg pace / speed</th></tr></thead><tbody>${
+    const cell=(s,b,g)=>`<td class="num">${b?"<strong>":""}${s.n}${b?"</strong>":""}</td><td class="num">${b?"<strong>":""}${hm(s.mins)}${b?"</strong>":""}</td><td class="num">${s.n?hm(Math.round(s.mins/s.n)):"—"}</td><td class="num">${s.km>0?`${s.km.toFixed(1)} km`:"—"}</td><td class="num">${s.hr?`${s.hr} bpm`:"—"}</td><td class="num">${g?paceOf(g,s.spd):"—"}</td>`;
+    $("trainingTable").innerHTML=`<div class="table-scroll mr-wrap"><table class="history train-table mr-table"><thead><tr><th>Workout type</th><th class="num">Sessions</th><th class="num">Time</th><th class="num">Avg session</th><th class="num">Distance</th><th class="num">Avg HR</th><th class="num">Avg pace / speed</th></tr></thead><tbody>${
       rows.map(r=>`<tr><td><strong>${esc(sportLabel(r.g))}</strong></td>${cell(r.s,false,r.g)}</tr>`).join("")
     }<tr class="total-row"><td><strong>Total</strong></td>${cell(tot,true,null)}</tr></tbody></table></div>`;
 
