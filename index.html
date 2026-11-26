@@ -2456,6 +2456,13 @@
   #healthCard .hc-score.ok::before{background:#eef0f3!important;color:#5f6873!important}
   #healthCard .hc-fill.ok{background:linear-gradient(90deg,#c3c9d0,#9aa3ad)!important}
   #healthCard .att.watch{border-left-color:#9aa3ad!important}#healthCard .att.watch::before{background:#9aa3ad}
+  /* Health › Attention uses the training-check cards; "improve next" in silver here */
+  #attentionList .ta-sec h4{font-size:16px}
+  #attentionList .ta-ok .ta-ic,#attentionList .ta-sec-ok h4 em{background:#9aa3ad!important}
+  #attentionList .ta-ok{border-color:rgba(154,163,173,.45)!important;background:#fafbfc!important}
+  #attentionList .ta-watch{border-color:rgba(240,90,79,.35)!important;background:#fffafa!important}
+  .ta-cat.c-blood{background:#fdeeed;color:#c7372c;box-shadow:inset 0 0 0 1.5px #f05a4f}
+  #healthCard .att-section .att-big{margin-bottom:14px!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3278,9 +3285,19 @@
 
     // attention
     const items=attentionItems(i,comps);
-    $("attentionList").innerHTML=items.length?items.map(a=>
-      `<div class="att ${a.level}"><div class="att-title">${esc(a.title)}</div><p>${esc(a.why)}</p></div>`).join("")
-      :`<div class="att good"><div class="att-title">Nothing flagged</div><p>Every input you have given is inside its reference range. Add more inputs and this gets more useful.</p></div>`;
+    // same card style as the training check: grouped by priority, category chip, one-tap goals
+    {const inG=t=>(state.customGoals||[]).some(g=>g.kind==="fitness"&&!g.done&&g.title.toLowerCase()===t.toLowerCase());
+      const L={high:"watch",watch:"ok",info:"info",good:"good"},ic={watch:"!",ok:"↑",info:"i",good:"✓"};
+      const cc=c=>c==="Body"?"body":c==="Training"?"train":c==="Blood"?"blood":"sleep";
+      const card=(a,i)=>{const l=L[a.level]||"info";return `<li class="ta-n ta-${l}"><span class="ta-ic">${ic[l]}</span><div class="ta-tx">${a.cat?`<span class="ta-cat c-${cc(a.cat)}">${esc(a.cat)}</span>`:""}<b>${esc(a.title)}</b><p>${esc(a.why)}</p>
+        ${a.goal&&l!=="info"?`<div class="ta-goal"><span class="ta-gl">Suggested goal</span><strong>${esc(a.goal.title)}</strong>${inG(a.goal.title)?`<span class="ta-added">✓ In your Goals</span>`:`<button type="button" class="ta-add" data-att-goal="${i}">＋ Add to Goals</button>`}</div>`:""}</div></li>`};
+      const grp=(lv,label,sub)=>{const g=items.map((a,i)=>[a,i]).filter(([a])=>(L[a.level]||"info")===lv);return g.length?`<section class="ta-sec ta-sec-${lv}"><h4><span>${label}</span><em>${g.length}</em><small>${sub}</small></h4><ul>${g.map(([a,i])=>card(a,i)).join("")}</ul></section>`:""};
+      const el=$("attentionList");
+      el.innerHTML=items.length?grp("watch","Fix first","biggest health risks right now")+grp("ok","Improve next","worth working on")+grp("info","Good to know","")
+        :`<section class="ta-sec ta-sec-good"><ul><li class="ta-n ta-good"><span class="ta-ic">✓</span><div class="ta-tx"><b>Nothing flagged</b><p>Every input you have given is inside its reference range. Add more inputs and this gets more useful.</p></div></li></ul></section>`;
+      el.querySelectorAll("[data-att-goal]").forEach(b=>b.addEventListener("click",()=>{const a=items[+b.dataset.attGoal];if(!a||!a.goal||inG(a.goal.title))return;
+        state.customGoals=state.customGoals||[];state.customGoals.push({id:uid(),kind:"fitness",type:"achievement",title:a.goal.title.slice(0,140),target:a.goal.target.slice(0,60),due:"",done:false});
+        save();try{renderGoals()}catch(e){}showToast("Added to Goals",false);b.outerHTML='<span class="ta-added">✓ In your Goals</span>'}))}
 
     $("healthSource").textContent=i.source?`Wearable figures from your ${i.source}. Measurements come from your own log.`:
       "Enter the wearable figures below, or import your Garmin export to fill them in.";
@@ -3801,40 +3818,40 @@
     if(i.whtr!=null&&i.whtr>=HEALTH_REF.whtrHealthy){
       const target=Math.round(HEALTH_REF.whtrHealthy*i.heightCm*10)/10;
       items.push({level:i.whtr>=HEALTH_REF.whtrHigh?"high":"watch",
-        title:"Waist is above the healthy ratio",
+        title:"Waist is above the healthy ratio",cat:"Body",goal:{title:`Waist down to ${fmt(target)} cm`,target:`${fmt(target)} cm`},
         why:`Your waist is ${fmt(i.waist)} cm against ${fmt(i.heightCm)} cm of height, a ratio of ${i.whtr.toFixed(3)}. NICE puts 0.50 and above in the increased-risk band for adults under BMI 35. Getting to ${fmt(target)} cm would clear it.`,
         gain:Math.round((100-components.find(c=>c.key==="body")?.score||0)*25/100)});
     }
     if(i.sleepH!=null&&i.sleepH<HEALTH_REF.sleepLow){
-      items.push({level:"watch",title:"Sleep is under seven hours",
+      items.push({level:"watch",title:"Sleep is under seven hours",cat:"Sleep & recovery",goal:{title:"Sleep 7+ hours a night",target:"7–9 h / night"},
         why:`Typical night is ${fmt(i.sleepH)} h. Below 7 h blunts the training adaptation you are paying for in every session, and it is the cheapest thing on this list to fix.`});
     }
     if(i.shortNights!=null&&i.nightsLogged&&i.shortNights/i.nightsLogged>=.25){
-      items.push({level:"watch",title:"Short nights are frequent",
+      items.push({level:"watch",title:"Short nights are frequent",cat:"Sleep & recovery",goal:{title:"No nights under 6 hours",target:"6 h+ every night"},
         why:`${i.shortNights} of the last ${i.nightsLogged} recorded nights were under 6 h. The median hides this; consistency matters more than the average.`});
     }
     if(i.nightsLogged!=null&&i.nightsWindow&&i.nightsLogged/i.nightsWindow<.7){
-      items.push({level:"info",title:"Sleep is only being recorded some nights",
+      items.push({level:"info",title:"Sleep is only being recorded some nights",cat:"Sleep & recovery",
         why:`${i.nightsLogged} nights captured out of ${i.nightsWindow}. Wear the watch overnight more often or the sleep half of this score is guesswork.`});
     }
     if(i.hrv!=null&&i.hrvLo!=null&&i.hrv<i.hrvLo){
-      items.push({level:"watch",title:"HRV is below your own baseline",
+      items.push({level:"watch",title:"HRV is below your own baseline",cat:"Sleep & recovery",goal:{title:"Take 1 rest or easy day every week",target:"1 rest day / week"},
         why:`${fmt(i.hrv)} against a baseline of ${fmt(i.hrvLo)}-${fmt(i.hrvHi)}. One reading is noise; several days in a row usually means load, sleep debt, alcohol or illness.`});
     }
     if(i.weeklyMinutes!=null&&i.weeklyMinutes<HEALTH_REF.whoMinutes){
-      items.push({level:"watch",title:"Weekly activity is under the WHO minimum",
+      items.push({level:"watch",title:"Weekly activity is under the WHO minimum",cat:"Training",goal:{title:"150+ minutes of activity a week",target:"150 min / week"},
         why:`${Math.round(i.weeklyMinutes)} moderate-equivalent minutes a week against a floor of 150.`});
     }
     if(i.bmi!=null&&i.bmi>=25&&(i.whtr==null||i.whtr<HEALTH_REF.whtrHealthy)){
-      items.push({level:"info",title:"BMI reads overweight but your waist does not",
+      items.push({level:"info",title:"BMI reads overweight but your waist does not",cat:"Body",
         why:`BMI ${i.bmi.toFixed(1)} with a healthy waist ratio usually means muscle, not fat. This is why the score leans on waist rather than BMI.`});
     }
     const bs=bloodHealthScore();
     if(bs&&bs.bad>0){
-      items.push({level:"high",title:`${bs.bad} blood marker${bs.bad>1?"s":""} outside reference range`,
+      items.push({level:"high",cat:"Blood",title:`${bs.bad} blood marker${bs.bad>1?"s":""} outside reference range`,
         why:`Your last blood results show ${bs.bad} critical result${bs.bad>1?"s":""} and ${bs.warn} borderline out of ${bs.tested} tested. Check the Blood Results tab for details and discuss with your doctor.`});
     }else if(bs&&bs.warn>=3){
-      items.push({level:"watch",title:`${bs.warn} blood markers are borderline`,
+      items.push({level:"watch",cat:"Blood",title:`${bs.warn} blood markers are borderline`,
         why:`${bs.warn} of ${bs.tested} tested markers sit in the borderline range. None are critical, but several borderline results together are worth a conversation with your doctor.`});
     }
     return items;
