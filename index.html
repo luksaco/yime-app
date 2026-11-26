@@ -5832,10 +5832,10 @@
     const save=()=>{const v=el.textContent.replace(/\s+/g," ").trim().slice(0,40);el.textContent=v;try{localStorage.setItem("yime_name",v)}catch(e){}};
     el.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();el.blur()}});el.addEventListener("blur",save);})();
   // ===== Workout activity trend: sessions, time and distance per week or month, by activity =====
-  let wtPeriod="week",wtGroup="All",wtYear=new Date().getFullYear();
+  let wtPeriod="month",wtGroup="All",wtYear=new Date().getFullYear();
   function renderWorkoutTrend(){
     const el=$("workoutTrend");if(!el)return;const tc=$("trainingCard");if(tc&&tc.nextElementSibling!==el)tc.after(el);const ws=state.workouts||[];
-    if(!ws.length){el.innerHTML=`<p class="eyebrow">Fitness activity trend</p><p class="wt-empty">Import your Garmin or Strava workouts in Training and your weekly and monthly activity trend appears here.</p>`;return}
+    if(!ws.length){el.innerHTML=`<p class="eyebrow">Fitness activity trend</p><p class="wt-empty">Import your Garmin or Strava workouts in Training and your monthly activity trend appears here.</p>`;return}
     const groups=["All",...[...new Set(ws.map(w=>w.group))].sort((a,b)=>ws.filter(w=>w.group===b).length-ws.filter(w=>w.group===a).length)];
     if(!groups.includes(wtGroup))wtGroup="All";
     const rows=ws.filter(w=>wtGroup==="All"||w.group===wtGroup),realNow=new Date(),buckets=[];
@@ -5873,7 +5873,7 @@
     const dHr=(a,b)=>{if(!a||!b)return"";const s=Math.round(a-b);if(!s)return`<em class="flat">same</em>`;return`<em class="${s<0?"up":"down"}">${s<0?"↓":"↑"} ${Math.abs(s)}</em>`};
     const lastRun=[...buckets].slice(0,-1).reverse().find(b=>b.hr||b.pace)||{},hasHr=buckets.some(b=>b.hr);
     const runTile=`<div class="wt-run"><span>Running vs last ${wtPeriod}</span><b>${last.hr?Math.round(last.hr):"—"}<i class="u"> bpm avg</i></b><small>${last.hr&&lastRun.hr?`${dHr(last.hr,lastRun.hr)} vs ${Math.round(lastRun.hr)} bpm`:hasHr?"No HR this "+wtPeriod+" yet":"Import Strava with heart rate"}</small><small>${pc(last.pace)} ${dPace(last.pace,lastRun.pace)}${lastRun.pace?` vs ${pc(lastRun.pace)}`:""}</small></div>`;
-    el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Fitness activity trend</p><div class="wt-ctrl"><div class="seg wt-seg">${["week","month"].map(p=>`<button type="button" data-wtp="${p}" aria-pressed="${wtPeriod===p}">${p==="week"?"Weekly":"Monthly"}</button>`).join("")}</div>
+    el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Fitness activity trend</p><div class="wt-ctrl">
       ${wtPeriod==="month"?`<select class="wt-sel wt-year" data-wty aria-label="Year">${years.map(y=>`<option value="${y}" ${y===wtYear?"selected":""}>${y}</option>`).join("")}</select>`:""}
       <select class="wt-sel" data-wtg aria-label="Activity">${groups.map(g=>`<option ${g===wtGroup?"selected":""}>${g}</option>`).join("")}</select></div></div>
       <div class="wt-sum"><div><span>${last.cur?`This ${wtPeriod}`:esc(last.label)}</span><b>${last.n}<i class="u"> session${last.n===1?"":"s"}</i></b><small>${hm(last.min)} · ${last.km.toFixed(1)} km ${last.cur?dlt(last.min,last.pmin):prev?dlt(last.min,prev.min):""}</small><small class="wt-cmp">${last.cur?`vs same days last ${wtPeriod}`:`vs ${esc(prev?prev.label:"")}`}</small></div>
@@ -5884,7 +5884,7 @@
       ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>`<tr class="${b.cur?"cur":""}"><td>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*240).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}${p?` <span class="wt-d">${dPace(b.pace,p.pace)}</span>`:""}</td><td class="num">${b.hr?Math.round(b.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(b.hr,p.hr)}</span>`:""}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td></tr>`).join("")}
       </tbody></table></div>`;
   }
-  document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-wtp]");if(b){wtPeriod=b.dataset.wtp;renderWorkoutTrend()}});
+  
   document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}
     if(e.target.matches&&e.target.matches("[data-wty]")){wtYear=Number(e.target.value);renderWorkoutTrend()}});
   {let wtRz,wtW=0;addEventListener("resize",()=>{clearTimeout(wtRz);wtRz=setTimeout(()=>{const w=$("workoutTrend")?.clientWidth||0;if(w&&Math.abs(w-wtW)>40){wtW=w;renderWorkoutTrend()}},150)})}
