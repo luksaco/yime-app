@@ -2247,6 +2247,13 @@
   :root:not([data-theme="dark"]) body{background:linear-gradient(180deg,#FAFBFD 0%,#F3F6FA 100%)!important;background-attachment:fixed!important}
   :root:not([data-theme="dark"]) body::before{opacity:0!important}
   :where(:root:not([data-theme="dark"])) .card,:where(:root:not([data-theme="dark"])) .stat,:where(:root:not([data-theme="dark"])) .bm-health,:where(:root:not([data-theme="dark"])) .fit-mini{background:#fff!important;border-color:rgba(6,7,6,.06)!important;box-shadow:0 1px 2px rgba(6,7,6,.04),0 8px 24px rgba(6,7,6,.04)!important}
+  /* body goals: current → target → unit sit in fixed columns so every row lines up */
+  #gx-body .gx-fig{display:grid!important;grid-template-columns:64px 22px 78px 78px;align-items:center;column-gap:6px;width:auto}
+  #gx-body .gx-fig b{text-align:right;white-space:nowrap}
+  #gx-body .gx-fig i{text-align:center;font-style:normal}
+  #gx-body .gx-fig input{width:78px!important;min-width:0;box-sizing:border-box}
+  #gx-body .gx-fig span{text-align:left;white-space:nowrap;font-size:12.5px;margin:0!important;align-self:center;line-height:1}
+  @media(max-width:680px){#gx-body .gx-fig{grid-template-columns:52px 18px 68px auto}#gx-body .gx-fig input{width:68px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
