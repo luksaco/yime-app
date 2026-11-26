@@ -2345,6 +2345,11 @@
   @keyframes wtIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
   @media(prefers-reduced-motion:reduce){#workoutTrend table.wt-table tbody tr.wt-wrow td{animation:none}}
   :root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-mrow.open td{background:#f2f1ef!important;color:#111!important}:root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-mrow.open td *{color:#111}:root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-wrow td{background:#17181b!important}
+  @media(max-width:680px){#workoutTrend .wt-table td:nth-child(8),#workoutTrend .wt-table th:nth-child(8){display:none}}
+  #workoutTrend table.wt-table thead th{white-space:normal!important;vertical-align:bottom;line-height:1.3}
+  #workoutTrend table.wt-table th,#workoutTrend table.wt-table td{padding-left:10px!important;padding-right:10px!important}
+  #workoutTrend .wt-time i{max-width:170px!important}
+  #workoutTrend table.wt-table th:nth-child(6){min-width:86px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -6289,12 +6294,12 @@
       const r=rows.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});
       const runs=r.filter(w=>w.group==="Run"&&w.km>0&&w.minutes>0),rk=runs.reduce((a,w)=>a+w.km,0),rm=runs.reduce((a,w)=>a+w.minutes,0);
       const hrs=r.filter(w=>w.group==="Run"&&w.hr),hm2=hrs.reduce((a,w)=>a+w.minutes,0),rhr=hm2?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hm2:null;
-      const isCur=i===0&&(wtPeriod==="week"||curYear);let pmin=null;if(isCur){const t1=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);let ps,pe;
+      const isCur=i===0&&(wtPeriod==="week"||curYear);let pmin=null,pkm=null;if(isCur){const t1=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);let ps,pe;
         if(wtPeriod==="week"){ps=new Date(s);ps.setDate(ps.getDate()-7);pe=new Date(t1);pe.setDate(pe.getDate()-7)}
         else{ps=new Date(s.getFullYear(),s.getMonth()-1,1);const dim=new Date(s.getFullYear(),s.getMonth(),0).getDate();pe=new Date(s.getFullYear(),s.getMonth()-1,Math.min(now.getDate(),dim)+1)}
-        pmin=rows.filter(w=>{const t=dateValue(w.date);return t>=ps.getTime()&&t<pe.getTime()}).reduce((a,w)=>a+(w.minutes||0),0)}
+        const pr=rows.filter(w=>{const t=dateValue(w.date);return t>=ps.getTime()&&t<pe.getTime()});pmin=pr.reduce((a,w)=>a+(w.minutes||0),0);pkm=pr.reduce((a,w)=>a+(w.km||0),0)}
       const days=Math.max(1,Math.round((Math.min(e.getTime(),Date.now())-s.getTime())/864e5)),full=Math.round((e-s)/864e5);
-      buckets.push({s:s.getTime(),e:e.getTime(),label,short:wtPeriod==="week"?label:s.toLocaleDateString("en-GB",{month:"short"}),n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:rhr,cur:isCur,pmin,
+      buckets.push({s:s.getTime(),e:e.getTime(),label,short:wtPeriod==="week"?label:s.toLocaleDateString("en-GB",{month:"short"}),n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:rhr,cur:isCur,pmin,pkm,
         act:new Set(r.map(w=>w.date)).size,longest:Math.max(0,...r.map(w=>w.minutes||0)),days:isCur?days:full,full})}
     while(buckets.length>1&&!buckets[0].n&&!buckets[0].cur)buckets.shift();
     // Activity score 0–100 per period: volume 50 (time vs your usual for this view, pro-rated for the period in progress),
@@ -6319,7 +6324,7 @@
         out.push({label:`${f(sd)}${f(sd)!==f(ed)?"–"+f(ed):""} ${sd.toLocaleDateString("en-GB",{month:"short"})}`,n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:hmn?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hmn:null,future:s>Date.now()});
         ws0=we}
       const wmx=Math.max(1,...out.map(w=>w.min));
-      return out.map((w,i)=>{const p=out[i-1];return `<tr class="wt-wrow"><td>${w.label}</td><td class="num">${w.n||"—"}</td><td class="wt-time"><b>${w.min?hm(w.min):"—"}</b>${w.min?`<i style="width:${(w.min/wmx*160).toFixed(0)}px"></i>`:""}</td><td class="num">${w.km?w.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(w.pace)}${p?` <span class="wt-d">${dPace(w.pace,p.pace)}</span>`:""}</td><td class="num">${w.hr?Math.round(w.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(w.hr,p.hr)}</span>`:""}</td><td class="num">${w.future?"—":p&&p.min?dlt(w.min,p.min):"—"}</td></tr>`}).join("")};
+      return out.map((w,i)=>{const p=out[i-1];return `<tr class="wt-wrow"><td>${w.label}</td><td class="num">${w.n||"—"}</td><td class="wt-time"><b>${w.min?hm(w.min):"—"}</b>${w.min?`<i style="width:${(w.min/wmx*160).toFixed(0)}px"></i>`:""}</td><td class="num">${w.km?w.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(w.pace)}${p?` <span class="wt-d">${dPace(w.pace,p.pace)}</span>`:""}</td><td class="num">${w.hr?Math.round(w.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(w.hr,p.hr)}</span>`:""}</td><td class="num">${w.future?"—":p&&p.min?dlt(w.min,p.min):"—"}</td><td class="num">${w.future?"—":p&&p.km?dlt(w.km,p.km):"—"}</td></tr>`}).join("")};
     el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Fitness activity trend</p><div class="wt-ctrl">
       ${wtPeriod==="month"?`<select class="wt-sel wt-year" data-wty aria-label="Year">${years.map(y=>`<option value="${y}" ${y===wtYear?"selected":""}>${y}</option>`).join("")}</select>`:""}
       <select class="wt-sel" data-wtg aria-label="Activity">${groups.map(g=>`<option value="${esc(g)}" ${g===wtGroup?"selected":""}>${g==="All"?"Pick activity":esc(sportLabel(g))}</option>`).join("")}</select></div></div>
@@ -6327,8 +6332,8 @@
         <div><span>Average ${wtPeriod}${wtPeriod==="month"?` in ${wtYear}`:""}</span><b>${avg("n").toFixed(1)}<i class="u"> sessions</i></b><small>${hm(avg("min"))} · ${avg("km").toFixed(1)} km</small></div>
         <div><span>${wtPeriod==="week"?"12 weeks total":`${wtYear} total${curYear?" so far":""}`}</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div>${runTile}</div>
       ${wtChart(buckets)}
-      <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num"><span class="wt-lg">Sessions</span><span class="wt-sm">#</span></th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num"><span class="wt-lg">Run avg HR</span><span class="wt-sm">Run HR</span></th><th class="num">Time vs prev</th></tr></thead><tbody>
-      ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>{const key=String(b.s),open=wtOpen.has(key);return `<tr class="${b.cur?"cur":""} wt-mrow${open?" open":""}" data-wtm="${key}" tabindex="0" aria-expanded="${open}"><td><span class="wt-chev">›</span>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*240).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}${p?` <span class="wt-d">${dPace(b.pace,p.pace)}</span>`:""}</td><td class="num">${b.hr?Math.round(b.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(b.hr,p.hr)}</span>`:""}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td></tr>${open?wtWeeks(b):""}`}).join("")}
+      <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num"><span class="wt-lg">Sessions</span><span class="wt-sm">#</span></th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num"><span class="wt-lg">Run avg HR</span><span class="wt-sm">Run HR</span></th><th class="num">Time<br>vs prev</th><th class="num">Distance<br>vs prev</th></tr></thead><tbody>
+      ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>{const key=String(b.s),open=wtOpen.has(key);return `<tr class="${b.cur?"cur":""} wt-mrow${open?" open":""}" data-wtm="${key}" tabindex="0" aria-expanded="${open}"><td><span class="wt-chev">›</span>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*170).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}${p?` <span class="wt-d">${dPace(b.pace,p.pace)}</span>`:""}</td><td class="num">${b.hr?Math.round(b.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(b.hr,p.hr)}</span>`:""}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td><td class="num">${b.cur?(b.pkm?dlt(b.km,b.pkm):"—"):p&&p.km?dlt(b.km,p.km):"—"}</td></tr>${open?wtWeeks(b):""}`}).join("")}
       </tbody></table></div>`;
   }
   
