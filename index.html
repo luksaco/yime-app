@@ -2450,6 +2450,12 @@
   .sg-card p{margin:0 0 24px;font-size:15.5px;line-height:1.5;color:#4a443e;font-weight:500}
   .sg-btn{border:0;border-radius:999px;background:#060706;color:#fff;font:inherit;font-size:15px;font-weight:800;padding:14px 26px;cursor:pointer}
   .sg-btn:hover{background:#f05a4f}
+  /* Body health: "fair/normal" in silver instead of amber */
+  #healthCard{--a:#a7afb8}
+  #healthCard .fa-ring.ok .fa-val,#healthCard .hc-score.ok{color:#7b848e!important}
+  #healthCard .hc-score.ok::before{background:#eef0f3!important;color:#5f6873!important}
+  #healthCard .hc-fill.ok{background:linear-gradient(90deg,#c3c9d0,#9aa3ad)!important}
+  #healthCard .att.watch{border-left-color:#9aa3ad!important}#healthCard .att.watch::before{background:#9aa3ad}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3259,7 +3265,7 @@
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
     const R=52,C=2*Math.PI*R;
     $("hsArc").setAttribute("stroke-dasharray",`${(score||0)/100*C} ${C}`);
-    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#1f9d55":score>=65?"#4397f7":score>=50?"#f5a524":"#f05a4f");
+    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#1f9d55":score>=65?"#4397f7":score>=50?"#9aa3ad":"#f05a4f");
 
     // components
     $("healthComponents").innerHTML=comps.length?comps.map(c=>{
