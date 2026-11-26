@@ -2303,6 +2303,12 @@
   #healthCard .att.high::before{background:var(--r)}#healthCard .att.watch::before{background:var(--a)}#healthCard .att.info::before{background:var(--b)}#healthCard .att.good::before{background:var(--g)}
   #healthCard .health-rings{align-items:stretch!important}
   #healthCard .health-rings>.fa-ring,#healthCard .health-rings>.hs-dial{display:flex!important;flex-direction:column;align-items:center;justify-content:center;height:auto!important;width:auto!important;margin:0!important}
+  /* Training: more breathing room between and inside the cards */
+  #trainingCard,#workoutTrend,#energyCard{margin-top:0!important;margin-bottom:32px!important}
+  #trainingCard .train-tiles{margin-bottom:22px!important}
+  #workoutTrend .wt-sum{margin:18px 0 22px!important}
+  #workoutTrend .wtc{margin-bottom:24px!important}
+  @media(max-width:680px){#trainingCard,#workoutTrend,#energyCard{margin-bottom:22px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
