@@ -2005,6 +2005,8 @@
 
   /* 12-month bar chart removed from Training (month switching stays in the top nav) */
   #trainingCard .train-chart-head,#trainingCard #trainingChart,#trainingCard .month-row-bottom{display:none!important}
+  /* manual "Add a session yourself" form removed from Training */
+  #trainingCard details.train-tools.always-open{display:none!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -2481,7 +2483,7 @@
           <button type="button" class="btn small" id="staleFix">Re-import activities.csv</button>
         </div>
         <div id="trainingEmpty" class="training-empty">
-          <p>No sessions yet. Use <b>Import workouts</b> above for a CSV export from your watch app, or add a session yourself below.</p>
+          <p>No sessions yet. Use <b>Import workouts</b> above for a CSV export from your watch app.</p>
         </div>
         <div id="trainingBody" class="hidden">
           <div class="stats train-tiles" id="trainingTiles"></div>
