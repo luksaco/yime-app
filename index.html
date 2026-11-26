@@ -2330,6 +2330,21 @@
   /* main YIME header stays at the top while scrolling */
   .wrap>.top,.top{position:sticky!important;top:0;z-index:60!important}
   .top::before{box-shadow:0 1px 0 rgba(6,7,6,.06),0 6px 18px rgba(6,7,6,.04)}
+  /* opened month: black header row, its weeks on white with a YIME-red rail, clear end line */
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open td{background:#060706!important;color:#fff!important}
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open td *{color:#fff}
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open .wt-chev{color:#f05a4f!important}
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open .wt-time i{background:#fff!important;opacity:1}
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open em.up{color:#4ade80!important}#workoutTrend table.wt-table tbody tr.wt-mrow.open em.down{color:#ff7a70!important}
+  #workoutTrend table.wt-table tbody tr.wt-mrow.open td:first-child{border-radius:0}
+  #workoutTrend table.wt-table tbody tr.wt-wrow td{background:#fff!important;font-size:14px;animation:wtIn .22s ease both}
+  #workoutTrend table.wt-table tbody tr.wt-wrow td:first-child{box-shadow:inset 4px 0 0 #f05a4f!important;padding-left:30px!important}
+  #workoutTrend table.wt-table tbody tr.wt-wrow .wt-time i{background:#f05a4f!important;opacity:.55}
+  #workoutTrend table.wt-table tbody tr.wt-wrow:has(+ tr.wt-mrow) td,#workoutTrend table.wt-table tbody tr.wt-wrow:last-child td{border-bottom:2px solid #060706!important}
+  #workoutTrend table.wt-table tbody tr.wt-wrow:hover td{background:#fff6f5!important}
+  @keyframes wtIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){#workoutTrend table.wt-table tbody tr.wt-wrow td{animation:none}}
+  :root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-mrow.open td{background:#f2f1ef!important;color:#111!important}:root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-mrow.open td *{color:#111}:root[data-theme="dark"] #workoutTrend table.wt-table tbody tr.wt-wrow td{background:#17181b!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
