@@ -2412,6 +2412,29 @@
   /* app feel on phones: no double-tap zoom, inputs at 16px so iOS doesn't zoom on focus */
   html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   @media(max-width:680px){input,select,textarea{font-size:16px!important}}
+  /* ===== Setup wizard: clean white card on a dark overlay ===== */
+  .setup-overlay{background:rgba(6,7,6,.72)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
+  .setup-box{background:#fff!important;border:0!important;box-shadow:0 30px 80px rgba(0,0,0,.35)!important;border-radius:28px!important;padding:30px 32px 26px!important;color:#060706;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  .setup-logo{display:block;height:34px;width:auto;margin:0 0 18px}
+  .setup-dots{justify-content:flex-start!important;margin-bottom:22px!important}
+  .setup-dots span{width:22px!important;height:4px!important;border-radius:99px!important;background:#e6e6e6!important}
+  .setup-dots span.on{background:#060706!important}
+  .setup-box h2{font-size:28px!important;font-weight:800!important;letter-spacing:-.03em!important;color:#060706!important}
+  .setup-box .setup-sub{color:#4a443e!important;font-size:15px!important;font-weight:500}
+  .setup-label{color:#060706!important;font-size:12px!important;font-weight:800!important;letter-spacing:.07em!important}
+  .setup-input{background:#f2f2f2!important;border:1.5px solid transparent!important;color:#060706!important;font-weight:600;border-radius:14px!important;box-shadow:none!important}
+  .setup-input::placeholder{color:#9a938b}
+  .setup-input:focus{background:#fff!important;border-color:#060706!important;box-shadow:none!important}
+  .setup-sex button,.setup-toggle button,.setup-select-group button{background:#f2f2f2!important;border:1.5px solid transparent!important;color:#060706!important;font-weight:700!important;box-shadow:none!important;background-image:none!important}
+  .setup-sex button.chosen,.setup-toggle button.chosen,.setup-select-group button.chosen{background:#060706!important;border-color:#060706!important;color:#fff!important}
+  .setup-sex button:hover:not(.chosen),.setup-toggle button:hover:not(.chosen),.setup-select-group button:hover:not(.chosen){border-color:#060706!important}
+  .setup-freq label{border-color:rgba(6,7,6,.1)!important;color:#060706;font-weight:600}.setup-freq input{accent-color:#060706}
+  .setup-note{color:#857b70!important}
+  .setup-summary{background:#f2f2f2!important}.setup-summary dt{color:#857b70!important}.setup-summary dd{color:#060706!important}
+  .setup-nav .btn.primary,#setupNext{background:#060706!important;border-color:#060706!important;color:#fff!important;box-shadow:none!important;border-radius:999px!important;font-weight:700}
+  #setupBack{background:#fff!important;border:1.5px solid rgba(6,7,6,.14)!important;color:#060706!important;box-shadow:none!important;border-radius:999px!important}
+  #setupSkip{color:#857b70!important;background:none!important;border:0!important;box-shadow:none!important}
+  @media(max-width:560px){.setup-box{padding:24px 20px 20px!important;border-radius:24px!important}.setup-box h2{font-size:24px!important}.setup-logo{height:28px}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -7993,5 +8016,8 @@
 ;(function(){const no=e=>{e.preventDefault()};
   document.addEventListener("gesturestart",no,{passive:false});document.addEventListener("gesturechange",no,{passive:false});document.addEventListener("gestureend",no,{passive:false});
   document.addEventListener("touchmove",e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});})();
+
+;(function(){const box=document.querySelector(".setup-box"),logo=document.querySelector(".logo-main");if(!box||!logo||box.querySelector(".setup-logo"))return;
+  const c=logo.cloneNode(true);c.removeAttribute("style");c.classList.remove("logo-main");c.classList.add("setup-logo");c.setAttribute("aria-label","yime app");box.insertBefore(c,box.firstChild);})();
 </script>
 </body></html>
