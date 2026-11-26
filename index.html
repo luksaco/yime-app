@@ -2179,6 +2179,7 @@
   .ta-ctx.race{background:#060706!important;color:#fff!important}
   .ta-verdict.bad,.ta-verdict.mid,.ta-verdict.good{background:#060706!important}
   .ta-addall{box-shadow:none!important}
+  .stat[data-key]{cursor:pointer}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -6654,14 +6655,19 @@
       {const vp=$("bodyViewport");let pend=null,fr=0;
         vp.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse"||bodyDragging)return;pend=e;if(!fr)fr=requestAnimationFrame(()=>{fr=0;const r=vp.getBoundingClientRect();if(!r.width)return;
           const k=bodyPartAt((pend.clientX-r.left)/r.width*500,(pend.clientY-r.top)/r.height*700);setFocus(k);vp.style.cursor=k?"pointer":""})});
-        vp.addEventListener("pointerleave",()=>{setFocus(null);vp.style.cursor=""});}
+        vp.addEventListener("pointerleave",()=>{setFocus(null);vp.style.cursor=""});
+        let down=null;vp.addEventListener("pointerdown",e=>{down={x:e.clientX,y:e.clientY,t:Date.now()}});
+        vp.addEventListener("pointerup",e=>{if(!down)return;const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y),quick=Date.now()-down.t<500;down=null;if(moved>6||!quick)return;
+          const r=vp.getBoundingClientRect();const k=bodyPartAt((e.clientX-r.left)/r.width*500,(e.clientY-r.top)/r.height*700);if(k&&metrics[k]){setFocus(k);openLog(k)}});}
       for(const host of [$("stats"),$("statsTop")]){
         host.addEventListener("mouseover",e=>{const t=tileOf(e);if(t)setFocus(t.dataset.key)});
         host.addEventListener("mouseleave",()=>setFocus(null));
         host.addEventListener("focusin",e=>{const t=tileOf(e);if(t)setFocus(t.dataset.key)});
         host.addEventListener("focusout",()=>setFocus(null));
-        host.addEventListener("click",e=>{const t=tileOf(e);if(!t||!ringKeys(t.dataset.key))return;setFocus(t.dataset.key);
-          const r=$("bodyViewport").getBoundingClientRect();if(r.bottom<80||r.top>innerHeight-80)$("bodyViewport").scrollIntoView({behavior:"smooth",block:"center"})});
+        // clicking a measurement tile opens Log straight on that body part
+        host.addEventListener("click",e=>{const t=tileOf(e);if(!t||!metrics[t.dataset.key]||e.target.closest("button,a,select,input"))return;if(ringKeys(t.dataset.key))setFocus(t.dataset.key);openLog(t.dataset.key)});
+        host.querySelectorAll(".stat[data-key]").forEach(s=>{s.style.cursor="pointer";if(!s.hasAttribute("tabindex"))s.tabIndex=0});
+        host.addEventListener("keydown",e=>{const t=tileOf(e);if(t&&metrics[t.dataset.key]&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openLog(t.dataset.key)}});
       }})();
     (()=>{const mb=$("menuBtn"),mp=$("menuPop"),ms=$("menuScrim");const set=open=>{mp.hidden=!open;ms.hidden=!open;mb.setAttribute("aria-expanded",String(open))};const close=()=>set(false);
       mb.addEventListener("click",e=>{e.stopPropagation();set(mp.hidden)});
