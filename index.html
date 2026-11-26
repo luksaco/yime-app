@@ -2038,6 +2038,27 @@
   .wtc-tip b em{font-style:normal;font-size:12.5px;font-weight:700;margin-left:4px}
   .wtc-tip em.up{color:#4ade80}.wtc-tip em.down{color:#ff7a70}.wtc-tip em.flat{color:rgba(255,255,255,.6)}
   .wtc-tip small{display:block;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.75);margin-top:3px}
+  /* fitness activity trend summary tiles: clearer, bolder */
+  #workoutTrend .wt-sum{gap:12px!important;margin:14px 0 16px!important}
+  #workoutTrend .wt-sum>div{background:#fff!important;border:1px solid rgba(6,7,6,.08);border-radius:18px!important;padding:16px 18px!important;box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:4px}
+  #workoutTrend .wt-sum>div>span{font-size:11.5px!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase;color:#060706!important}
+  #workoutTrend .wt-sum>div>b{font-size:32px!important;font-weight:800!important;letter-spacing:-.04em!important;line-height:1.05;color:#060706;margin-top:4px}
+  #workoutTrend .wt-sum>div>b .u{font-size:14px!important;font-weight:700!important;letter-spacing:0;color:#857b70!important;margin-left:2px}
+  #workoutTrend .wt-sum>div>small{font-size:13.5px!important;font-weight:650;color:#3b3632!important;margin-top:2px}
+  #workoutTrend .wt-sum>div>small em{font-size:13.5px;font-weight:800}
+  #workoutTrend .wt-sum>div>small.wt-cmp{font-size:11.5px!important;font-weight:500;color:#857b70!important;opacity:1;margin-top:0}
+  #workoutTrend .wt-sum>.wt-run{background:#060706!important;border-color:#060706}
+  #workoutTrend .wt-sum>.wt-run>span{color:rgba(255,255,255,.7)!important}
+  #workoutTrend .wt-sum>.wt-run>b{color:#fff}
+  #workoutTrend .wt-sum>.wt-run>b .u{color:rgba(255,255,255,.55)!important}
+  #workoutTrend .wt-sum>.wt-run>small{color:rgba(255,255,255,.85)!important;font-size:13px!important}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>div{background:#161615!important;border-color:rgba(255,255,255,.08)}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>div>span,:root[data-theme="dark"] #workoutTrend .wt-sum>div>b{color:#f2f1ef!important}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>div>small{color:#cfc9c2!important}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>.wt-run{background:#f2f1ef!important}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>.wt-run>span,:root[data-theme="dark"] #workoutTrend .wt-sum>.wt-run>small{color:rgba(18,18,17,.7)!important}
+  :root[data-theme="dark"] #workoutTrend .wt-sum>.wt-run>b{color:#121211!important}
+  @media(max-width:680px){#workoutTrend .wt-sum{gap:8px!important}#workoutTrend .wt-sum>div{padding:12px 13px!important}#workoutTrend .wt-sum>div>b{font-size:25px!important}#workoutTrend .wt-sum>div>span{font-size:10.5px!important;letter-spacing:.04em}#workoutTrend .wt-sum>div>small.wt-cmp{font-size:11px!important}#workoutTrend .wt-sum>div>small{font-size:12.5px!important}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
