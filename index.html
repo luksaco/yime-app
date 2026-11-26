@@ -2254,6 +2254,53 @@
   #gx-body .gx-fig input{width:78px!important;min-width:0;box-sizing:border-box}
   #gx-body .gx-fig span{text-align:left;white-space:nowrap;font-size:12.5px;margin:0!important;align-self:center;line-height:1}
   @media(max-width:680px){#gx-body .gx-fig{grid-template-columns:52px 18px 68px auto}#gx-body .gx-fig input{width:68px!important}}
+  /* ===== Body health — cleaner, more readable ===== */
+  #healthCard{--g:#1f9d55;--b:#4397f7;--a:#f5a524;--r:#f05a4f}
+  #healthCard>.card-title-row .eyebrow{font-size:20px;font-weight:800;letter-spacing:.02em;color:#060706}
+  #healthCard .hs-note{font-size:13px;font-weight:500;color:#857b70}
+  /* three headline tiles */
+  #healthCard .health-rings{gap:14px!important;margin-bottom:26px!important}
+  #healthCard .health-rings>.fa-ring,#healthCard .health-rings>.hs-dial{background:#fff!important;border:1px solid rgba(6,7,6,.08)!important;border-radius:22px!important;box-shadow:0 1px 2px rgba(6,7,6,.04)!important;padding:26px 18px 24px!important;min-height:0!important}
+  #healthCard .health-rings>.fa-ring::before,#healthCard .health-rings>.hs-dial::before{display:none!important}
+  #healthCard .fa-ring .fa-val{font-size:60px!important;font-weight:800!important;letter-spacing:-.05em!important;line-height:1!important}
+  #healthCard .fa-ring.great .fa-val{color:var(--g)!important}#healthCard .fa-ring.good .fa-val{color:var(--b)!important}#healthCard .fa-ring.ok .fa-val{color:#c98400!important}#healthCard .fa-ring.poor .fa-val{color:var(--r)!important}
+  #healthCard .fa-lab,#healthCard .hs-centre span{font-size:12px!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#060706!important;margin-top:10px!important}
+  #healthCard .hs-centre span{color:#857b70!important;margin-top:2px!important}
+  #healthCard .fa-cap,#healthCard .hs-cap{font-size:14px!important;font-weight:600!important;color:#4a443e!important;margin-top:6px!important}
+  #healthCard .hs-centre strong{font-size:44px!important;font-weight:800!important;letter-spacing:-.04em}
+  /* score rows become clean cards */
+  #healthCard .health-components{display:flex;flex-direction:column;gap:10px!important}
+  #healthCard .hc-row{background:#fff;border:1px solid rgba(6,7,6,.08);border-radius:18px;padding:16px 18px 14px;margin:0!important}
+  #healthCard .hc-head{align-items:center!important;margin-bottom:10px}
+  #healthCard .hc-label{font-size:16px!important;font-weight:800!important;color:#060706!important;letter-spacing:-.01em}
+  #healthCard .hc-score{display:inline-flex;align-items:center;gap:10px;font-size:26px!important;font-weight:800!important;letter-spacing:-.03em}
+  #healthCard .hc-score.great{color:var(--g)!important}#healthCard .hc-score.good{color:var(--b)!important}#healthCard .hc-score.ok{color:#c98400!important}#healthCard .hc-score.poor{color:var(--r)!important}
+  #healthCard .hc-score::before{font-size:11px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase;padding:4px 10px!important;border-radius:999px!important}
+  #healthCard .hc-score.great::before{background:rgba(31,157,85,.1)!important;color:var(--g)!important}
+  #healthCard .hc-score.good::before{background:rgba(67,151,247,.1)!important;color:#2a7ad8!important}
+  #healthCard .hc-score.ok::before{background:rgba(245,165,36,.14)!important;color:#a86a00!important}
+  #healthCard .hc-score.poor::before{background:rgba(240,90,79,.1)!important;color:#d93a2f!important}
+  #healthCard .hc-track{height:10px!important;border-radius:999px;background:#eef0f3!important;margin:0 0 10px!important}
+  #healthCard .hc-fill.great{background:var(--g)!important}#healthCard .hc-fill.good{background:var(--b)!important}#healthCard .hc-fill.ok{background:var(--a)!important}#healthCard .hc-fill.poor{background:var(--r)!important}
+  #healthCard .hc-foot{font-size:13.5px!important;line-height:1.45!important;gap:16px!important}
+  #healthCard .hc-foot>span:first-child{color:#3b3632!important;font-weight:600}
+  #healthCard .hc-ref{font-size:12px!important;font-weight:600;color:#857b70!important}
+  /* section headings */
+  #healthCard .sec-head{font-size:15px!important;font-weight:800!important;letter-spacing:.06em!important;color:#060706!important;margin:30px 0 10px!important}
+  #healthCard .cap-read{font-size:14px!important;font-weight:500;color:#4a443e!important;line-height:1.5}
+  /* attention notes */
+  #healthCard .att{background:#fff!important;border:1px solid rgba(6,7,6,.08);border-left:4px solid #c4bcb3;border-radius:14px!important;padding:14px 16px 14px 62px!important;margin-bottom:10px;position:relative}
+  #healthCard .att.high{border-left-color:var(--r)!important}#healthCard .att.watch{border-left-color:var(--a)!important}#healthCard .att.info{border-left-color:var(--b)!important}#healthCard .att.good{border-left-color:var(--g)!important}
+  #healthCard .att-title{font-size:15px!important;font-weight:800!important;color:#060706}
+  #healthCard .att p{font-size:13.5px!important;color:#4a443e!important;font-weight:500}
+  @media(max-width:680px){#healthCard .fa-ring .fa-val{font-size:44px!important}#healthCard .hc-row{padding:14px}#healthCard .hc-foot{flex-direction:column;gap:2px!important}#healthCard .hc-score{font-size:22px!important}}
+  :root[data-theme="dark"] #healthCard .health-rings>.fa-ring,:root[data-theme="dark"] #healthCard .health-rings>.hs-dial,:root[data-theme="dark"] #healthCard .hc-row,:root[data-theme="dark"] #healthCard .att{background:#17181b!important;border-color:rgba(255,255,255,.08)!important}
+  :root[data-theme="dark"] #healthCard .hc-label,:root[data-theme="dark"] #healthCard .fa-lab,:root[data-theme="dark"] #healthCard .att-title,:root[data-theme="dark"] #healthCard .sec-head,:root[data-theme="dark"] #healthCard>.card-title-row .eyebrow{color:#f2f1ef!important}
+  :root[data-theme="dark"] #healthCard .hc-foot>span:first-child,:root[data-theme="dark"] #healthCard .fa-cap,:root[data-theme="dark"] #healthCard .hs-cap,:root[data-theme="dark"] #healthCard .att p{color:#cfc9c2!important}:root[data-theme="dark"] #healthCard .hc-track{background:rgba(255,255,255,.08)!important}
+  #healthCard .att::before{left:18px;top:14px}
+  #healthCard .att.high::before{background:var(--r)}#healthCard .att.watch::before{background:var(--a)}#healthCard .att.info::before{background:var(--b)}#healthCard .att.good::before{background:var(--g)}
+  #healthCard .health-rings{align-items:stretch!important}
+  #healthCard .health-rings>.fa-ring,#healthCard .health-rings>.hs-dial{display:flex!important;flex-direction:column;align-items:center;justify-content:center;height:auto!important;width:auto!important;margin:0!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -3060,7 +3107,7 @@
       score>=80?"strong across the board":score>=65?"good, with clear room":score>=50?"mixed":"needs work";
     const R=52,C=2*Math.PI*R;
     $("hsArc").setAttribute("stroke-dasharray",`${(score||0)/100*C} ${C}`);
-    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#89D25B":score>=50?"#0099FF":"#F04438");
+    $("hsArc").setAttribute("stroke",score==null?"#d7dbe3":score>=80?"#1f9d55":score>=65?"#4397f7":score>=50?"#f5a524":"#f05a4f");
 
     // components
     $("healthComponents").innerHTML=comps.length?comps.map(c=>{
