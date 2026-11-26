@@ -4893,7 +4893,8 @@
     let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{try{renderChart()}catch(e){}},150)});
   })();
   function renderHistory(){
-    const rows=[];if(state.baseline)rows.push({...state.baseline,baseline:true});sortedEntries().reverse().forEach(e=>rows.push(e));
+    // newest measurement first, the starting point at the bottom
+    const rows=sortedEntries().slice().sort((a,b)=>dateValue(b.date)-dateValue(a.date));if(state.baseline)rows.push({...state.baseline,baseline:true});
     if(!rows.length){$("history").innerHTML=`<div class="empty">No measurements yet. Set your baseline to begin.</div>`;return}
     // compact, fits without sideways scrolling: unit sits in the header, short labels, date on two lines
     const SH={weightKg:"Weight",chestCm:"Chest",waistCm:"Waist",hipCm:"Hips",leftBicepsCm:"Biceps L",rightBicepsCm:"Biceps R",leftThighCm:"Thigh L",rightThighCm:"Thigh R",leftCalfCm:"Calf L",rightCalfCm:"Calf R",vo2max:"VO₂ max"};
