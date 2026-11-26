@@ -2242,6 +2242,11 @@
   table.mh-table thead tr{background:#060706}table.mh-table thead th{background:transparent!important}
   @media(max-width:760px){table.mh-table tr{box-sizing:border-box;grid-template-columns:repeat(3,minmax(0,1fr))!important}table.mh-table td.mh-act{justify-self:end}table.mh-table .mh-btn{padding:4px 10px;font-size:11.5px}}
   table.mh-table thead th{background:#060706!important;box-shadow:1px 0 0 0 #060706,-1px 0 0 0 #060706!important}
+  /* lighter, calmer page background: near-white with the faintest cool tint; cards stay crisp white */
+  :root:not([data-theme="dark"]){--bg:#F6F8FB}
+  :root:not([data-theme="dark"]) body{background:linear-gradient(180deg,#FAFBFD 0%,#F3F6FA 100%)!important;background-attachment:fixed!important}
+  :root:not([data-theme="dark"]) body::before{opacity:0!important}
+  :root:not([data-theme="dark"]) .card,:root:not([data-theme="dark"]) .stat,:root:not([data-theme="dark"]) .bm-health,:root:not([data-theme="dark"]) .fit-mini{background:#fff!important;border-color:rgba(6,7,6,.06)!important;box-shadow:0 1px 2px rgba(6,7,6,.04),0 8px 24px rgba(6,7,6,.04)!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
