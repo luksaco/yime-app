@@ -2354,6 +2354,8 @@
     <div class="setup-step active" data-setup="1">
       <h2>Welcome to YIME</h2>
       <p class="setup-sub">Let's set up your profile so we can track your progress accurately. This takes about a minute.</p>
+      <label class="setup-label" for="setupName">Your name or username</label>
+      <input type="text" class="setup-input" id="setupName" maxlength="40" autocomplete="nickname" placeholder="Shown on your body model">
       <label class="setup-label">I am</label>
       <div class="setup-sex" id="setupSex">
         <button type="button" data-val="male" class="chosen">Male</button>
@@ -6630,7 +6632,7 @@
     const dietLabels={omnivore:"Omnivore",pescatarian:"Pescatarian",vegetarian:"Vegetarian",vegan:"Vegan",keto:"Keto / Low carb",other:"Other"};
     const alcoholLabels={none:"None",rare:"Rarely",moderate:"Moderate",frequent:"Frequent"};
     const smokingLabels={never:"Never",former:"Former",current:"Current"};
-    let html=row("Sex",setupSex==="male"?"Male":"Female");
+    let html=row("Name",esc(($("setupName").value||"").trim())||"not set")+row("Sex",setupSex==="male"?"Male":"Female");
     html+=row("Date of birth",$("setupDob").value||"not set");
     html+=row("Height",h?h+" cm":"not set");
     html+=row("Weight",w?w+" kg":"not set");
@@ -6667,6 +6669,7 @@
 
   function setupFinish(){
     const t=today();
+    {const nm=($("setupName").value||"").replace(/\s+/g," ").trim().slice(0,40);if(nm){try{localStorage.setItem("yime_name",nm)}catch(e){}const sn=$("scanName");if(sn)sn.textContent=nm}}
     state.sex=setupSex;
     const health={};
     const dob=$("setupDob").value;
@@ -6740,6 +6743,7 @@
     ["setupDob","setupHeight","setupWeight","setupChest","setupWaist","setupHip","setupLBiceps","setupRBiceps","setupLThigh","setupRThigh","setupLCalf","setupRCalf","setupVo2","setupRhr","setupSleep","setupSupplements","setupConditions"].forEach(id=>{const el=$(id);if(el)el.value="";});
     ["setupWorkType","setupStress","setupWater","setupDiet","setupAlcohol","setupSmoking","setupSleepQuality","setupTrainToggle","setupBloodToggle"].forEach(id=>{const el=$(id);if(el)el.querySelectorAll("button").forEach(b=>b.classList.remove("chosen"));});
     $("setupSex")?.querySelectorAll("button").forEach(b=>b.classList.toggle("chosen",b.dataset.val===setupSex));
+    {const sn=$("setupName");if(sn){try{sn.value=localStorage.getItem("yime_name")||""}catch(e){sn.value=""}}}
     document.querySelectorAll('input[name="setupFreq"]').forEach(r=>{r.checked=false});
     $("setupTrainDetails")?.classList.add("hidden");
     $("setupOverlay").classList.remove("hidden");
@@ -6779,6 +6783,7 @@
 
     $("setupSkip").addEventListener("click",()=>{
       try{localStorage.setItem("yime_setup_done","1")}catch(e){}
+      {const nm=($("setupName")?.value||"").replace(/\s+/g," ").trim().slice(0,40);if(nm){try{localStorage.setItem("yime_name",nm)}catch(e){}const sn=$("scanName");if(sn)sn.textContent=nm}}
       $("setupOverlay").classList.add("hidden");
       showToast("Setup skipped. Finish it anytime with the Set up button.",false);
     });
