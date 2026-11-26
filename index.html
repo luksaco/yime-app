@@ -2010,6 +2010,19 @@
   /* Monthly Review tiles: drops use the YIME red, gains the app green */
   #trainingCard .train-tiles .delta .down{color:#e9473c!important}
   #trainingCard .train-tiles .delta .up{color:#1f9d55!important}
+  /* fitness activity trend: year picker + score chart */
+  .wt-year{min-width:84px}
+  .wtc{border:1px solid var(--stroke);border-radius:16px;padding:16px 18px 10px;margin:0 0 14px;background:var(--card)}
+  .wtc-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .wtc-score{display:flex;align-items:center;gap:12px}.wtc-score b{font-size:38px;font-weight:800;letter-spacing:-.045em;line-height:1}
+  .wtc-score span{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}.wtc-score small{display:block;font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted);margin-top:2px}
+  .wtc-tr{font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px}.wtc-tr i{font-style:normal;font-weight:500;opacity:.8;margin-left:4px}
+  .wtc-tr.up{color:#1f9d55;background:rgba(31,157,85,.1)}.wtc-tr.down{color:#e9473c;background:rgba(233,71,60,.1)}.wtc-tr.flat{color:var(--muted);background:var(--soft)}
+  .wtc-svg{display:block;width:100%;height:auto;overflow:visible}
+  .wtc-ax{font-size:11px;font-weight:600;fill:var(--muted2)}
+  .wtc-dot{fill:#fff;stroke:#1f9d55;stroke-width:2}.wtc-cur{fill:#fff;stroke:#1f9d55;stroke-width:2;stroke-dasharray:3 2}
+  .wtc-note{margin:4px 0 0;font-size:11px;color:var(--muted2)}
+  :root[data-theme="dark"] .wtc-dot,:root[data-theme="dark"] .wtc-cur{fill:#121211}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5819,44 +5832,86 @@
     const save=()=>{const v=el.textContent.replace(/\s+/g," ").trim().slice(0,40);el.textContent=v;try{localStorage.setItem("yime_name",v)}catch(e){}};
     el.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();el.blur()}});el.addEventListener("blur",save);})();
   // ===== Workout activity trend: sessions, time and distance per week or month, by activity =====
-  let wtPeriod="week",wtGroup="All";
+  let wtPeriod="week",wtGroup="All",wtYear=new Date().getFullYear();
   function renderWorkoutTrend(){
     const el=$("workoutTrend");if(!el)return;const tc=$("trainingCard");if(tc&&tc.nextElementSibling!==el)tc.after(el);const ws=state.workouts||[];
     if(!ws.length){el.innerHTML=`<p class="eyebrow">Fitness activity trend</p><p class="wt-empty">Import your Garmin or Strava workouts in Training and your weekly and monthly activity trend appears here.</p>`;return}
     const groups=["All",...[...new Set(ws.map(w=>w.group))].sort((a,b)=>ws.filter(w=>w.group===b).length-ws.filter(w=>w.group===a).length)];
     if(!groups.includes(wtGroup))wtGroup="All";
-    const rows=ws.filter(w=>wtGroup==="All"||w.group===wtGroup),now=new Date(),N=wtPeriod==="week"?12:12,buckets=[];
+    const rows=ws.filter(w=>wtGroup==="All"||w.group===wtGroup),realNow=new Date(),buckets=[];
+    const years=[...new Set([realNow.getFullYear(),...ws.map(w=>Number(String(w.date).slice(0,4))).filter(Boolean)])].sort((a,b)=>b-a);
+    if(!years.includes(wtYear))wtYear=realNow.getFullYear();
+    const curYear=wtYear===realNow.getFullYear();
+    // monthly view lists the chosen year from January; a past year is shown as if "now" were 31 Dec
+    const now=wtPeriod==="month"&&!curYear?new Date(wtYear,11,31):realNow;
+    const N=wtPeriod==="week"?12:now.getMonth()+1;
     const monday=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
     for(let i=N-1;i>=0;i--){let s,e,label;
       if(wtPeriod==="week"){s=monday(now);s.setDate(s.getDate()-7*i);e=new Date(s);e.setDate(e.getDate()+7);label=s.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
       else{s=new Date(now.getFullYear(),now.getMonth()-i,1);e=new Date(now.getFullYear(),now.getMonth()-i+1,1);label=s.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
-        if(i===0){e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);label=`1–${now.getDate()} ${s.toLocaleDateString("en-GB",{month:"short"})} ${s.getFullYear()}`}}
+        if(i===0&&curYear){e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);label=`1–${now.getDate()} ${s.toLocaleDateString("en-GB",{month:"short"})} ${s.getFullYear()}`}}
       const r=rows.filter(w=>{const t=dateValue(w.date);return t>=s.getTime()&&t<e.getTime()});
       const runs=r.filter(w=>w.group==="Run"&&w.km>0&&w.minutes>0),rk=runs.reduce((a,w)=>a+w.km,0),rm=runs.reduce((a,w)=>a+w.minutes,0);
       const hrs=r.filter(w=>w.group==="Run"&&w.hr),hm2=hrs.reduce((a,w)=>a+w.minutes,0),rhr=hm2?hrs.reduce((a,w)=>a+w.hr*w.minutes,0)/hm2:null;
-      let pmin=null;if(i===0){const t1=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);let ps,pe;
+      const isCur=i===0&&(wtPeriod==="week"||curYear);let pmin=null;if(isCur){const t1=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);let ps,pe;
         if(wtPeriod==="week"){ps=new Date(s);ps.setDate(ps.getDate()-7);pe=new Date(t1);pe.setDate(pe.getDate()-7)}
         else{ps=new Date(s.getFullYear(),s.getMonth()-1,1);const dim=new Date(s.getFullYear(),s.getMonth(),0).getDate();pe=new Date(s.getFullYear(),s.getMonth()-1,Math.min(now.getDate(),dim)+1)}
         pmin=rows.filter(w=>{const t=dateValue(w.date);return t>=ps.getTime()&&t<pe.getTime()}).reduce((a,w)=>a+(w.minutes||0),0)}
-      buckets.push({label,n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:rhr,cur:i===0,pmin})}
+      const days=Math.max(1,Math.round((Math.min(e.getTime(),Date.now())-s.getTime())/864e5)),full=Math.round((e-s)/864e5);
+      buckets.push({label,short:wtPeriod==="week"?label:s.toLocaleDateString("en-GB",{month:"short"}),n:r.length,min:r.reduce((a,w)=>a+(w.minutes||0),0),km:r.reduce((a,w)=>a+(w.km||0),0),pace:rk?rm/rk:null,hr:rhr,cur:isCur,pmin,
+        act:new Set(r.map(w=>w.date)).size,longest:Math.max(0,...r.map(w=>w.minutes||0)),days:isCur?days:full,full})}
+    while(buckets.length>1&&!buckets[0].n&&!buckets[0].cur)buckets.shift();
+    // Activity score 0–100 per period: volume 50 (time vs your usual for this view, pro-rated for the period in progress),
+    // consistency 30 (active days, every second day = full), endurance 20 (longest session: 90 min a week / 2 h a month = full)
+    const doneB=buckets.filter(b=>!b.cur&&b.min),usual=doneB.length?doneB.reduce((a,b)=>a+b.min,0)/doneB.length:(buckets.find(b=>b.min)||{}).min||1;
+    buckets.forEach(b=>{if(!b.n){b.score=0;return}const f=b.days/b.full;
+      const vol=Math.min(1,b.min/(usual*1.2*f))*50,con=Math.min(1,b.act/(b.days*.5))*30,end=Math.min(1,b.longest/(wtPeriod==="week"?90:120))*20;b.score=Math.round(vol+con+end)});
     const mx=Math.max(1,...buckets.map(b=>b.min)),hm=m=>{m=Math.round(m);return m>=60?`${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}`:`${m}m`},pc=p=>p?`${Math.floor(p)}:${String(Math.round(p%1*60)).padStart(2,"0")}/km`:"—";
-    const avg=k=>{const b=buckets.slice(0,-1).filter(x=>x.n);return b.length?b.reduce((a,x)=>a+x[k],0)/b.length:0};
+    const avg=k=>{const b=buckets.filter(x=>!x.cur&&x.n);return b.length?b.reduce((a,x)=>a+x[k],0)/b.length:0};
     const last=buckets.at(-1),prev=buckets.at(-2),dlt=(a,b)=>!b?"":`<em class="${a>=b?"up":"down"}">${a>=b?"↑":"↓"} ${Math.abs(Math.round((a-b)/b*100))}%</em>`;
     const dPace=(a,b)=>{if(!a||!b)return"";const s=Math.round((a-b)*60);if(!s)return`<em class="flat">same</em>`;return`<em class="${s<0?"up":"down"}">${s<0?"↓":"↑"} ${Math.abs(s)}s</em>`};
     const dHr=(a,b)=>{if(!a||!b)return"";const s=Math.round(a-b);if(!s)return`<em class="flat">same</em>`;return`<em class="${s<0?"up":"down"}">${s<0?"↓":"↑"} ${Math.abs(s)}</em>`};
     const lastRun=[...buckets].slice(0,-1).reverse().find(b=>b.hr||b.pace)||{},hasHr=buckets.some(b=>b.hr);
     const runTile=`<div class="wt-run"><span>Running vs last ${wtPeriod}</span><b>${last.hr?Math.round(last.hr):"—"}<i class="u"> bpm avg</i></b><small>${last.hr&&lastRun.hr?`${dHr(last.hr,lastRun.hr)} vs ${Math.round(lastRun.hr)} bpm`:hasHr?"No HR this "+wtPeriod+" yet":"Import Strava with heart rate"}</small><small>${pc(last.pace)} ${dPace(last.pace,lastRun.pace)}${lastRun.pace?` vs ${pc(lastRun.pace)}`:""}</small></div>`;
     el.innerHTML=`<div class="card-title-row"><p class="eyebrow">Fitness activity trend</p><div class="wt-ctrl"><div class="seg wt-seg">${["week","month"].map(p=>`<button type="button" data-wtp="${p}" aria-pressed="${wtPeriod===p}">${p==="week"?"Weekly":"Monthly"}</button>`).join("")}</div>
+      ${wtPeriod==="month"?`<select class="wt-sel wt-year" data-wty aria-label="Year">${years.map(y=>`<option value="${y}" ${y===wtYear?"selected":""}>${y}</option>`).join("")}</select>`:""}
       <select class="wt-sel" data-wtg aria-label="Activity">${groups.map(g=>`<option ${g===wtGroup?"selected":""}>${g}</option>`).join("")}</select></div></div>
-      <div class="wt-sum"><div><span>This ${wtPeriod}</span><b>${last.n}<i class="u"> session${last.n===1?"":"s"}</i></b><small>${hm(last.min)} · ${last.km.toFixed(1)} km ${dlt(last.min,last.pmin)}</small><small class="wt-cmp">vs same days last ${wtPeriod}</small></div>
-        <div><span>Average ${wtPeriod}</span><b>${avg("n").toFixed(1)}<i class="u"> sessions</i></b><small>${hm(avg("min"))} · ${avg("km").toFixed(1)} km</small></div>
-        <div><span>${wtPeriod==="week"?"12 weeks":"12 months"} total</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div>${runTile}</div>
+      <div class="wt-sum"><div><span>${last.cur?`This ${wtPeriod}`:esc(last.label)}</span><b>${last.n}<i class="u"> session${last.n===1?"":"s"}</i></b><small>${hm(last.min)} · ${last.km.toFixed(1)} km ${last.cur?dlt(last.min,last.pmin):prev?dlt(last.min,prev.min):""}</small><small class="wt-cmp">${last.cur?`vs same days last ${wtPeriod}`:`vs ${esc(prev?prev.label:"")}`}</small></div>
+        <div><span>Average ${wtPeriod}${wtPeriod==="month"?` in ${wtYear}`:""}</span><b>${avg("n").toFixed(1)}<i class="u"> sessions</i></b><small>${hm(avg("min"))} · ${avg("km").toFixed(1)} km</small></div>
+        <div><span>${wtPeriod==="week"?"12 weeks total":`${wtYear} total${curYear?" so far":""}`}</span><b>${buckets.reduce((a,b)=>a+b.n,0)}<i class="u"> sessions</i></b><small>${hm(buckets.reduce((a,b)=>a+b.min,0))} · ${buckets.reduce((a,b)=>a+b.km,0).toFixed(0)} km</small></div>${runTile}</div>
+      ${wtChart(buckets)}
       <div class="table-scroll"><table class="history wt-table"><thead><tr><th>${wtPeriod==="week"?"Week of":"Month"}</th><th class="num"><span class="wt-lg">Sessions</span><span class="wt-sm">#</span></th><th>Time</th><th class="num">Distance</th><th class="num">Run pace</th><th class="num"><span class="wt-lg">Run avg HR</span><span class="wt-sm">Run HR</span></th><th class="num">Time vs prev</th></tr></thead><tbody>
       ${buckets.map((b,i)=>({b,p:buckets[i-1]})).reverse().map(({b,p})=>`<tr class="${b.cur?"cur":""}"><td>${b.label}${b.cur?' <span class="wt-now">now</span>':""}</td><td class="num">${b.n||"—"}</td><td class="wt-time"><b>${b.min?hm(b.min):"—"}</b>${b.min?`<i style="width:${(b.min/mx*240).toFixed(0)}px"></i>`:""}</td><td class="num">${b.km?b.km.toFixed(1)+" km":"—"}</td><td class="num">${pc(b.pace)}${p?` <span class="wt-d">${dPace(b.pace,p.pace)}</span>`:""}</td><td class="num">${b.hr?Math.round(b.hr)+" bpm":"—"}${p?` <span class="wt-d">${dHr(b.hr,p.hr)}</span>`:""}</td><td class="num">${b.cur?(b.pmin?dlt(b.min,b.pmin):"—"):p&&p.min?dlt(b.min,p.min):"—"}</td></tr>`).join("")}
       </tbody></table></div>`;
   }
   document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-wtp]");if(b){wtPeriod=b.dataset.wtp;renderWorkoutTrend()}});
-  document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}});
+  document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("[data-wtg]")){wtGroup=e.target.value;renderWorkoutTrend()}
+    if(e.target.matches&&e.target.matches("[data-wty]")){wtYear=Number(e.target.value);renderWorkoutTrend()}});
+  {let wtRz,wtW=0;addEventListener("resize",()=>{clearTimeout(wtRz);wtRz=setTimeout(()=>{const w=$("workoutTrend")?.clientWidth||0;if(w&&Math.abs(w-wtW)>40){wtW=w;renderWorkoutTrend()}},150)})}
+  function wtChart(all){
+    // a period in progress with nothing logged yet is not plotted (it would read as a crash to 0)
+    const B=all.filter(b=>!(b.cur&&!b.n));
+    if(B.length<2)return "";
+    const cw=($("workoutTrend")?.clientWidth||1040)-38,W=Math.max(300,Math.min(1100,cw)),H=W<600?170:190,pl=34,pr=18,pt=22,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+    const x=i=>pl+(B.length===1?iw/2:i*iw/(B.length-1)),y=v=>pt+ih-(v/100)*ih;
+    const P=B.map((b,i)=>[x(i),y(b.score)]);
+    let d=`M${P[0][0]},${P[0][1]}`;for(let i=1;i<P.length;i++){const [x0,y0]=P[i-1],[x1,y1]=P[i],cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`}
+    const grid=[0,25,50,75,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" stroke-opacity=".08"/><text x="${pl-8}" y="${y(v)+3.5}" text-anchor="end" class="wtc-ax">${v}</text>`).join("");
+    const step=Math.ceil(B.length/(W<600?6:12));
+    const lab=B.map((b,i)=>i%step&&i!==B.length-1?"":`<text x="${x(i)}" y="${H-8}" text-anchor="middle" class="wtc-ax">${esc(b.short)}</text>`).join("");
+    const dots=P.map(([px,py],i)=>`<circle cx="${px}" cy="${py}" r="${i===P.length-1?5:3.2}" class="${B[i].cur?"wtc-cur":"wtc-dot"}"><title>${esc(B[i].label)}: ${B[i].score}</title></circle>`).join("");
+    const lastI=B.length-1,lb=B[lastI];
+    // trend: latest completed period vs the one before
+    const done=B.filter(b=>!b.cur),a=done.at(-1),p=done.at(-2),diff=a&&p?a.score-p.score:null;
+    const dir=diff==null?"":Math.abs(diff)<2?"flat":diff>0?"up":"down";
+    const unit=wtPeriod==="week"?"week":"month";
+    const trend=diff==null?`<span class="wtc-tr flat">Not enough history yet</span>`:`<span class="wtc-tr ${dir}">${dir==="up"?"↑ Going up":dir==="down"?"↓ Going down":"→ Steady"} <i>${diff>0?"+":""}${diff} vs previous ${unit}</i></span>`;
+    const shown=a||lb,curB=all.find(b=>b.cur);
+    return `<div class="wtc"><div class="wtc-head"><div class="wtc-score"><b>${shown.score}</b><span>Activity score<small>${esc(shown.label)}${curB?(curB.n?` · ${curB.score} so far this ${unit}`:` · nothing logged this ${unit} yet`):""}</small></span></div>${trend}</div>
+      <svg class="wtc-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Activity score per ${unit}">
+        <defs><linearGradient id="wtcG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f9d55" stop-opacity=".18"/><stop offset="1" stop-color="#1f9d55" stop-opacity="0"/></linearGradient></defs>
+        ${grid}<path d="${d} L${P.at(-1)[0]},${pt+ih} L${P[0][0]},${pt+ih} Z" fill="url(#wtcG)"/><path d="${d}" fill="none" stroke="#1f9d55" stroke-width="2.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>${dots}${lab}</svg>
+      <p class="wtc-note">Score 0–100 for each ${unit}: time vs your usual (50), active days (30), longest session (20).</p></div>`}
   // ===== Progress: Fitness score card =====
   // Monthly score 0–100 from four parts, for any activity:
   //   Fitness 40  — chronic training load at month end (42-day weighted daily load; HR-weighted when HR exists); 60 load/day ≈ full
