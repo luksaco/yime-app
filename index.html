@@ -2180,6 +2180,24 @@
   .ta-verdict.bad,.ta-verdict.mid,.ta-verdict.good{background:#060706!important}
   .ta-addall{box-shadow:none!important}
   .stat[data-key]{cursor:pointer}
+  /* Goals hero */
+  .card.gl-hero{background:#060706!important;color:#fff;border:0!important;border-radius:26px;padding:30px 32px!important;align-items:center!important;box-shadow:0 14px 34px rgba(6,7,6,.18)}
+  .gl-hero .gl-left{flex:1;min-width:260px}
+  .gl-hero .gl-eye{margin:0;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#f05a4f}
+  .gl-hero h2{margin:6px 0 8px!important;font-size:38px!important;font-weight:800;letter-spacing:-.04em!important;color:#fff!important;line-height:1.05}
+  .gl-hero .gl-sub{margin:0;font-size:15px;font-weight:500;color:rgba(255,255,255,.72);line-height:1.45;max-width:520px}
+  .gl-prog{display:flex;align-items:center;gap:12px;margin-top:18px;max-width:520px}
+  .gl-bar{flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden}
+  .gl-bar i{display:block;height:100%;border-radius:inherit;background:#f05a4f;min-width:6px}
+  .gl-prog span{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap}.gl-prog b{color:#fff;font-weight:800;font-size:15px}
+  .gl-hero .gl-sum{display:flex;gap:10px}
+  .gl-hero .gl-sum>div{min-width:118px;padding:16px 18px;border-radius:18px;text-align:left;background:rgba(255,255,255,.08)!important;border:0}
+  .gl-hero .gl-sum b{display:block;font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#fff}
+  .gl-hero .gl-sum span{display:block;margin-top:8px;font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+  .gl-hero .gl-sum .s-all{background:#fff!important}.gl-hero .gl-sum .s-all b{color:#060706}.gl-hero .gl-sum .s-all span{color:#857b70}
+  .gl-hero .gl-sum .s-run{background:#f05a4f!important}.gl-hero .gl-sum .s-run span{color:rgba(255,255,255,.85)}
+  .gl-hero .gl-sum .s-done{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25)}
+  @media(max-width:680px){.card.gl-hero{padding:22px 20px!important}.gl-hero h2{font-size:30px!important}.gl-hero .gl-sum{width:100%}.gl-hero .gl-sum>div{flex:1;min-width:0;padding:13px 14px}.gl-hero .gl-sum b{font-size:30px}.gl-hero .gl-sum span{font-size:10px;letter-spacing:.04em}}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -5421,8 +5439,10 @@
     const bloodForm=goalForm==="blood"&&B?`<form class="gx-form" data-gform="blood"><select name="m" required>${Object.keys(B.MARKERS).map(c=>`<optgroup label="${esc(B.CAT_LABELS[c]||c)}">${B.MARKERS[c].map(m=>`<option value="${m.id}">${esc(m.label)} (${esc(m.unit)})</option>`).join("")}</optgroup>`).join("")}</select><select name="dir"><option value="max">at most ≤</option><option value="min">at least ≥</option></select><input name="v" type="number" step="any" inputmode="decimal" placeholder="Target" required><button type="submit" class="gx-save">Save goal</button><button type="button" class="gx-cancel" data-gcancel>Cancel</button></form>`:"";
     const section=(id,title,sub,rows,empty,form,addLabel,canAdd=true)=>`<section class="card gx-sec" id="${id}"><div class="gx-head"><div><h3>${title}</h3><p>${sub}</p></div></div>
       ${rows?`<ul class="gx-list">${rows}</ul>`:`<p class="gx-empty">${empty}</p>`}${form||(canAdd?`<button type="button" class="gx-add" data-gadd="${id.replace("gx-","")}"><span>+</span>${addLabel}</button>`:"")}</section>`;
-    host.innerHTML=`<div class="card gl-head"><div><p class="eyebrow">Goals</p><h2>Your goals</h2><p class="gl-sub">Body measurements, training and race targets, and blood results, all in one place.</p></div>
-      <div class="gl-sum"><div><b>${total}</b><span>goals</span></div><div><b>${track}</b><span>in progress</span></div><div><b>${reached}</b><span>reached</span></div></div></div>
+    const glPct=total?Math.round(reached/total*100):0;
+    host.innerHTML=`<div class="card gl-head gl-hero"><div class="gl-left"><p class="gl-eye">Goals</p><h2>Your goals</h2><p class="gl-sub">Body measurements, training and race targets, and blood results — all in one place.</p>
+        <div class="gl-prog"><div class="gl-bar"><i style="width:${glPct}%"></i></div><span><b>${glPct}%</b> reached</span></div></div>
+      <div class="gl-sum"><div class="s-all"><b>${total}</b><span>Goals</span></div><div class="s-run"><b>${track}</b><span>In progress</span></div><div class="s-done"><b>${reached}</b><span>Reached</span></div></div></div>
       ${section("gx-body","Body measurements","Pick a measurement and set a target. Progress runs from your starting value.",bodyRows,"No measurement goals yet.",bodyForm,"Add body measurement goal",freeKeys.length>0)}
       ${section("gx-fitness","Training & race goals","A race with a target time, or an achievement like a lift or a distance.",fitRows,"No training goals yet.",fitForm,"Add training goal")}
       ${section("gx-blood","Blood result goals","Set a target for any marker. It is checked against your latest blood results.",bloodRows,"No blood goals yet.",bloodForm,"Add blood goal")}`;
