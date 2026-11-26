@@ -2070,6 +2070,64 @@
   #workoutTrend tr.wt-wrow td:first-child{padding-left:34px;color:#3b3632;font-weight:600}
   #workoutTrend tr.wt-wrow .wt-time i{opacity:.55}
   :root[data-theme="dark"] #workoutTrend tr.wt-wrow td{background:#1a1a19}
+  /* ===== Training check (Analyze) redesign ===== */
+  #trainingAnalysis .ta-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;color:var(--ink)}
+  #trainingAnalysis .ta-k{display:block;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#060706}
+  #trainingAnalysis .ta-d{display:block;font-size:13px;font-weight:600;color:#857b70;margin-top:2px}
+  #trainingAnalysis .ta-close{border:1px solid rgba(6,7,6,.12);background:#fff;border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;color:#060706}
+  #trainingAnalysis .ta-close:hover{background:#060706;color:#fff}
+  .ta-verdict{display:grid;grid-template-columns:1fr auto;gap:14px 20px;align-items:center;border-radius:20px;padding:18px 20px;margin-bottom:14px;color:#fff;background:#060706}
+  .ta-verdict.bad{background:linear-gradient(135deg,#060706 0%,#2a1210 100%)}.ta-verdict.mid{background:linear-gradient(135deg,#060706 0%,#2a2008 100%)}.ta-verdict.good{background:linear-gradient(135deg,#060706 0%,#0d2a18 100%)}
+  .ta-verdict strong{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  .ta-verdict.bad strong{color:#ff7a70}.ta-verdict.mid strong{color:#ffc300}.ta-verdict.good strong{color:#4ade80}
+  .ta-verdict p{margin:5px 0 0;font-size:14px;font-weight:500;color:rgba(255,255,255,.8);line-height:1.4}
+  .ta-counts{display:flex;gap:8px}
+  .ta-counts span{display:flex;flex-direction:column;align-items:center;min-width:76px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.07);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+  .ta-counts b{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.1;text-transform:none}
+  .ta-counts .c-watch b{color:#ff7a70}.ta-counts .c-ok b{color:#ffc300}.ta-counts .c-good b{color:#4ade80}
+  .ta-addall{grid-column:1/-1;justify-self:start;border:0;border-radius:999px;background:#f05a4f;color:#fff;font-size:13.5px;font-weight:800;padding:10px 18px;box-shadow:0 6px 18px rgba(240,90,79,.35)}
+  .ta-addall:hover{background:#e9473c}
+  #trainingAnalysis .ta-tiles{gap:10px;margin-bottom:14px}
+  #trainingAnalysis .ta-tile{border-radius:16px;padding:13px 14px;border:1px solid transparent;position:relative;overflow:hidden}
+  #trainingAnalysis .ta-tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  #trainingAnalysis .ta-tile span{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#060706}
+  #trainingAnalysis .ta-tile strong{font-size:28px;font-weight:800;letter-spacing:-.04em;margin-top:6px;color:#060706}
+  #trainingAnalysis .ta-tile strong i{font-style:normal;font-size:13px;font-weight:700;color:#857b70;margin-left:2px;letter-spacing:0}
+  #trainingAnalysis .ta-tile small{display:block;font-size:12px;font-weight:700;margin-top:2px}
+  .ta-tile.t-watch{background:#fdeeed}.ta-tile.t-watch::before{background:#f05a4f}.ta-tile.t-watch small{color:#d93a2f}
+  .ta-tile.t-ok{background:#fff6e0}.ta-tile.t-ok::before{background:#f5a524}.ta-tile.t-ok small{color:#b26b00}
+  .ta-tile.t-good{background:#e8f6ee}.ta-tile.t-good::before{background:#1f9d55}.ta-tile.t-good small{color:#1f9d55}
+  #trainingAnalysis .ta-chart{border-radius:18px;padding:16px 18px 10px;margin-bottom:18px}
+  #trainingAnalysis .ta-chart-label{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  #trainingAnalysis .ta-chart-label b{font-size:13px;font-weight:800;color:#060706;text-transform:uppercase;letter-spacing:.05em}
+  #trainingAnalysis .ta-chart-label span{font-size:11.5px;font-weight:600;color:#857b70;display:flex;align-items:center;gap:5px}
+  .ta-chart-label i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-left:6px}.lg-r{background:#f05a4f}.lg-a{background:#f5a524}.lg-g{background:#1f9d55}
+  .ta-bv{font-size:14px;font-weight:800;fill:#060706}.ta-bx{font-size:12px;font-weight:600;fill:#857b70}
+  .ta-tl{stroke:#1f9d55;stroke-width:1.5;stroke-dasharray:6 5}.ta-tt{font-size:12px;font-weight:700;fill:#1f9d55}
+  .ta-sec{margin-bottom:16px}
+  .ta-sec h4{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:15px;font-weight:800;letter-spacing:-.01em;color:#060706}
+  .ta-sec h4 em{font-style:normal;font-size:12px;font-weight:800;min-width:22px;height:22px;border-radius:999px;display:inline-grid;place-items:center;color:#fff;padding:0 7px}
+  .ta-sec h4 small{font-size:12.5px;font-weight:500;color:#857b70}
+  .ta-sec-watch h4 em{background:#f05a4f}.ta-sec-ok h4 em{background:#f5a524}.ta-sec-good h4 em{background:#1f9d55}.ta-sec-info h4 em{background:#060706}
+  .ta-sec ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .ta-n{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid rgba(6,7,6,.08);border-radius:16px;padding:14px 16px}
+  .ta-ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:900;color:#fff}
+  .ta-watch .ta-ic{background:#f05a4f}.ta-ok .ta-ic{background:#f5a524}.ta-good .ta-ic{background:#1f9d55}.ta-info .ta-ic{background:#060706;font-family:Georgia,serif;font-style:italic}
+  .ta-watch{border-color:rgba(240,90,79,.35);background:#fffafa}.ta-ok{border-color:rgba(245,165,36,.4);background:#fffcf5}
+  .ta-tx{min-width:0;flex:1}.ta-tx b{display:block;font-size:15px;font-weight:800;color:#060706;letter-spacing:-.01em}
+  .ta-tx p{margin:3px 0 0;font-size:13.5px;line-height:1.45;font-weight:500;color:#4a443e}
+  .ta-goal{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:#EDF4FE}
+  .ta-gl{flex-basis:100%;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#857b70}
+  .ta-goal strong{font-size:13.5px;font-weight:800;color:#060706;margin-right:auto}
+  .ta-add{border:0;border-radius:999px;background:#060706;color:#fff;font-size:12.5px;font-weight:800;padding:7px 13px;white-space:nowrap}
+  .ta-add:hover{background:#f05a4f}
+  .ta-added{font-size:12.5px;font-weight:800;color:#1f9d55;white-space:nowrap}
+  #trainingAnalysis .ta-foot{font-size:11.5px;color:#857b70}
+  #trainingAnalysis .ta-close{white-space:nowrap;flex:none}
+  @media(max-width:760px){#trainingAnalysis .ta-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}#trainingAnalysis .ta-tile span{white-space:normal}.ta-counts span{white-space:nowrap;font-size:9.5px;letter-spacing:.02em}.ta-verdict strong{font-size:21px}.ta-verdict{padding:16px}
+  .ta-verdict{grid-template-columns:1fr}.ta-counts span{flex:1;min-width:0}.ta-sec ul{grid-template-columns:1fr}#trainingAnalysis .ta-tile strong{font-size:24px}}
+  :root[data-theme="dark"] .ta-n{background:#17181b;border-color:rgba(255,255,255,.08)}:root[data-theme="dark"] .ta-tx b,:root[data-theme="dark"] .ta-sec h4,:root[data-theme="dark"] #trainingAnalysis .ta-tile strong,:root[data-theme="dark"] #trainingAnalysis .ta-tile span,:root[data-theme="dark"] .ta-goal strong{color:#f2f1ef}
+  :root[data-theme="dark"] .ta-tx p{color:#cfc9c2}:root[data-theme="dark"] .ta-goal{background:#1f2024}:root[data-theme="dark"] .ta-tile.t-watch{background:#2a1716}:root[data-theme="dark"] .ta-tile.t-ok{background:#2a2312}:root[data-theme="dark"] .ta-tile.t-good{background:#13251a}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4897,37 +4955,67 @@
     const paceTxt=p=>{const m=Math.floor(p),s=Math.round((p-m)*60);return `${s===60?m+1:m}:${String(s===60?0:s).padStart(2,"0")}/km`};
     const ddmm=ms=>{const d=new Date(ms);return `${String(d.getUTCDate()).padStart(2,"0")}.${String(d.getUTCMonth()+1).padStart(2,"0")}`};
 
-    const notes=[];const add=(lvl,title,why)=>notes.push({lvl,title,why});
+    const notes=[];const add=(lvl,title,why,goal)=>notes.push({lvl,title,why,goal:lvl==="good"||lvl==="info"?null:goal||null});
+    const r5=v=>Math.max(5,Math.round(v/5)*5);
+    const nextKm=Math.min(70,r5(Math.max(kmW+10,kmW*1.25))),nextRuns=Math.min(6,Math.max(3,Math.ceil(runsW)+1)),nextLong=Math.min(32,Math.max(16,Math.round(longest+4)));
+    const G={freq:{title:"Train 5 sessions every week",target:"5+ sessions / week"},
+      cons:{title:"3+ sessions every single week",target:"8 of 8 weeks"},
+      km:{title:`Build running to ${nextKm} km a week`,target:`${nextKm} km / week`},
+      runs:{title:`Run ${nextRuns} times a week`,target:`${nextRuns} runs / week`},
+      long:{title:`Long run of ${nextLong} km`,target:`${nextLong} km`},
+      ramp:{title:"Increase running by max 10% a week",target:"≤ +10% / week"},
+      gap:{title:"No breaks longer than 4 days",target:"≤ 4 days between sessions"},
+      rest:{title:"Take 1 rest or easy day every week",target:"1 rest day / week"},
+      time:{title:"150+ minutes of activity a week",target:"150 min / week"}};
     if(sessW>=5)add("good","Training frequency is high",`${sessW.toFixed(1)} sessions a week on average.`);
-    else if(sessW>=3)add("ok","Training frequency is moderate",`${sessW.toFixed(1)} sessions a week. Sub-3 build-ups usually sit at 5–7 sessions.`);
-    else add("watch","Training frequency is low",`${sessW.toFixed(1)} sessions a week. Aim for at least 3, building toward 5–6 runs.`);
-    add(consistent>=7?"good":consistent>=5?"ok":"watch","Consistency",`${consistent} of 8 weeks had 3 or more sessions.`);
+    else if(sessW>=3)add("ok","Training frequency is moderate",`${sessW.toFixed(1)} sessions a week. Sub-3 build-ups usually sit at 5–7 sessions.`,G.freq);
+    else add("watch","Training frequency is low",`${sessW.toFixed(1)} sessions a week. Aim for at least 3, building toward 5–6 runs.`,G.freq);
+    add(consistent>=7?"good":consistent>=5?"ok":"watch","Consistency",`${consistent} of 8 weeks had 3 or more sessions.`,G.cons);
     if(kmW>=70)add("good","Running volume is in sub-3 territory",`${kmW.toFixed(0)} km a week. Most sub-3 plans peak around 70–100 km.`);
-    else if(kmW>=45)add("ok","Running volume is building",`${kmW.toFixed(0)} km a week. Most sub-3 plans peak around 70–100 km a week.`);
-    else add("watch","Running volume is below sub-3 level",`${kmW.toFixed(0)} km a week. Most sub-3 plans peak around 70–100 km a week — build gradually.`);
-    if(runsW<4&&kmW>0)add("watch","Few runs per week",`${runsW.toFixed(1)} runs a week. Sub-3 plans typically spread the volume over 5–6 runs.`);
+    else if(kmW>=45)add("ok","Running volume is building",`${kmW.toFixed(0)} km a week. Most sub-3 plans peak around 70–100 km a week.`,G.km);
+    else add("watch","Running volume is below sub-3 level",`${kmW.toFixed(0)} km a week. Most sub-3 plans peak around 70–100 km a week — build gradually.`,G.km);
+    if(runsW<4&&kmW>0)add("watch","Few runs per week",`${runsW.toFixed(1)} runs a week. Sub-3 plans typically spread the volume over 5–6 runs.`,G.runs);
     if(longest>=30)add("good","Long run is marathon-ready",`Longest run ${longest.toFixed(1)} km.`);
-    else if(runs.length)add(longest>=22?"ok":"watch","Long run",`Longest run ${longest.toFixed(1)} km. Build toward 30–35 km in the final build-up.`);
+    else if(runs.length)add(longest>=22?"ok":"watch","Long run is too short",`Longest run ${longest.toFixed(1)} km. Build toward 30–35 km in the final build-up.`,G.long);
     if(prior4>0){const ch=(recent4-prior4)/prior4*100;
-      if(ch>30)add("watch","Running load jumped",`Last 4 weeks averaged ${recent4.toFixed(0)} km vs ${prior4.toFixed(0)} km before (+${ch.toFixed(0)}%). Bigger jumps raise injury risk — ramp gradually.`);
-      else if(ch<-30)add("ok","Running load dropped",`Last 4 weeks averaged ${recent4.toFixed(0)} km vs ${prior4.toFixed(0)} km before (${ch.toFixed(0)}%). Fine if planned (taper, recovery).`);}
-    if(gap>=7)add("watch","Long break in training",`The longest gap between sessions was ${gap} days.`);
-    if(fullWeeks)add("watch","No rest day in some weeks",`${fullWeeks} week${fullWeeks===1?"":"s"} with training every day. Keep at least one easy or rest day.`);
+      if(ch>30)add("watch","Running load jumped",`Last 4 weeks averaged ${recent4.toFixed(0)} km vs ${prior4.toFixed(0)} km before (+${ch.toFixed(0)}%). Bigger jumps raise injury risk — ramp gradually.`,G.ramp);
+      else if(ch<-30)add("ok","Running load dropped",`Last 4 weeks averaged ${recent4.toFixed(0)} km vs ${prior4.toFixed(0)} km before (${ch.toFixed(0)}%). Fine if planned (taper, recovery).`,G.km);}
+    if(gap>=7)add("watch","Long break in training",`The longest gap between sessions was ${gap} days.`,G.gap);
+    if(fullWeeks)add("watch","No rest day in some weeks",`${fullWeeks} week${fullWeeks===1?"":"s"} with training every day. Keep at least one easy or rest day.`,G.rest);
     if(pace)add("info","Average run pace",`${paceTxt(pace)} across all runs. Sub-3 marathon pace is 4:16/km — most runs should be slower, with some sessions at or near it.`);
-    add(minW>=150?"good":"watch","Weekly activity time",`${hm(minW)} a week. WHO recommends at least 150–300 minutes of moderate activity.`);
+    add(minW>=150?"good":"watch","Weekly activity time",`${hm(minW)} a week. WHO recommends at least 150–300 minutes of moderate activity.`,G.time);
 
-    const maxKm=Math.max(10,...weeks.map(w=>w.runKm)),CW=1000,gp=18,bw=(CW-gp*(WEEKS-1))/WEEKS,H=110;
-    const bars=weeks.map((w,i)=>{const h=w.runKm/maxKm*(H-40),x=i*(bw+gp);
-      return `<rect x="${x}" y="${H-18-h}" width="${bw}" height="${Math.max(h,1.5)}" rx="6" fill="${i>=4?"#111":"#c9c6c0"}"><title>Week of ${ddmm(w.from)}: ${w.runKm.toFixed(1)} km, ${w.s} sessions</title></rect>
-      <text x="${x+bw/2}" y="${H-22-h}" text-anchor="middle" font-size="10" font-weight="600" fill="#241f1a">${w.runKm?w.runKm.toFixed(0):""}</text>
-      <text x="${x+bw/2}" y="${H-4}" text-anchor="middle" font-size="9.5" fill="#857b70">${ddmm(w.from)}</text>`}).join("");
-    const tiles=[["Sessions / week",sessW.toFixed(1)],["Run km / week",kmW.toFixed(0)],["Runs / week",runsW.toFixed(1)],["Longest run",longest?longest.toFixed(1)+" km":"—"],["Time / week",hm(minW)],["Consistent weeks",consistent+"/8"]];
-    el.innerHTML=`<div class="ta-head"><b>Last 8 weeks</b> · ${ddmm(start)} – ${ddmm(end)} · ${win.length} session${win.length===1?"":"s"}<button type="button" class="icon-btn" id="taClose" aria-label="Close analysis">Close</button></div>
-      <div class="ta-tiles">${tiles.map(([k,v])=>`<div class="ta-tile"><span>${k}</span><strong>${v}</strong></div>`).join("")}</div>
-      <div class="ta-chart"><div class="ta-chart-label">Running km per week</div><svg viewBox="0 0 ${CW} ${H}" role="img" aria-label="Running kilometres per week, last 8 weeks">${bars}</svg></div>
-      <ul class="ta-notes">${notes.map(n=>`<li class="ta-${n.lvl}"><b>${esc(n.title)}</b><span>${esc(n.why)}</span></li>`).join("")}</ul>
+    // ---- render: what to fix, what to improve, what's on track, with one-tap goals
+    const inGoals=t=>(state.customGoals||[]).some(g=>g.kind==="fitness"&&!g.done&&g.title.toLowerCase()===t.toLowerCase());
+    const TGT=45,maxKm=Math.max(TGT*1.08,...weeks.map(w=>w.runKm)),CW=1000,gp=16,bw=(CW-gp*(WEEKS-1))/WEEKS,H=170,top=22,base=H-24,sc=v=>v/maxKm*(base-top);
+    const bars=weeks.map((w,i)=>{const hh=sc(w.runKm),x=i*(bw+gp),col=w.runKm>=TGT?"#1f9d55":w.runKm>=TGT*.6?"#f5a524":"#f05a4f";
+      return `<rect x="${x}" y="${base-hh}" width="${bw}" height="${Math.max(hh,2)}" rx="8" fill="${col}" fill-opacity="${i>=4?1:.45}"><title>Week of ${ddmm(w.from)}: ${w.runKm.toFixed(1)} km, ${w.s} sessions</title></rect>
+      <text x="${x+bw/2}" y="${base-hh-7}" text-anchor="middle" class="ta-bv">${w.runKm?w.runKm.toFixed(0):"0"}</text>
+      <text x="${x+bw/2}" y="${H-5}" text-anchor="middle" class="ta-bx">${ddmm(w.from)}</text>`}).join("");
+    const ty=base-sc(TGT),tline=`<line x1="0" x2="${CW}" y1="${ty}" y2="${ty}" class="ta-tl"/><text x="${CW}" y="${ty-6}" text-anchor="end" class="ta-tt">Sub-3 base ${TGT} km</text>`;
+    const st=(v,good,ok)=>v>=good?"good":v>=ok?"ok":"watch";
+    const tiles=[["Sessions / week",sessW.toFixed(1),"","goal 5–7",st(sessW,5,3)],["Run km / week",kmW.toFixed(0),"km","goal 70+",st(kmW,70,45)],["Runs / week",runsW.toFixed(1),"","goal 5–6",st(runsW,5,4)],
+      ["Longest run",longest?longest.toFixed(1):"—",longest?"km":"","goal 30+",st(longest,30,22)],["Time / week",hm(minW),"","goal 150+ min",st(minW,150,120)],["Consistent weeks",consistent,"/8","goal 7+",st(consistent,7,5)]];
+    const grp={watch:notes.filter(n=>n.lvl==="watch"),ok:notes.filter(n=>n.lvl==="ok"),good:notes.filter(n=>n.lvl==="good"),info:notes.filter(n=>n.lvl==="info")};
+    const icon={watch:"!",ok:"↑",good:"✓",info:"i"};
+    const card=(n,i)=>`<li class="ta-n ta-${n.lvl}"><span class="ta-ic">${icon[n.lvl]}</span><div class="ta-tx"><b>${esc(n.title)}</b><p>${esc(n.why)}</p>
+      ${n.goal?`<div class="ta-goal"><span class="ta-gl">Suggested goal</span><strong>${esc(n.goal.title)}</strong>${inGoals(n.goal.title)?`<span class="ta-added">✓ In your Goals</span>`:`<button type="button" class="ta-add" data-ta-goal="${i}">＋ Add to Goals</button>`}</div>`:""}</div></li>`;
+    const idx=n=>notes.indexOf(n);
+    const sect=(k,label,sub)=>grp[k].length?`<section class="ta-sec ta-sec-${k}"><h4><span>${label}</span><em>${grp[k].length}</em><small>${sub}</small></h4><ul>${grp[k].map(n=>card(n,idx(n))).join("")}</ul></section>`:"";
+    const open=notes.filter(n=>n.goal&&!inGoals(n.goal.title));
+    const verdict=grp.watch.length>=3?["Needs work","Your base is too small for a sub-3 build yet — fix the red items first."]:grp.watch.length?["Getting there","A few things are holding you back — start with the red ones."]:grp.ok.length?["On the right track","Keep stacking weeks and push the amber items."]:["Marathon-ready base","Everything checks out — keep it consistent."];
+    el.innerHTML=`<div class="ta-head"><div><span class="ta-k">Training check · last 8 weeks</span><span class="ta-d">${ddmm(start)} – ${ddmm(end)} · ${win.length} session${win.length===1?"":"s"}</span></div><button type="button" class="ta-close" id="taClose" aria-label="Close analysis">Close ✕</button></div>
+      <div class="ta-verdict ${grp.watch.length?"bad":grp.ok.length?"mid":"good"}"><div><strong>${verdict[0]}</strong><p>${verdict[1]}</p></div>
+        <div class="ta-counts"><span class="c-watch"><b>${grp.watch.length}</b>to fix</span><span class="c-ok"><b>${grp.ok.length}</b>to improve</span><span class="c-good"><b>${grp.good.length}</b>on track</span></div>
+        ${open.length?`<button type="button" class="ta-addall" data-ta-all>＋ Add ${open.length} goal${open.length===1?"":"s"} to Goals</button>`:""}</div>
+      <div class="ta-tiles">${tiles.map(([k,v,u,g,s])=>`<div class="ta-tile t-${s}"><span>${k}</span><strong>${v}<i>${u}</i></strong><small>${g}</small></div>`).join("")}</div>
+      <div class="ta-chart"><div class="ta-chart-label"><b>Running km per week</b><span><i class="lg-r"></i>below 27 <i class="lg-a"></i>27–44 <i class="lg-g"></i>45+ · faded = earlier 4 weeks</span></div><svg viewBox="0 0 ${CW} ${H}" role="img" aria-label="Running kilometres per week, last 8 weeks">${tline}${bars}</svg></div>
+      ${sect("watch","Fix first","biggest gaps for a sub-3")}${sect("ok","Improve next","close, push a bit more")}${sect("good","On track","keep doing this")}${sect("info","Good to know","")}
       <p class="ta-foot">Rough guide based on common sub-3 marathon plans and WHO activity guidance — not a coaching plan.</p>`;
     $("taClose").addEventListener("click",()=>el.classList.add("hidden"));
+    const addGoal=n=>{if(!n.goal||inGoals(n.goal.title))return false;state.customGoals=state.customGoals||[];state.customGoals.push({id:uid(),kind:"fitness",type:"achievement",title:n.goal.title.slice(0,140),target:n.goal.target.slice(0,60),due:"",done:false});return true};
+    el.querySelectorAll("[data-ta-goal]").forEach(b=>b.addEventListener("click",()=>{if(addGoal(notes[+b.dataset.taGoal])){save();try{renderGoals()}catch(e){}showToast("Added to Goals",false);analyzeTraining()}}));
+    const all=el.querySelector("[data-ta-all]");if(all)all.addEventListener("click",()=>{let n=0;open.forEach(x=>{if(addGoal(x))n++});if(n){save();try{renderGoals()}catch(e){}showToast(`Added ${n} goal${n===1?"":"s"} to Goals`,false);analyzeTraining()}});
   }
 
   let trainingMonth=null, trainingChartGroup="Run";
