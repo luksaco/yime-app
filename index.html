@@ -2024,8 +2024,10 @@
   .wtc-note{margin:4px 0 0;font-size:11px;color:var(--muted2)}
   :root[data-theme="dark"] .wtc-dot,:root[data-theme="dark"] .wtc-cur{fill:#121211}
   /* fitness activity trend table header: YIME red, bold black text */
-  #workoutTrend table.wt-table thead th{background:#4397f7!important;color:#fff!important;font-weight:800!important}
-  #workoutTrend table.wt-table thead th *{color:#fff!important}
+  /* minimal header: no fill, quiet grey labels, one black rule underneath */
+  #workoutTrend table.wt-table thead th{background:#fff!important;color:#857b70!important;font-weight:800!important;border-bottom:2px solid #060706!important}
+  #workoutTrend table.wt-table thead th *{color:#857b70!important}
+  :root[data-theme="dark"] #workoutTrend table.wt-table thead th{background:transparent!important;border-bottom-color:#f2f1ef!important}
   /* activity score hover tooltip */
   .wtc-plot{position:relative}
   .wtc-hit{cursor:crosshair}
