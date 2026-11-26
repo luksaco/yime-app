@@ -2116,7 +2116,7 @@
   .ta-watch{border-color:rgba(240,90,79,.35);background:#fffafa}.ta-ok{border-color:rgba(245,165,36,.4);background:#fffcf5}
   .ta-tx{min-width:0;flex:1}.ta-tx b{display:block;font-size:15px;font-weight:800;color:#060706;letter-spacing:-.01em}
   .ta-tx p{margin:3px 0 0;font-size:13.5px;line-height:1.45;font-weight:500;color:#4a443e}
-  .ta-goal{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:#EDF4FE}
+  .ta-goal{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:#f2f2f2}
   .ta-gl{flex-basis:100%;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#857b70}
   .ta-goal strong{font-size:13.5px;font-weight:800;color:#060706;margin-right:auto}
   .ta-add{border:0;border-radius:999px;background:#060706;color:#fff;font-size:12.5px;font-weight:800;padding:7px 13px;white-space:nowrap}
@@ -2128,7 +2128,7 @@
   .ta-verdict{grid-template-columns:1fr}.ta-counts span{flex:1;min-width:0}.ta-sec ul{grid-template-columns:1fr}#trainingAnalysis .ta-tile strong{font-size:24px}}
   :root[data-theme="dark"] .ta-n{background:#17181b;border-color:rgba(255,255,255,.08)}:root[data-theme="dark"] .ta-tx b,:root[data-theme="dark"] .ta-sec h4,:root[data-theme="dark"] #trainingAnalysis .ta-tile strong,:root[data-theme="dark"] #trainingAnalysis .ta-tile span,:root[data-theme="dark"] .ta-goal strong{color:#f2f1ef}
   :root[data-theme="dark"] .ta-tx p{color:#cfc9c2}:root[data-theme="dark"] .ta-goal{background:#1f2024}:root[data-theme="dark"] .ta-tile.t-watch{background:#2a1716}:root[data-theme="dark"] .ta-tile.t-ok{background:#2a2312}:root[data-theme="dark"] .ta-tile.t-good{background:#13251a}
-  .ta-ctx{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:800;background:#EDF4FE;color:#060706}
+  .ta-ctx{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:800;background:#f2f2f2;color:#060706}
   .ta-ctx.race{background:#fdeeed;color:#c7372c}
   .ta-chart-label i.lg-t{width:16px;height:0;border-radius:0;border-top:2px dashed #1f9d55;margin-left:10px}
   /* ===== Log dialog — YIME colours + full check-in ===== */
@@ -2173,8 +2173,12 @@
   #trainingAnalysis .ta-sub{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#857b70;margin:4px 0 8px}
   #trainingAnalysis .ta-tiles2{grid-template-columns:repeat(4,minmax(0,1fr))}
   .ta-cat{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-bottom:5px}
-  .ta-cat.c-train{background:#f2f2f2;color:#2559a8}.ta-cat.c-body{background:#fdeeed;color:#c7372c}.ta-cat.c-sleep{background:#efeafd;color:#5b3fc4}
+  .ta-cat.c-train{background:#060706;color:#fff}.ta-cat.c-body{background:#f05a4f;color:#fff}.ta-cat.c-sleep{background:#fff;color:#060706;box-shadow:inset 0 0 0 1.5px #060706}
   @media(max-width:760px){#trainingAnalysis .ta-tiles2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  #logDialog .log-val input{-moz-appearance:textfield}#logDialog .log-val input::-webkit-inner-spin-button,#logDialog .log-val input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .ta-ctx.race{background:#060706!important;color:#fff!important}
+  .ta-verdict.bad,.ta-verdict.mid,.ta-verdict.good{background:#060706!important}
+  .ta-addall{box-shadow:none!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
