@@ -2440,6 +2440,16 @@
   #setupSkipStep{color:#060706!important;font-weight:700!important;text-decoration:underline;text-underline-offset:4px}
   /* dark mode switched off for now */
   .theme-btn{display:none!important}
+  /* locked until setup is done */
+  .setup-gate{display:none}
+  body.needs-setup .setup-gate{display:block;padding:40px 0 80px}
+  body.needs-setup #appTabs,body.needs-setup .panel,body.needs-setup .space-soon,body.needs-setup #calSpace,body.needs-setup .spaces,body.needs-setup #menuBtn,body.needs-setup .menu-pop,body.needs-setup #logFab,body.needs-setup footer{display:none!important}
+  .sg-card{max-width:560px;margin:0 auto;background:#fff;border-radius:28px;padding:36px 34px;box-shadow:0 1px 2px rgba(6,7,6,.04),0 14px 40px rgba(6,7,6,.08);text-align:left}
+  .sg-logo{display:block;height:34px;width:auto;margin-bottom:22px}
+  .sg-card h2{margin:0 0 10px;font-size:30px;font-weight:800;letter-spacing:-.035em;color:#060706}
+  .sg-card p{margin:0 0 24px;font-size:15.5px;line-height:1.5;color:#4a443e;font-weight:500}
+  .sg-btn{border:0;border-radius:999px;background:#060706;color:#fff;font:inherit;font-size:15px;font-weight:800;padding:14px 26px;cursor:pointer}
+  .sg-btn:hover{background:#f05a4f}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -6714,6 +6724,18 @@
   let setupStep=1,setupSex="male",setupTrain=false,setupBlood=false;
   let setupWorkType="",setupStress="",setupWater="",setupDiet="",setupAlcohol="",setupSmoking="",setupSleepQuality="";
 
+  // the dashboard and calendar unlock once setup is done (or the person already has data)
+  function isSetUp(){try{if(localStorage.getItem("yime_setup_done"))return true}catch(e){}return !!(state.baseline||state.entries.length||state.health?.birthDate)}
+  function setupGate(){
+    let g=$("setupGate");
+    if(!g){g=document.createElement("section");g.id="setupGate";g.className="setup-gate";
+      const logo=document.querySelector(".logo-main")?.cloneNode(true);if(logo){logo.removeAttribute("style");logo.classList.remove("logo-main");logo.classList.add("sg-logo")}
+      g.innerHTML=`<div class="sg-card"><div class="sg-logo-slot"></div><h2>Finish setting up YIME</h2><p>Your dashboard and calendar unlock as soon as your profile is set up. It takes about a minute, and you can skip any step you don't know yet.</p><button type="button" class="sg-btn" id="sgGo">Continue setup</button></div>`;
+      if(logo)g.querySelector(".sg-logo-slot").appendChild(logo);
+      const top=document.querySelector(".top");(top&&top.parentNode?top.parentNode:document.body).insertBefore(g,top?top.nextSibling:null);
+      g.querySelector("#sgGo").addEventListener("click",()=>openSetupFresh())}
+    document.body.classList.toggle("needs-setup",!isSetUp());
+  }
   function setupNeedsShow(){
     try{if(localStorage.getItem("yime_setup_done"))return false}catch(e){}
     return !state.baseline&&!state.entries.length&&!state.health.birthDate;
@@ -6829,7 +6851,7 @@
     }
 
     save();
-    try{localStorage.setItem("yime_setup_done","1")}catch(e){}
+    try{localStorage.setItem("yime_setup_done","1")}catch(e){}try{setupGate()}catch(e){}
     $("setupOverlay").classList.add("hidden");
     syncGoalInputs();resetMeasurementForm();renderAll();syncSex();
     syncHealthInputs();
@@ -6897,10 +6919,10 @@
     });
 
     $("setupSkip").addEventListener("click",()=>{
-      try{localStorage.setItem("yime_setup_done","1")}catch(e){}
       {const nm=($("setupName")?.value||"").replace(/\s+/g," ").trim().slice(0,40);if(nm){try{localStorage.setItem("yime_name",nm)}catch(e){}const sn=$("scanName");if(sn)sn.textContent=nm}}
       $("setupOverlay").classList.add("hidden");
-      showToast("Setup skipped. Finish it anytime with the Set up button.",false);
+      setupGate();
+      if(!isSetUp())showToast("Finish setup to unlock your dashboard and calendar.",false);
     });
 
     $("setupNext").addEventListener("click",()=>{
@@ -6931,6 +6953,7 @@
     $("m-date").max=$("b-date").max=today();resetMeasurementForm();if(!state.baseline)$("b-date").value=today();syncGoalInputs();renderAll();setMotion(figureOptions.motion);
     initSetup();
     if(setupNeedsShow())openSetupFresh();
+    setupGate();
     $("setupBtn").addEventListener("click",openSetupFresh);
     (()=>{const b=$("themeBtn"),root=document.documentElement;const sync=()=>{const d=root.getAttribute("data-theme")==="dark";b.setAttribute("aria-label",d?"Switch to white mode":"Switch to dark mode");b.setAttribute("aria-pressed",String(d))};sync();
       b.addEventListener("click",()=>{const d=root.getAttribute("data-theme")!=="dark";root.setAttribute("data-theme",d?"dark":"light");try{localStorage.setItem("yime_theme",d?"dark":"light")}catch(e){}sync();try{renderAll()}catch(e){}})})();
