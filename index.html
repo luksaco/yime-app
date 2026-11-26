@@ -2131,6 +2131,45 @@
   .ta-ctx{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:800;background:#EDF4FE;color:#060706}
   .ta-ctx.race{background:#fdeeed;color:#c7372c}
   .ta-chart-label i.lg-t{width:16px;height:0;border-radius:0;border-top:2px dashed #1f9d55;margin-left:10px}
+  /* ===== Log dialog — YIME colours + full check-in ===== */
+  #logDialog.log-dialog{background:#fff;color:#060706;width:min(440px,calc(100vw - 32px));max-height:min(92vh,860px);overflow:auto;box-shadow:0 30px 70px rgba(6,7,6,.28)}
+  #logDialog[data-mode="full"]{width:min(620px,calc(100vw - 32px))}
+  #logDialog form{padding:24px 24px 22px}
+  #logDialog .log-head h2{font-size:22px;font-weight:800;letter-spacing:-.03em}
+  #logDialog .log-x{background:#EDF4FE;color:#060706}#logDialog .log-x:hover{background:#060706;color:#fff}
+  #logDialog .log-mode{display:flex;background:#EDF4FE;border-radius:14px;padding:4px;margin:2px 0 8px}
+  #logDialog .log-mode button{flex:1;border:0;background:transparent;border-radius:11px;padding:10px 12px;font:inherit;font-size:13.5px;font-weight:700;color:#060706;cursor:pointer}
+  #logDialog .log-mode button[aria-pressed="true"]{background:#060706;color:#fff;box-shadow:0 4px 12px rgba(6,7,6,.2)}
+  #logDialog .log-lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#060706;margin:14px 0 7px}
+  #logDialog .log-input{background:#EDF4FE!important;border:1.5px solid transparent!important;border-radius:14px;color:#060706;font-weight:700}
+  #logDialog .log-input:focus{background:#fff!important;border-color:#f05a4f!important;box-shadow:0 0 0 4px rgba(240,90,79,.16)!important}
+  #logDialog .log-input[aria-invalid="true"]{border-color:#e9473c!important;background:#fdeeed!important}
+  #logDialog .log-val input{font-size:26px;font-weight:800}
+  #logDialog .log-val span{font-weight:800;color:#857b70}
+  #logDialog .log-prev{font-size:13px;font-weight:600;color:#857b70}
+  #logDialog .log-err{color:#e9473c;font-weight:700}
+  #logDialog .log-save{background:#f05a4f!important;color:#fff!important;border-radius:14px;font-weight:800;font-size:15.5px;box-shadow:0 8px 20px rgba(240,90,79,.32)}
+  #logDialog .log-save:hover{background:#e9473c!important}
+  #logDialog .log-more{background:#fff;border:1.5px solid rgba(6,7,6,.14);border-radius:14px;font-weight:700;color:#060706}
+  #logDialog .log-more:hover{border-color:#060706}
+  #logDialog[data-mode="full"] .log-actions{position:sticky;bottom:-22px;background:#fff;margin:8px -24px -22px;padding:14px 24px 22px;box-shadow:0 -10px 20px rgba(255,255,255,.9)}
+  :root[data-theme="dark"] #logDialog[data-mode="full"] .log-actions{background:#17181b;box-shadow:none}
+  #logDialog .log-hint{margin:6px 0 4px;font-size:13px;font-weight:500;color:#857b70;line-height:1.4}
+  #logDialog .log-grp{border:0;margin:12px 0 0;padding:0}
+  #logDialog .log-grp legend{padding:0;margin-bottom:8px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#f05a4f}
+  #logDialog .log-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  #logDialog .log-f{display:flex;flex-direction:column;gap:5px;min-width:0}
+  #logDialog .log-f>span{font-size:12.5px;font-weight:700;color:#060706}
+  #logDialog .log-fv{position:relative}
+  #logDialog .log-fv input{height:46px;font-size:18px;font-weight:800;padding:0 52px 0 14px;-moz-appearance:textfield}
+  #logDialog .log-fv input::-webkit-inner-spin-button,#logDialog .log-fv input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  #logDialog .log-fv input::placeholder{color:#a89e91;font-weight:600}
+  #logDialog .log-fv i{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-style:normal;font-size:12.5px;font-weight:800;color:#857b70;pointer-events:none}
+  @media(max-width:680px){#logDialog.log-dialog,#logDialog[data-mode="full"]{width:100vw;max-height:92vh}#logDialog form{padding:20px 18px 18px}}
+  :root[data-theme="dark"] #logDialog.log-dialog{background:#17181b;color:#f2f1ef}
+  :root[data-theme="dark"] #logDialog .log-input,:root[data-theme="dark"] #logDialog .log-mode,:root[data-theme="dark"] #logDialog .log-x{background:#1f2024!important;color:#f2f1ef}
+  :root[data-theme="dark"] #logDialog .log-lab,:root[data-theme="dark"] #logDialog .log-f>span,:root[data-theme="dark"] #logDialog .log-mode button{color:#f2f1ef}
+  :root[data-theme="dark"] #logDialog .log-mode button[aria-pressed="true"]{background:#f2f1ef;color:#111}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -6207,11 +6246,18 @@
     const dlg=document.createElement("dialog");dlg.id="logDialog";dlg.className="log-dialog";dlg.setAttribute("aria-labelledby","logTitle");
     dlg.innerHTML=`<form method="dialog" id="logForm" novalidate>
       <div class="log-head"><h2 id="logTitle">Log a measurement</h2><button type="button" class="log-x" id="logClose" aria-label="Close">✕</button></div>
+      <div class="log-mode" role="group" aria-label="What to log"><button type="button" data-logmode="one" aria-pressed="true">One measurement</button><button type="button" data-logmode="full" aria-pressed="false">Full check-in</button></div>
+      <div class="log-one">
       <label class="log-lab" for="logMetric">Measurement</label>
       <select id="logMetric" class="log-input">${metricKeys.map(k=>`<option value="${k}">${esc(metrics[k].label)}</option>`).join("")}</select>
       <label class="log-lab" for="logValue">Value</label>
       <div class="log-val"><input id="logValue" class="log-input" type="number" step="0.1" inputmode="decimal" autocomplete="off" aria-describedby="logPrev logErr"><span id="logUnit"></span></div>
       <p class="log-prev" id="logPrev"></p>
+      </div>
+      <div class="log-full" hidden>
+        <p class="log-hint">Fill in what you measured today — empty fields are skipped. Grey numbers are your last values.</p>
+        ${[["Body",["weightKg"]],["Torso",["chestCm","waistCm","hipCm"]],["Arms",["leftBicepsCm","rightBicepsCm"]],["Legs",["leftThighCm","rightThighCm","leftCalfCm","rightCalfCm"]],["Fitness",["vo2max"]]].map(([g,ks])=>`<fieldset class="log-grp"><legend>${g}</legend><div class="log-grid">${ks.map(k=>`<label class="log-f"><span>${esc(metrics[k].label)}</span><div class="log-fv"><input type="number" step="0.1" inputmode="decimal" autocomplete="off" data-full="${k}" class="log-input"><i>${metrics[k].unit==="ml/kg/min"?"ml/kg":metrics[k].unit}</i></div></label>`).join("")}</div></fieldset>`).join("")}
+      </div>
       <label class="log-lab" for="logDate">Date</label>
       <input id="logDate" class="log-input" type="date">
       <p class="log-err" id="logErr" role="alert"></p>
@@ -6225,15 +6271,42 @@
     $("logMetric").addEventListener("change",()=>{sync();$("logValue").focus()});
     $("logClose").addEventListener("click",()=>dlg.close());
     dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
-    $("logForm").addEventListener("submit",e=>{e.preventDefault();if(saveQuickLog())dlg.close()});
+    $("logForm").addEventListener("submit",e=>{e.preventDefault();if(dlg.dataset.mode==="full"?saveFullLog():saveQuickLog())dlg.close()});
     $("logMore").addEventListener("click",()=>{if(saveQuickLog()){const sel=$("logMetric"),i=sel.selectedIndex;sel.selectedIndex=(i+1)%sel.options.length;sync();$("logValue").focus()}});
     dlg._sync=sync;
+    const setMode=m=>{dlg.dataset.mode=m;dlg.querySelectorAll("[data-logmode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.logmode===m)));
+      dlg.querySelector(".log-one").hidden=m!=="one";dlg.querySelector(".log-full").hidden=m!=="full";$("logMore").hidden=m!=="one";
+      $("logTitle").textContent=m==="full"?"Full check-in":"Log a measurement";$("logSave").textContent=m==="full"?"Save check-in":"Save";$("logErr").textContent="";
+      if(m==="full"){dlg.querySelectorAll("[data-full]").forEach(i=>{const s=series(i.dataset.full);i.placeholder=s.length?fmt(s.at(-1).value):"—";i.removeAttribute("aria-invalid")});setTimeout(()=>dlg.querySelector("[data-full]").focus(),30)}
+      else setTimeout(()=>$("logValue").focus(),30);
+      try{localStorage.setItem("yime_log_mode",m)}catch(e){}};
+    dlg.querySelectorAll("[data-logmode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.logmode)));
+    dlg._mode=setMode;
+  }
+  function saveFullLog(){
+    const dlg=$("logDialog"),date=$("logDate").value,vals={};let bad=null;
+    dlg.querySelectorAll("[data-full]").forEach(i=>{i.removeAttribute("aria-invalid");const raw=i.value.trim();if(raw==="")return;const k=i.dataset.full,m=metrics[k],v=Number(raw.replace(",","."));
+      if(!Number.isFinite(v)||v<m.min||v>m.max){i.setAttribute("aria-invalid","true");bad=bad||{i,m}}else vals[k]=Math.round(v*10)/10});
+    const err=t=>{$("logErr").textContent=t;return false};
+    if(bad){bad.i.focus();return err(`${bad.m.label} should be between ${bad.m.min} and ${bad.m.max} ${bad.m.unit}.`)}
+    const n=Object.keys(vals).length;if(!n)return err("Fill in at least one measurement.");
+    if(!validDate(date))return err("Choose a valid date.");
+    if(date>today())return err("Choose today or an earlier date.");
+    if(state.baseline&&dateValue(date)<dateValue(state.baseline.date))return err(`Your starting point is ${longDate(state.baseline.date)}. Choose that date or later.`);
+    logUndo=JSON.parse(JSON.stringify(state.entries));
+    let rec=state.entries.find(e=>e.date===date);
+    if(!rec){rec={id:uid(),date};metricKeys.forEach(x=>rec[x]=null);state.entries.push(rec)}
+    Object.assign(rec,vals);
+    state.entries.sort((a,b)=>dateValue(a.date)-dateValue(b.date)||a.id.localeCompare(b.id));
+    save();renderAll();showToast(`Check-in saved: ${n} measurement${n===1?"":"s"} for ${longDate(date)}.`,true);
+    dlg.querySelectorAll("[data-full]").forEach(i=>i.value="");
+    return true;
   }
   function openLog(key){
     buildLogDialog();const dlg=$("logDialog");
     $("logMetric").value=key&&metrics[key]?key:logLastMetric();$("logValue").value="";$("logDate").value=today();$("logDate").max=today();dlg._sync();
+    let mode="one";try{if(!key&&localStorage.getItem("yime_log_mode")==="full")mode="full"}catch(e){}dlg._mode(mode);
     if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
-    setTimeout(()=>$("logValue").focus(),30);
   }
   function saveQuickLog(){
     const k=$("logMetric").value,m=metrics[k],raw=$("logValue").value.trim(),date=$("logDate").value,err=t=>{$("logErr").textContent=t;$("logValue").setAttribute("aria-invalid","true");$("logValue").focus();return false};
