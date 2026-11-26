@@ -2198,6 +2198,50 @@
   .gl-hero .gl-sum .s-run{background:#f05a4f!important}.gl-hero .gl-sum .s-run span{color:rgba(255,255,255,.85)}
   .gl-hero .gl-sum .s-done{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25)}
   @media(max-width:680px){.card.gl-hero{padding:22px 20px!important}.gl-hero h2{font-size:30px!important}.gl-hero .gl-sum{width:100%}.gl-hero .gl-sum>div{flex:1;min-width:0;padding:13px 14px}.gl-hero .gl-sum b{font-size:30px}.gl-hero .gl-sum span{font-size:10px;letter-spacing:.04em}}
+  /* ===== Measurement history: readable header, fits the width ===== */
+  .mh-wrap{border-radius:18px;overflow:hidden;border:1px solid rgba(6,7,6,.08)}
+  table.history.mh-table{min-width:0!important;width:100%;table-layout:fixed;border-collapse:collapse;font-size:13.5px}
+  table.mh-table thead th{background:#060706!important;color:#fff!important;padding:14px 6px;vertical-align:bottom;text-align:right;text-transform:none;letter-spacing:0;white-space:normal}
+  table.mh-table thead th span{display:block;font-size:12px;font-weight:800;letter-spacing:.02em;color:#fff}
+  table.mh-table thead th em{display:block;font-style:normal;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.55);margin-top:2px}
+  table.mh-table thead th.mh-date{text-align:left;padding-left:18px;font-size:12px;font-weight:800;width:92px}
+  table.mh-table th.mh-act,table.mh-table td.mh-act{width:96px}
+  table.mh-table td{padding:13px 6px;text-align:right;border-top:1px solid rgba(6,7,6,.06);white-space:nowrap;font-weight:700;color:#060706;font-variant-numeric:tabular-nums}
+  table.mh-table td.mh-date{text-align:left;padding-left:18px;font-weight:600}
+  table.mh-table td.mh-date b{display:block;font-size:14px;font-weight:800}
+  table.mh-table td.mh-date small{display:block;font-size:11.5px;color:#857b70;font-weight:600}
+  .mh-start{display:inline-block;margin-top:4px;font-style:normal;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#f05a4f;border-radius:999px;padding:2px 8px}
+  table.mh-table tr.baseline td{background:#fff6f5!important}
+  table.mh-table tbody tr:hover td{background:#f7f7f7}
+  .mh-na{color:#c4bcb3;font-weight:600}
+  table.mh-table .row-actions{display:flex;gap:6px;justify-content:flex-end;padding-right:10px}
+  .mh-btn{border:1.5px solid rgba(6,7,6,.14);background:#fff;color:#060706;border-radius:999px;padding:5px 11px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+  .mh-btn:hover{background:#060706;color:#fff;border-color:#060706}
+  .mh-btn.del{padding:5px 9px;color:#857b70}.mh-btn.del:hover{background:#f05a4f;border-color:#f05a4f;color:#fff}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  @media(max-width:1100px){table.mh-table{font-size:12.5px}table.mh-table thead th span{font-size:11px}table.mh-table td{padding:12px 4px}}
+  /* phones: each entry becomes a card */
+  @media(max-width:760px){
+    .mh-wrap{border:0;overflow:visible}
+    table.mh-table,table.mh-table tbody,table.mh-table tr{display:block;width:100%}
+    table.mh-table thead{display:none}
+    table.mh-table tr{background:#fff;border:1px solid rgba(6,7,6,.08);border-radius:16px;margin-bottom:10px;padding:12px 14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px}
+    table.mh-table tr.baseline{background:#fff6f5}
+    table.mh-table td{display:block;border:0;padding:0;text-align:left;background:transparent!important;font-size:15px}
+    table.mh-table td[data-label]::before{content:attr(data-label);display:block;font-size:10.5px;font-weight:700;color:#857b70;text-transform:uppercase;letter-spacing:.03em}
+    table.mh-table td.mh-date{grid-column:1/3;padding:0}table.mh-table td.mh-date b,table.mh-table td.mh-date small{display:inline;margin-right:6px}
+    table.mh-table td.mh-act{grid-column:3;grid-row:1;width:auto}
+  }
+  :root[data-theme="dark"] table.mh-table td{color:#f2f1ef}:root[data-theme="dark"] table.mh-table tr.baseline td{background:#2a1716!important}:root[data-theme="dark"] .mh-btn{background:#17181b;color:#f2f1ef}
+  table.mh-table thead th{border:0!important;box-shadow:none!important}
+  table.mh-table thead th span{font-size:11.5px}
+  table.mh-table th.mh-act,table.mh-table td.mh-act{width:112px}
+  table.mh-table td{border-left:0!important;border-right:0!important}
+  @media(max-width:760px){table.mh-table td,table.mh-table td.mh-date{border:0!important;padding:0!important;text-align:left!important;min-height:0}
+    table.mh-table tr{padding:14px!important;gap:10px 8px!important}table.mh-table td[data-label]::before{font-size:10px;margin-bottom:1px}table.mh-table td.mh-act .row-actions{padding:0}}
+  table.mh-table thead tr{background:#060706}table.mh-table thead th{background:transparent!important}
+  @media(max-width:760px){table.mh-table tr{box-sizing:border-box;grid-template-columns:repeat(3,minmax(0,1fr))!important}table.mh-table td.mh-act{justify-self:end}table.mh-table .mh-btn{padding:4px 10px;font-size:11.5px}}
+  table.mh-table thead th{background:#060706!important;box-shadow:1px 0 0 0 #060706,-1px 0 0 0 #060706!important}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
@@ -4846,8 +4890,12 @@
   function renderHistory(){
     const rows=[];if(state.baseline)rows.push({...state.baseline,baseline:true});sortedEntries().reverse().forEach(e=>rows.push(e));
     if(!rows.length){$("history").innerHTML=`<div class="empty">No measurements yet. Set your baseline to begin.</div>`;return}
-    const cells=r=>metricKeys.map(k=>`<td class="num">${r[k]==null?"—":`${fmt(r[k])} ${metrics[k].unit}`}</td>`).join("");
-    $("history").innerHTML=`<div class="table-scroll"><table class="history"><thead><tr><th>Date</th>${metricKeys.map(k=>`<th>${metrics[k].label}</th>`).join("")}<th></th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.baseline?"baseline":""}"><td>${esc(r.date)}${r.baseline?" · Start":""}</td>${cells(r)}<td><div class="row-actions">${r.baseline?`<button class="icon-btn" type="button" data-baseline-edit>Edit</button>`:`<button class="icon-btn" type="button" data-edit="${esc(r.id)}">Edit</button><button class="icon-btn delete" type="button" data-delete="${esc(r.id)}" aria-label="Delete measurement from ${esc(r.date)}">Delete</button>`}</div></td></tr>`).join("")}</tbody></table></div>`;
+    // compact, fits without sideways scrolling: unit sits in the header, short labels, date on two lines
+    const SH={weightKg:"Weight",chestCm:"Chest",waistCm:"Waist",hipCm:"Hips",leftBicepsCm:"Biceps L",rightBicepsCm:"Biceps R",leftThighCm:"Thigh L",rightThighCm:"Thigh R",leftCalfCm:"Calf L",rightCalfCm:"Calf R",vo2max:"VO₂ max"};
+    const U=k=>metrics[k].unit==="ml/kg/min"?"ml/kg/min":metrics[k].unit;
+    const dt=s=>{const d=new Date(s+"T00:00:00");return `<b>${d.getDate()} ${d.toLocaleDateString("en-GB",{month:"short"})}</b><small>${d.getFullYear()}</small>`};
+    const cells=r=>metricKeys.map(k=>`<td class="num" data-label="${esc(SH[k]||metrics[k].label)} (${esc(U(k))})">${r[k]==null?'<span class="mh-na">—</span>':fmt(r[k])}</td>`).join("");
+    $("history").innerHTML=`<div class="mh-wrap"><table class="history mh-table"><thead><tr><th class="mh-date">Date</th>${metricKeys.map(k=>`<th class="num"><span>${esc(SH[k]||metrics[k].label).replace(/ /g,"&nbsp;")}</span><em>${esc(U(k))}</em></th>`).join("")}<th class="mh-act"><span class="sr-only">Actions</span></th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.baseline?"baseline":""}"><td class="mh-date">${dt(r.date)}${r.baseline?'<i class="mh-start">Start</i>':""}</td>${cells(r)}<td class="mh-act"><div class="row-actions">${r.baseline?`<button class="mh-btn" type="button" data-baseline-edit>Edit</button>`:`<button class="mh-btn" type="button" data-edit="${esc(r.id)}">Edit</button><button class="mh-btn del" type="button" data-delete="${esc(r.id)}" aria-label="Delete measurement from ${esc(r.date)}">✕</button>`}</div></td></tr>`).join("")}</tbody></table></div>`;
   }
   function renderBaseline(){
     const has=!!state.baseline;$("baselineForm").classList.toggle("hidden",has);$("baselineSummary").classList.toggle("hidden",!has);if(has)$("cancelBaselineEdit").classList.add("hidden");
