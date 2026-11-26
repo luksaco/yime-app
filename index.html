@@ -2435,9 +2435,13 @@
   #setupBack{background:#fff!important;border:1.5px solid rgba(6,7,6,.14)!important;color:#060706!important;box-shadow:none!important;border-radius:999px!important}
   #setupSkip{color:#857b70!important;background:none!important;border:0!important;box-shadow:none!important}
   @media(max-width:560px){.setup-box{padding:24px 20px 20px!important;border-radius:24px!important}.setup-box h2{font-size:24px!important}.setup-logo{height:28px}}
+  #setupSkip.setup-close{position:absolute;top:22px;right:22px;width:38px;height:38px;padding:0;border-radius:50%!important;border:0!important;background:#f2f2f2!important;color:#060706!important;font-size:15px;font-weight:700;cursor:pointer;display:grid;place-items:center;text-decoration:none}
+  #setupSkip.setup-close:hover{background:#060706!important;color:#fff!important}
+  #setupSkipStep{color:#060706!important;font-weight:700!important;text-decoration:underline;text-underline-offset:4px}
 </style>
 <div class="setup-overlay hidden" id="setupOverlay">
   <div class="setup-box">
+    <button type="button" class="setup-close" id="setupSkip" aria-label="Finish setup later" title="Finish later">✕</button>
     <div class="setup-dots" id="setupDots"></div>
 
     <!-- Step 1: Welcome + Sex -->
@@ -2609,7 +2613,7 @@
     <div id="setupError" style="color:var(--red);font-size:13px;font-weight:600;min-height:18px;margin-top:4px"></div>
     <div class="setup-nav">
       <button class="btn" type="button" id="setupBack">Back</button>
-      <button class="btn text" type="button" id="setupSkip">Skip for later</button>
+      <button class="btn text" type="button" id="setupSkipStep">Skip this step</button>
       <button class="btn primary" type="button" id="setupNext">Next</button>
     </div>
   </div>
@@ -6725,6 +6729,7 @@
     });
     $("setupBack").classList.toggle("hidden",setupStep===1);
     $("setupNext").textContent=setupStep===SETUP_STEPS?"Start tracking":"Next";
+    $("setupSkipStep")?.classList.toggle("hidden",setupStep===SETUP_STEPS);
     $("setupError").textContent="";
     setupDots();
     if(setupStep===SETUP_STEPS)buildSetupSummary();
@@ -6903,6 +6908,14 @@
     });
 
     $("setupBack").addEventListener("click",()=>setupGo(setupStep-1));
+    // skip just this step: clear what was typed here so half-filled values aren't saved, then move on
+    $("setupSkipStep").addEventListener("click",()=>{
+      const st=document.querySelector(`.setup-step[data-setup="${setupStep}"]`);
+      if(st&&setupStep>1){st.querySelectorAll("input").forEach(i=>{if(i.type==="radio"||i.type==="checkbox")i.checked=false;else if(i.id!=="setupName")i.value=""})}
+      $("setupError").textContent="";
+      if(setupStep===SETUP_STEPS){setupFinish();return}
+      setupGo(setupStep+1);
+    });
   }
 
   function init(){
